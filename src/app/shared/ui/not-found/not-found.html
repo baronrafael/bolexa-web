@@ -1,8 +1,8 @@
 <main class="grid min-h-screen place-items-center bg-base-100 px-5 text-center text-base-content">
   <section class="max-w-xl rounded-[2rem] border border-white/10 bg-base-300/70 p-8 shadow-2xl">
-    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">404</p>
-    <h1 class="mt-4 text-4xl font-black text-white">Ruta no encontrada</h1>
-    <p class="mt-4 text-slate-300">Esta pantalla no existe en el MVP de Bolexa.</p>
-    <a class="btn btn-primary mt-8" routerLink="/">Volver al inicio</a>
+    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.code }}</p>
+    <h1 class="mt-4 text-4xl font-black text-white">{{ labels.title }}</h1>
+    <p class="mt-4 text-slate-300">{{ labels.description }}</p>
+    <a class="btn btn-primary mt-8" routerLink="/">{{ labels.cta }}</a>
   </section>
 </main>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MockAuth } from '../mock-auth';
 import { UserRole } from '../../../data-access/models';
+import { appLabels } from '../../content/app-labels';
 
 @Component({
   selector: 'app-demo-role-switcher',
@@ -10,16 +11,10 @@ import { UserRole } from '../../../data-access/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoRoleSwitcher {
+  protected readonly labels = appLabels;
   protected readonly auth = inject(MockAuth);
 
   protected roleLabel(role: UserRole): string {
-    const labels: Record<UserRole, string> = {
-      consumer: 'Comprador',
-      organizer: 'Organizador',
-      scanner: 'Scanner',
-      admin: 'Admin',
-    };
-
-    return labels[role];
+    return this.labels.auth.roleLabels[role];
   }
 }

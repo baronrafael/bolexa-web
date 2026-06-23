@@ -2,15 +2,15 @@
   <header class="border-b border-white/10 bg-base-200/60 px-5 py-4">
     <div class="mx-auto flex max-w-5xl items-center justify-between gap-3">
       <div>
-        <a class="text-lg font-black text-white" routerLink="/">Bolexa Scan</a>
-        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-success">Modo operativo</p>
+        <a class="text-lg font-black text-white" routerLink="/">{{ labels.brand.scannerName }}</a>
+        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-success">{{ labels.shells.scanner.mode }}</p>
       </div>
 
       <app-demo-role-switcher />
     </div>
   </header>
 
-  <nav class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-5 py-4" aria-label="Scanner">
+  <nav class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-5 py-4" [attr.aria-label]="labels.navigation.scannerAriaLabel">
     @for (link of navLinks; track link.path) {
       <a class="btn btn-ghost btn-sm shrink-0" routerLinkActive="btn-success" [routerLink]="link.path">
         {{ link.label }}

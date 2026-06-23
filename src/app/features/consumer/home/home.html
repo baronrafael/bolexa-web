@@ -2,40 +2,33 @@
   <section class="grid gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
     <div class="max-w-3xl">
       <div class="badge badge-primary badge-outline mb-6 border-primary/40 bg-primary/10 px-4 py-3 text-primary-content">
-        MVP demo · Dark mode first
+        {{ labels.home.badge }}
       </div>
 
       <h1 class="text-5xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
-        La boleteria moderna de Venezuela.
+        {{ labels.home.headline }}
       </h1>
 
       <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-        Descubre eventos, compra facil y entra rapido con tickets QR. Bolexa conecta compradores,
-        organizadores y equipos de acceso en una sola plataforma.
+        {{ labels.home.description }}
       </p>
 
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <a class="btn btn-primary btn-lg shadow-[0_0_36px_rgba(10,132,255,0.28)]" routerLink="/events">
-          Explorar eventos
+          {{ labels.home.primaryCta }}
         </a>
         <a class="btn btn-outline btn-lg border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10" routerLink="/organizer/dashboard">
-          Ver demo organizador
+          {{ labels.home.secondaryCta }}
         </a>
       </div>
 
       <div class="mt-10 grid gap-3 text-sm text-slate-300 sm:grid-cols-3">
-        <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <span class="block text-2xl font-black text-white">3</span>
-          Superficies: comprador, organizador y scanner.
-        </div>
-        <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <span class="block text-2xl font-black text-white">QR</span>
-          Tickets validables para entrada rapida.
-        </div>
-        <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <span class="block text-2xl font-black text-white">VE</span>
-          Pago movil, Zelle, USDT y pagos manuales.
-        </div>
+        @for (stat of labels.home.stats; track stat.value) {
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <span class="block text-2xl font-black text-white">{{ stat.value }}</span>
+            {{ stat.description }}
+          </div>
+        }
       </div>
     </div>
 
@@ -49,7 +42,7 @@
           } @else if (featuredEvents()[0]; as featuredEvent) {
             <div class="overflow-hidden rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-primary via-secondary to-accent p-1">
               <div class="rounded-[1.35rem] bg-base-100/85 p-5">
-                <p class="text-sm font-semibold uppercase tracking-[0.25em] text-accent">Evento destacado</p>
+                <p class="text-sm font-semibold uppercase tracking-[0.25em] text-accent">{{ labels.home.featured.eyebrow }}</p>
                 <h2 class="mt-4 text-3xl font-black text-white">{{ featuredEvent.event.title }}</h2>
                 <p class="mt-3 text-slate-300">
                   {{ featuredEvent.venue.name }} · {{ featuredEvent.venue.city }}
@@ -58,13 +51,13 @@
                 @if (featuredEvent.ticketTypes[0]; as featuredTicketType) {
                   <div class="mt-6 grid gap-3 sm:grid-cols-2">
                     <div class="rounded-2xl bg-white/[0.04] p-4">
-                      <p class="text-sm text-slate-400">Desde</p>
+                      <p class="text-sm text-slate-400">{{ labels.home.featured.from }}</p>
                       <p class="mt-1 text-2xl font-black text-white">
                         ${{ featuredTicketType.price }}
                       </p>
                     </div>
                     <div class="rounded-2xl bg-white/[0.04] p-4">
-                      <p class="text-sm text-slate-400">Disponibles</p>
+                      <p class="text-sm text-slate-400">{{ labels.home.featured.available }}</p>
                       <p class="mt-1 text-2xl font-black text-white">
                         {{ featuredTicketType.quantityTotal - featuredTicketType.quantitySold }}
                       </p>
@@ -72,24 +65,20 @@
                   </div>
                 }
 
-                <a class="btn btn-primary mt-6 w-full" [routerLink]="['/events', featuredEvent.event.slug]">Comprar tickets</a>
+                <a class="btn btn-primary mt-6 w-full" [routerLink]="['/events', featuredEvent.event.slug]">
+                  {{ labels.home.featured.buyCta }}
+                </a>
               </div>
             </div>
           }
 
           <div class="grid gap-3 sm:grid-cols-3">
-            <div class="rounded-2xl border border-success/30 bg-success/10 p-4">
-              <p class="text-xs font-semibold uppercase tracking-wide text-success">Scanner</p>
-              <p class="mt-2 font-bold text-white">Ticket valido</p>
-            </div>
-            <div class="rounded-2xl border border-warning/30 bg-warning/10 p-4">
-              <p class="text-xs font-semibold uppercase tracking-wide text-warning">Ordenes</p>
-              <p class="mt-2 font-bold text-white">Pago manual</p>
-            </div>
-            <div class="rounded-2xl border border-primary/30 bg-primary/10 p-4">
-              <p class="text-xs font-semibold uppercase tracking-wide text-primary">Dashboard</p>
-              <p class="mt-2 font-bold text-white">Ventas en vivo</p>
-            </div>
+            @for (statusCard of labels.home.statusCards; track statusCard.eyebrow) {
+              <div [class]="statusCardClasses[statusCard.tone]">
+                <p [class]="statusCardEyebrowClasses[statusCard.tone]">{{ statusCard.eyebrow }}</p>
+                <p class="mt-2 font-bold text-white">{{ statusCard.title }}</p>
+              </div>
+            }
           </div>
         </div>
       </article>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { DemoRoleSwitcher } from '../../auth/demo-role-switcher/demo-role-switcher';
+import { appLabels } from '../../content/app-labels';
 
 @Component({
   selector: 'app-organizer-shell',
@@ -10,11 +11,12 @@ import { DemoRoleSwitcher } from '../../auth/demo-role-switcher/demo-role-switch
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizerShell {
+  protected readonly labels = appLabels;
   protected readonly navLinks = [
-    { label: 'Dashboard', path: '/organizer/dashboard' },
-    { label: 'Eventos', path: '/organizer/events' },
-    { label: 'Ordenes', path: '/organizer/events/event-caracas-music-fest/orders' },
-    { label: 'Asistentes', path: '/organizer/events/event-caracas-music-fest/attendees' },
-    { label: 'Reportes', path: '/organizer/events/event-caracas-music-fest/reports' },
+    { label: appLabels.navigation.organizerLinks.dashboard, path: '/organizer/dashboard' },
+    { label: appLabels.navigation.organizerLinks.events, path: '/organizer/events' },
+    { label: appLabels.navigation.organizerLinks.orders, path: '/organizer/events/event-caracas-music-fest/orders' },
+    { label: appLabels.navigation.organizerLinks.attendees, path: '/organizer/events/event-caracas-music-fest/attendees' },
+    { label: appLabels.navigation.organizerLinks.reports, path: '/organizer/events/event-caracas-music-fest/reports' },
   ];
 }

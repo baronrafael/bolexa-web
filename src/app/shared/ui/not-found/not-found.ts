@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { appLabels } from '../../../core/content/app-labels';
 
 @Component({
   selector: 'app-not-found',
@@ -8,4 +9,6 @@ import { RouterLink } from '@angular/router';
   styleUrl: './not-found.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotFound {}
+export class NotFound {
+  protected readonly labels = appLabels.notFound;
+}
