@@ -7,7 +7,7 @@ import { StatusBadge } from '../status-badge/status-badge';
   selector: 'app-qr-ticket-card',
   imports: [StatusBadge],
   templateUrl: './qr-ticket-card.html',
-  styleUrl: './qr-ticket-card.css',
+  styleUrl: './qr-ticket-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QrTicketCard {

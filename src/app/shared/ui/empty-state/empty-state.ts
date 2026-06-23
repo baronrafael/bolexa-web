@@ -6,7 +6,7 @@ import { appLabels } from '../../../core/content/app-labels';
   selector: 'app-empty-state',
   imports: [RouterLink],
   templateUrl: './empty-state.html',
-  styleUrl: './empty-state.css',
+  styleUrl: './empty-state.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyState {

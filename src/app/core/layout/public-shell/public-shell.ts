@@ -7,7 +7,7 @@ import { appLabels } from '../../content/app-labels';
   selector: 'app-public-shell',
   imports: [DemoRoleSwitcher, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './public-shell.html',
-  styleUrl: './public-shell.css',
+  styleUrl: './public-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicShell {

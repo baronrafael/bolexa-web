@@ -7,7 +7,7 @@ import { appLabels } from '../../content/app-labels';
   selector: 'app-organizer-shell',
   imports: [DemoRoleSwitcher, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './organizer-shell.html',
-  styleUrl: './organizer-shell.css',
+  styleUrl: './organizer-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizerShell {

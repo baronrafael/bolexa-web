@@ -11,7 +11,7 @@ type CapabilityCardTone = (typeof appLabels.home.capabilityCards)[number]['tone'
   selector: 'app-home',
   imports: [EmptyState, EventCard, LoadingState, MetricCard, RouterLink],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home {

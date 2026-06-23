@@ -6,7 +6,7 @@ import { appLabels } from '../../../core/content/app-labels';
   selector: 'app-not-found',
   imports: [RouterLink],
   templateUrl: './not-found.html',
-  styleUrl: './not-found.css',
+  styleUrl: './not-found.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotFound {

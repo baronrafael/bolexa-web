@@ -11,7 +11,7 @@ type DateFilter = 'all' | 'next_90_days' | 'later';
   selector: 'app-events-list',
   imports: [EmptyState, EventCard, LoadingState, SearchInput],
   templateUrl: './events-list.html',
-  styleUrl: './events-list.css',
+  styleUrl: './events-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsList {

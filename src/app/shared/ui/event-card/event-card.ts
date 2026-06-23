@@ -7,7 +7,7 @@ import { EventDetail, TicketType } from '../../../data-access/models';
   selector: 'app-event-card',
   imports: [RouterLink],
   templateUrl: './event-card.html',
-  styleUrl: './event-card.css',
+  styleUrl: './event-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventCard {

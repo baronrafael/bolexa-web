@@ -7,7 +7,7 @@ import { appLabels } from '../../../core/content/app-labels';
   selector: 'app-route-placeholder',
   imports: [RouterLink],
   templateUrl: './route-placeholder.html',
-  styleUrl: './route-placeholder.css',
+  styleUrl: './route-placeholder.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoutePlaceholder {

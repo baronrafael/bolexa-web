@@ -5,7 +5,7 @@ import { appLabels } from '../../../core/content/app-labels';
   selector: 'app-loading-state',
   imports: [],
   templateUrl: './loading-state.html',
-  styleUrl: './loading-state.css',
+  styleUrl: './loading-state.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingState {

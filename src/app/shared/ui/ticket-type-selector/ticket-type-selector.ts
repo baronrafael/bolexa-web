@@ -7,7 +7,7 @@ import { StatusBadge } from '../status-badge/status-badge';
   selector: 'app-ticket-type-selector',
   imports: [StatusBadge],
   templateUrl: './ticket-type-selector.html',
-  styleUrl: './ticket-type-selector.css',
+  styleUrl: './ticket-type-selector.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketTypeSelector {

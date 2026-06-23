@@ -6,7 +6,7 @@ export type MetricCardTone = 'primary' | 'success' | 'warning' | 'neutral';
   selector: 'app-metric-card',
   imports: [],
   templateUrl: './metric-card.html',
-  styleUrl: './metric-card.css',
+  styleUrl: './metric-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetricCard {

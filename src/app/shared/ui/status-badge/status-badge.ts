@@ -7,7 +7,7 @@ export type StatusBadgeTone = 'neutral' | 'primary' | 'secondary' | 'success' | 
   selector: 'app-status-badge',
   imports: [],
   templateUrl: './status-badge.html',
-  styleUrl: './status-badge.css',
+  styleUrl: './status-badge.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatusBadge {

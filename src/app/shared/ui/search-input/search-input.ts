@@ -5,7 +5,7 @@ import { appLabels } from '../../../core/content/app-labels';
   selector: 'app-search-input',
   imports: [],
   templateUrl: './search-input.html',
-  styleUrl: './search-input.css',
+  styleUrl: './search-input.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInput {

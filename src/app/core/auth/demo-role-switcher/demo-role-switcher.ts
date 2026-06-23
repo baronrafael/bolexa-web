@@ -7,7 +7,7 @@ import { appLabels } from '../../content/app-labels';
   selector: 'app-demo-role-switcher',
   imports: [],
   templateUrl: './demo-role-switcher.html',
-  styleUrl: './demo-role-switcher.css',
+  styleUrl: './demo-role-switcher.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoRoleSwitcher {

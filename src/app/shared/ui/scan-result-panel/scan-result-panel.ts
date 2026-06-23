@@ -6,7 +6,7 @@ import { ScanResult, ScanResultStatus } from '../../../data-access/models';
   selector: 'app-scan-result-panel',
   imports: [],
   templateUrl: './scan-result-panel.html',
-  styleUrl: './scan-result-panel.css',
+  styleUrl: './scan-result-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScanResultPanel {

@@ -7,7 +7,7 @@ import { appLabels } from '../../content/app-labels';
   selector: 'app-scanner-shell',
   imports: [DemoRoleSwitcher, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './scanner-shell.html',
-  styleUrl: './scanner-shell.css',
+  styleUrl: './scanner-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScannerShell {
