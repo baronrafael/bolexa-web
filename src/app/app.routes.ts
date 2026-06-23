@@ -27,7 +27,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout/:eventId/confirmation/:orderId',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/consumer/confirmation/confirmation').then((m) => m.Confirmation),
         data: appLabels.routes.confirmation,
       },
       {

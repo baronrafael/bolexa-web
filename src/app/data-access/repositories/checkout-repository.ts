@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { CreateOrderInput, Order, PayOrderInput, Ticket } from '../models';
+import { CreateOrderInput, Order, OrderItem, PayOrderInput, Ticket } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, createMockId, mockDelay, nowIso } from '../mock/mock-helpers';
 
@@ -137,5 +137,25 @@ export class CheckoutRepository {
     const order = this.database.snapshot().orders.find((candidate) => candidate.id === orderId);
 
     return order ? clone(order) : null;
+  }
+
+  async getOrderItems(orderId: string): Promise<OrderItem[]> {
+    await mockDelay();
+
+    return this.database
+      .snapshot()
+      .orderItems
+      .filter((item) => item.orderId === orderId)
+      .map((item) => clone(item));
+  }
+
+  async getOrderTickets(orderId: string): Promise<Ticket[]> {
+    await mockDelay();
+
+    return this.database
+      .snapshot()
+      .tickets
+      .filter((ticket) => ticket.orderId === orderId)
+      .map((ticket) => clone(ticket));
   }
 }

@@ -14,7 +14,7 @@ type PaymentOption = Exclude<PaymentMethod, 'card'> | 'card';
   selector: 'app-checkout-page',
   imports: [EmptyState, LoadingState, OrderSummary, RouterLink, StatusBadge, TicketTypeSelector],
   templateUrl: './checkout-page.html',
-  styleUrl: './checkout-page.css',
+  styleUrl: './checkout-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutPage {

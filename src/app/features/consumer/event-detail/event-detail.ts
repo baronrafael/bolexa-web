@@ -10,7 +10,7 @@ import { EmptyState, LoadingState, OrderSummary, OrderSummaryItem, StatusBadge, 
   selector: 'app-event-detail',
   imports: [EmptyState, LoadingState, OrderSummary, RouterLink, StatusBadge, TicketTypeSelector],
   templateUrl: './event-detail.html',
-  styleUrl: './event-detail.css',
+  styleUrl: './event-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetail {
