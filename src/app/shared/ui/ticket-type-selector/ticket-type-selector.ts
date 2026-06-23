@@ -12,7 +12,7 @@ import { StatusBadge } from '../status-badge/status-badge';
 })
 export class TicketTypeSelector {
   readonly ticketType = input.required<TicketType>();
-  readonly quantity = input(0, { transform: numberAttribute });
+  readonly quantity = input(0, { transform: sanitizeQuantity });
   readonly quantityChange = output<number>();
 
   protected readonly labels = appLabels.shared.ticketTypeSelector;
@@ -38,4 +38,10 @@ export class TicketTypeSelector {
 
     this.quantityChange.emit(this.quantity() + 1);
   }
+}
+
+function sanitizeQuantity(value: unknown): number {
+  const quantity = numberAttribute(value);
+
+  return Number.isFinite(quantity) ? Math.max(quantity, 0) : 0;
 }

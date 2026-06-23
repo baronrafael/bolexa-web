@@ -22,7 +22,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout/:eventId',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/consumer/checkout-page/checkout-page').then((m) => m.CheckoutPage),
         data: appLabels.routes.checkout,
       },
       {

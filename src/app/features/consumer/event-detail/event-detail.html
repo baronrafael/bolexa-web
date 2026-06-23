@@ -65,7 +65,7 @@
             @for (ticketType of detail.ticketTypes; track ticketType.id) {
               <app-ticket-type-selector
                 [ticketType]="ticketType"
-                [quantity]="quantities()[ticketType.id]"
+                [quantity]="quantityFor(ticketType.id)"
                 (quantityChange)="updateQuantity(ticketType.id, $event)"
               />
             }

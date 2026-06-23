@@ -79,6 +79,10 @@ export class EventDetail {
     }));
   }
 
+  protected quantityFor(ticketTypeId: string): number {
+    return this.quantities()[ticketTypeId] ?? 0;
+  }
+
   private async loadEvent(slug: string): Promise<void> {
     this.loading.set(true);
     this.quantities.set({});
