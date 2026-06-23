@@ -37,7 +37,7 @@ export const routes: Routes = [
       },
       {
         path: 'my-tickets/:ticketId',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/consumer/ticket-detail/ticket-detail').then((m) => m.TicketDetail),
         data: appLabels.routes.ticketDetail,
       },
       {
