@@ -1,0 +1,105 @@
+<main class="mx-auto w-full max-w-7xl px-5 pb-28 pt-6 sm:px-8 lg:pb-16 lg:pt-10">
+  @if (loading()) {
+    <app-loading-state [title]="labels.eventDetail.loadingTitle" [rows]="5" />
+  } @else if (eventDetail(); as detail) {
+    <a class="btn btn-ghost btn-sm mb-6" routerLink="/events">{{ labels.eventDetail.backToEvents }}</a>
+
+    <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/60 shadow-2xl">
+      <div class="relative min-h-[24rem] bg-base-200">
+        @if (detail.event.coverImageUrl; as coverImageUrl) {
+          <img class="absolute inset-0 h-full w-full object-cover" [src]="coverImageUrl" [alt]="detail.event.title" />
+        }
+        <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/55 to-base-100/10"></div>
+
+        <div class="relative flex min-h-[24rem] flex-col justify-end p-6 sm:p-8 lg:p-10">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="badge border-primary/30 bg-primary/15 text-primary">{{ categoryLabel() }}</span>
+            <app-status-badge [status]="detail.event.status" />
+          </div>
+          <h1 class="mt-5 max-w-4xl text-4xl font-black leading-none tracking-tight text-white sm:text-6xl lg:text-7xl">
+            {{ detail.event.title }}
+          </h1>
+          <p class="mt-5 max-w-3xl text-lg leading-8 text-slate-200">{{ detail.event.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 grid gap-8 lg:grid-cols-[1fr_24rem] lg:items-start">
+      <div class="grid gap-8">
+        <div class="grid gap-4 sm:grid-cols-3">
+          <article class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ labels.eventDetail.date }}</p>
+            <p class="mt-2 font-bold text-white">{{ eventDate() }}</p>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ labels.eventDetail.venue }}</p>
+            <p class="mt-2 font-bold text-white">{{ detail.venue.name }}</p>
+            <p class="text-sm text-slate-400">{{ detail.venue.city }}</p>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ labels.eventDetail.organizer }}</p>
+            <p class="mt-2 font-bold text-white">{{ detail.organizer.name }}</p>
+          </article>
+        </div>
+
+        <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+          <h2 class="text-2xl font-black text-white">{{ labels.eventDetail.description }}</h2>
+          <p class="mt-4 leading-8 text-slate-300">{{ detail.event.description }}</p>
+        </article>
+
+        <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+          <h2 class="text-2xl font-black text-white">{{ labels.eventDetail.trustTitle }}</h2>
+          <div class="mt-5 grid gap-3">
+            @for (trustItem of labels.eventDetail.trustItems; track trustItem) {
+              <div class="flex gap-3 rounded-2xl border border-success/20 bg-success/10 p-4 text-sm text-slate-200">
+                <span class="mt-1 size-2 rounded-full bg-success"></span>
+                <span>{{ trustItem }}</span>
+              </div>
+            }
+          </div>
+        </article>
+
+        <section class="grid gap-4">
+          <h2 class="text-2xl font-black text-white">{{ labels.eventDetail.tickets }}</h2>
+          @if (detail.ticketTypes.length > 0) {
+            @for (ticketType of detail.ticketTypes; track ticketType.id) {
+              <app-ticket-type-selector
+                [ticketType]="ticketType"
+                [quantity]="quantities()[ticketType.id]"
+                (quantityChange)="updateQuantity(ticketType.id, $event)"
+              />
+            }
+          } @else {
+            <app-empty-state [title]="labels.eventDetail.unavailable" />
+          }
+        </section>
+      </div>
+
+      <aside class="lg:sticky lg:top-6">
+        <app-order-summary [items]="selectedItems()" [fees]="fees()" />
+
+        @if (selectedCount() === 0) {
+          <p class="mt-4 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-sm text-warning">
+            {{ labels.eventDetail.noTicketsSelected }}
+          </p>
+        }
+
+        <a
+          class="btn btn-primary mt-4 w-full shadow-[0_0_36px_rgba(10,132,255,0.28)]"
+          [class.btn-disabled]="selectedCount() === 0"
+          [routerLink]="checkoutLink()"
+          [attr.aria-disabled]="selectedCount() === 0"
+        >
+          {{ labels.eventDetail.continueToCheckout }}
+        </a>
+      </aside>
+    </section>
+  } @else {
+    <app-empty-state
+      actionLink="/events"
+      [actionLabel]="labels.eventDetail.backToEvents"
+      [title]="labels.eventDetail.notFoundTitle"
+      [description]="labels.eventDetail.notFoundDescription"
+    />
+  }
+</main>

@@ -17,7 +17,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/:eventSlug',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/consumer/event-detail/event-detail').then((m) => m.EventDetail),
         data: appLabels.routes.eventDetail,
       },
       {

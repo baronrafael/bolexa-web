@@ -159,6 +159,28 @@ export const appLabels = {
       description: 'Prueba cambiando la busqueda, ciudad, categoria o fecha.',
     },
   },
+  eventDetail: {
+    backToEvents: 'Volver a eventos',
+    category: 'Categoria',
+    date: 'Fecha y hora',
+    venue: 'Lugar',
+    organizer: 'Organizador',
+    description: 'Sobre el evento',
+    tickets: 'Selecciona tus tickets',
+    trustTitle: 'Compra segura con Bolexa',
+    trustItems: [
+      'Ticket QR unico por asistente.',
+      'Confirmacion simulada por Pago movil, Zelle, USDT o pago manual.',
+      'Entrada rapida con validacion por scanner.',
+    ],
+    summaryTitle: 'Tu seleccion',
+    noTicketsSelected: 'Selecciona al menos un ticket para continuar.',
+    continueToCheckout: 'Continuar al checkout',
+    unavailable: 'No hay tickets disponibles para este evento.',
+    notFoundTitle: 'Evento no encontrado',
+    notFoundDescription: 'El evento que buscas no existe o no esta publicado.',
+    loadingTitle: 'Cargando evento',
+  },
   routePlaceholder: {
     defaults: {
       eyebrow: 'Bolexa MVP',
