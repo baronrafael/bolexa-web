@@ -1,0 +1,8 @@
+<section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl" aria-busy="true">
+  <p class="text-sm font-semibold text-slate-300">{{ title() }}</p>
+  <div class="mt-5 grid gap-3">
+    @for (_ of skeletonRows(); track $index) {
+      <div class="skeleton h-16 rounded-2xl"></div>
+    }
+  </div>
+</section>

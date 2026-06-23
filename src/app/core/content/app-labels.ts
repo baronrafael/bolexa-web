@@ -1,4 +1,13 @@
-import { UserRole } from '../../data-access/models';
+import {
+  EventCategory,
+  EventStatus,
+  OrderStatus,
+  OrganizerStatus,
+  ScanResultStatus,
+  TicketStatus,
+  TicketTypeStatus,
+  UserRole,
+} from '../../data-access/models';
 
 export const appLabels = {
   brand: {
@@ -111,6 +120,118 @@ export const appLabels = {
     title: 'Ruta no encontrada',
     description: 'Esta pantalla no existe en el MVP de Bolexa.',
     cta: 'Volver al inicio',
+  },
+  shared: {
+    statusBadge: {
+      fallback: 'Estado',
+      event: {
+        draft: 'Borrador',
+        published: 'Publicado',
+        cancelled: 'Cancelado',
+        completed: 'Completado',
+      } satisfies Record<EventStatus, string>,
+      organizer: {
+        pending: 'Pendiente',
+        active: 'Activo',
+        suspended: 'Suspendido',
+      } satisfies Record<OrganizerStatus, string>,
+      ticketType: {
+        active: 'Activo',
+        paused: 'Pausado',
+        sold_out: 'Agotado',
+      } satisfies Record<TicketTypeStatus, string>,
+      order: {
+        pending: 'Pendiente',
+        paid: 'Pagado',
+        cancelled: 'Cancelado',
+        expired: 'Expirado',
+        refunded: 'Reembolsado',
+        manual_review: 'Revision manual',
+        failed: 'Fallido',
+      } satisfies Record<OrderStatus, string>,
+      ticket: {
+        valid: 'Valido',
+        used: 'Usado',
+        cancelled: 'Cancelado',
+        refunded: 'Reembolsado',
+      } satisfies Record<TicketStatus, string>,
+      scan: {
+        accepted: 'Valido',
+        already_used: 'Ya usado',
+        invalid_ticket: 'Invalido',
+        wrong_event: 'Evento incorrecto',
+        cancelled: 'Cancelado',
+        refunded: 'Reembolsado',
+      } satisfies Record<ScanResultStatus, string>,
+    },
+    emptyState: {
+      eyebrow: 'Sin resultados',
+      title: 'No hay informacion para mostrar',
+      description: 'Cuando existan datos disponibles, apareceran aqui.',
+      actionLabel: 'Volver al inicio',
+    },
+    loadingState: {
+      title: 'Cargando informacion',
+    },
+    searchInput: {
+      label: 'Buscar',
+      placeholder: 'Buscar eventos, asistentes u ordenes',
+      clear: 'Limpiar',
+    },
+    eventCard: {
+      noImage: 'Imagen del evento',
+      from: 'Desde',
+      available: 'disponibles',
+      soldOut: 'Agotado',
+      viewEvent: 'Ver evento',
+      categories: {
+        concert: 'Concierto',
+        sports: 'Deportes',
+        running: 'Running',
+        theater: 'Teatro',
+        conference: 'Conferencia',
+        party: 'Fiesta',
+        festival: 'Festival',
+        other: 'Otro',
+      } satisfies Record<EventCategory, string>,
+    },
+    ticketTypeSelector: {
+      each: 'c/u',
+      available: 'disponibles',
+      quantity: 'Cantidad',
+      decrement: 'Restar ticket',
+      increment: 'Sumar ticket',
+      unavailable: 'No disponible',
+    },
+    orderSummary: {
+      title: 'Resumen de orden',
+      empty: 'No hay tickets seleccionados.',
+      subtotal: 'Subtotal',
+      fees: 'Comision Bolexa',
+      total: 'Total',
+    },
+    qrTicketCard: {
+      official: 'Ticket oficial',
+      holder: 'Titular',
+      ticketType: 'Tipo de ticket',
+      qrCode: 'Codigo QR',
+      instructions: 'Presenta este codigo en la entrada. Cada ticket solo puede validarse una vez.',
+    },
+    scanResultPanel: {
+      idleTitle: 'Esperando ticket',
+      idleMessage: 'Escanea o ingresa un codigo QR para validar la entrada.',
+      holder: 'Titular',
+      ticketType: 'Tipo de ticket',
+      checkedInAt: 'Check-in',
+      defaultMessages: {
+        accepted: 'Ticket valido para este evento.',
+        already_used: 'Este ticket ya fue utilizado.',
+        invalid_ticket: 'No encontramos un ticket con ese codigo QR.',
+        wrong_event: 'Este ticket pertenece a otro evento.',
+        cancelled: 'Este ticket fue cancelado.',
+        refunded: 'Este ticket fue reembolsado.',
+      } satisfies Record<ScanResultStatus, string>,
+    },
   },
   routes: {
     eventsList: {

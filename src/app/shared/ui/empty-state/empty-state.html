@@ -1,0 +1,9 @@
+<section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-8 text-center shadow-2xl">
+  <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ displayEyebrow() }}</p>
+  <h2 class="mt-4 text-2xl font-black text-white">{{ displayTitle() }}</h2>
+  <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-300">{{ displayDescription() }}</p>
+
+  @if (actionLink(); as link) {
+    <a class="btn btn-primary mt-6" [routerLink]="link">{{ displayActionLabel() }}</a>
+  }
+</section>
