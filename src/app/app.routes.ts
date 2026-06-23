@@ -12,7 +12,7 @@ export const routes: Routes = [
       },
       {
         path: 'events',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/consumer/events-list/events-list').then((m) => m.EventsList),
         data: appLabels.routes.eventsList,
       },
       {

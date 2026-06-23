@@ -1,0 +1,67 @@
+<main class="mx-auto w-full max-w-7xl px-5 pb-16 pt-8 sm:px-8 lg:pt-14">
+  <section class="rounded-[2rem] border border-white/10 bg-base-300/50 p-6 shadow-2xl sm:p-8">
+    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.eventsList.eyebrow }}</p>
+    <div class="mt-4 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <div>
+        <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.eventsList.title }}</h1>
+        <p class="mt-4 max-w-2xl text-slate-300">{{ labels.eventsList.description }}</p>
+      </div>
+
+      <app-search-input
+        id="events-search"
+        [placeholder]="labels.eventsList.searchPlaceholder"
+        [value]="query()"
+        (queryChange)="setQuery($event)"
+      />
+    </div>
+  </section>
+
+  <section class="mt-8 grid gap-4 rounded-[1.5rem] border border-white/10 bg-base-300/40 p-4 shadow-2xl lg:grid-cols-[1fr_auto] lg:items-center">
+    <div class="grid gap-3 md:grid-cols-3">
+      <label class="form-control">
+        <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.category }}</span>
+        <select class="select select-bordered w-full border-white/10 bg-white/[0.04]" [value]="selectedCategory()" (change)="setCategory($event)">
+          <option value="all">{{ labels.eventsList.filters.allCategories }}</option>
+          @for (category of categoryOptions; track category.value) {
+            <option [value]="category.value">{{ category.label }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="form-control">
+        <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.city }}</span>
+        <select class="select select-bordered w-full border-white/10 bg-white/[0.04]" [value]="selectedCity()" (change)="setCity($event)">
+          <option value="all">{{ labels.eventsList.filters.allCities }}</option>
+          @for (city of cityOptions(); track city) {
+            <option [value]="city">{{ city }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="form-control">
+        <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.date }}</span>
+        <select class="select select-bordered w-full border-white/10 bg-white/[0.04]" [value]="selectedDate()" (change)="setDate($event)">
+          @for (dateOption of dateOptions; track dateOption.value) {
+            <option [value]="dateOption.value">{{ dateOption.label }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <p class="text-sm font-semibold text-slate-300 lg:text-right">{{ resultCountLabel() }}</p>
+  </section>
+
+  <section class="mt-8">
+    @if (loading()) {
+      <app-loading-state [rows]="4" />
+    } @else if (filteredEvents().length > 0) {
+      <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        @for (eventDetail of filteredEvents(); track eventDetail.event.id) {
+          <app-event-card [eventDetail]="eventDetail" />
+        }
+      </div>
+    } @else {
+      <app-empty-state [title]="labels.eventsList.empty.title" [description]="labels.eventsList.empty.description" />
+    }
+  </section>
+</main>

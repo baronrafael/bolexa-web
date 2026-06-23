@@ -9,10 +9,10 @@ import { appLabels } from '../../../core/content/app-labels';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInput {
-  readonly id = input('bolexa-search');
-  readonly label = input(appLabels.shared.searchInput.label);
-  readonly placeholder = input(appLabels.shared.searchInput.placeholder);
-  readonly value = input('');
+  readonly id = input<string>('bolexa-search');
+  readonly label = input<string>(appLabels.shared.searchInput.label);
+  readonly placeholder = input<string>(appLabels.shared.searchInput.placeholder);
+  readonly value = input<string>('');
   readonly queryChange = output<string>();
 
   protected readonly labels = appLabels.shared.searchInput;

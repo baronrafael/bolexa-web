@@ -72,23 +72,52 @@ export const appLabels = {
       {
         value: '3',
         description: 'Superficies: comprador, organizador y scanner.',
+        tone: 'primary',
       },
       {
         value: 'QR',
         description: 'Tickets validables para entrada rapida.',
+        tone: 'success',
       },
       {
         value: 'VE',
         description: 'Pago movil, Zelle, USDT y pagos manuales.',
+        tone: 'warning',
       },
     ],
     featured: {
       eyebrow: 'Evento destacado',
-      from: 'Desde',
-      available: 'Disponibles',
-      buyCta: 'Comprar tickets',
+      title: 'Evento destacado',
     },
-    statusCards: [
+    categories: {
+      eyebrow: 'Categorias',
+      title: 'Encuentra el plan que quieres vivir',
+      description: 'Conciertos, running, teatro, tecnologia, deportes y experiencias nocturnas en una sola plataforma.',
+      pills: [
+        'Conciertos',
+        'Running',
+        'Teatro',
+        'Conferencias',
+        'Fiestas',
+        'Deportes',
+      ],
+    },
+    upcoming: {
+      eyebrow: 'Proximamente',
+      title: 'Eventos destacados',
+      description: 'Una seleccion inicial de eventos venezolanos para probar el flujo completo del MVP.',
+      emptyTitle: 'No hay eventos publicados',
+      emptyDescription: 'Cuando existan eventos publicados, apareceran en esta seccion.',
+    },
+    organizerCta: {
+      eyebrow: 'Para organizadores',
+      title: 'Vende tu evento con Bolexa',
+      description: 'Publica eventos, configura tickets, controla ventas y valida accesos desde una experiencia moderna.',
+      primaryCta: 'Abrir dashboard demo',
+      secondaryCta: 'Crear evento',
+    },
+    footer: 'Bolexa MVP · Plataforma de ticketing para eventos en vivo en Venezuela.',
+    capabilityCards: [
       {
         eyebrow: 'Scanner',
         title: 'Ticket valido',
@@ -105,6 +134,30 @@ export const appLabels = {
         tone: 'primary',
       },
     ],
+  },
+  eventsList: {
+    eyebrow: 'Marketplace',
+    title: 'Eventos en Venezuela',
+    description: 'Busca conciertos, carreras, conferencias, teatro, deportes y fiestas con tickets QR.',
+    searchPlaceholder: 'Buscar por evento o descripcion',
+    filters: {
+      category: 'Categoria',
+      city: 'Ciudad',
+      date: 'Fecha',
+      allCategories: 'Todas las categorias',
+      allCities: 'Todas las ciudades',
+      allDates: 'Todas las fechas',
+      next90Days: 'Proximos 90 dias',
+      later: 'Mas adelante',
+    },
+    results: {
+      singular: 'evento encontrado',
+      plural: 'eventos encontrados',
+    },
+    empty: {
+      title: 'No encontramos eventos',
+      description: 'Prueba cambiando la busqueda, ciudad, categoria o fecha.',
+    },
   },
   routePlaceholder: {
     defaults: {
