@@ -1,0 +1,6 @@
+<section class="rounded-[2rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl sm:p-8">
+  <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ eyebrow() }}</p>
+  <h1 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-5xl">{{ title() }}</h1>
+  <p class="mt-4 max-w-2xl text-base leading-7 text-slate-300">{{ description() }}</p>
+  <a class="btn btn-primary mt-8" [routerLink]="primaryLink()">{{ primaryLabel() }}</a>
+</section>

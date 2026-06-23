@@ -1,0 +1,43 @@
+<div class="min-h-screen bg-base-100 text-base-content lg:grid lg:grid-cols-[18rem_1fr]">
+  <aside class="hidden border-r border-white/10 bg-base-200/70 px-5 py-6 lg:block">
+    <a class="text-xl font-black text-white" routerLink="/">Bolexa</a>
+    <p class="mt-2 text-sm text-slate-400">Portal organizador</p>
+
+    <nav class="mt-8 grid gap-2" aria-label="Organizador">
+      @for (link of navLinks; track link.path) {
+        <a
+          class="rounded-2xl px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/[0.05] hover:text-white"
+          routerLinkActive="bg-primary/15 text-white ring-1 ring-primary/30"
+          [routerLink]="link.path"
+        >
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <div class="min-w-0">
+    <header class="flex items-center justify-between gap-3 border-b border-white/10 bg-base-200/40 px-5 py-4 sm:px-8">
+      <div>
+        <a class="font-black text-white lg:hidden" routerLink="/">Bolexa</a>
+        <p class="hidden text-sm text-slate-400 lg:block">Producciones Avila · Demo</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a class="btn btn-ghost btn-sm" routerLink="/events">Ver marketplace</a>
+        <app-demo-role-switcher />
+      </div>
+    </header>
+
+    <nav class="flex gap-2 overflow-x-auto border-b border-white/10 px-5 py-3 lg:hidden" aria-label="Organizador movil">
+      @for (link of navLinks; track link.path) {
+        <a class="btn btn-ghost btn-sm shrink-0" routerLinkActive="btn-primary" [routerLink]="link.path">
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+
+    <main class="px-5 py-8 sm:px-8">
+      <router-outlet />
+    </main>
+  </div>
+</div>
