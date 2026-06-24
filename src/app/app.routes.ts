@@ -79,7 +79,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/:eventId/ticket-types',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/organizer/ticket-types/ticket-types').then((m) => m.TicketTypes),
         data: appLabels.routes.organizerTicketTypes,
       },
       {

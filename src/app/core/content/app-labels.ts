@@ -379,6 +379,48 @@ export const appLabels = {
     },
     loadingTitle: 'Cargando formulario',
   },
+  organizerTicketTypes: {
+    eyebrow: 'Inventario',
+    title: 'Tipos de ticket',
+    description: 'Configura precios, monedas, cantidades y estados de venta para el evento.',
+    backToEvents: 'Volver a eventos',
+    formTitleCreate: 'Crear tipo de ticket',
+    formTitleEdit: 'Editar tipo de ticket',
+    listTitle: 'Inventario actual',
+    fields: {
+      name: 'Nombre',
+      description: 'Descripcion',
+      price: 'Precio',
+      currency: 'Moneda',
+      quantityTotal: 'Cantidad total',
+      status: 'Estado',
+    },
+    placeholders: {
+      name: 'Ej. General, VIP, Backstage',
+      description: 'Beneficios o condiciones del ticket.',
+    },
+    metrics: {
+      sold: 'Vendidos',
+      available: 'Disponibles',
+      total: 'Total',
+      revenue: 'Revenue potencial',
+    },
+    actions: {
+      create: 'Crear ticket',
+      save: 'Guardar cambios',
+      edit: 'Editar',
+      cancelEdit: 'Cancelar edicion',
+      saving: 'Guardando...',
+    },
+    validation: {
+      required: 'Completa nombre, precio valido y cantidad total valida.',
+      notFound: 'No encontramos este evento para el organizador demo.',
+      quantityBelowSold: 'La cantidad total no puede ser menor a los tickets ya vendidos.',
+    },
+    emptyTitle: 'Sin tipos de ticket',
+    emptyDescription: 'Crea el primer tipo de ticket para iniciar el inventario del evento.',
+    loadingTitle: 'Cargando inventario',
+  },
   routePlaceholder: {
     defaults: {
       eyebrow: 'Bolexa MVP',

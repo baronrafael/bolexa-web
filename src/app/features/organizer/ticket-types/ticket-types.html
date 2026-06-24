@@ -1,0 +1,163 @@
+@if (loading()) {
+  <app-loading-state [title]="labels.organizerTicketTypes.loadingTitle" [rows]="5" />
+} @else if (notFound()) {
+  <app-empty-state
+    actionLink="/organizer/events"
+    [actionLabel]="labels.organizerTicketTypes.backToEvents"
+    [title]="labels.organizerTicketTypes.validation.notFound"
+    [description]="labels.organizerEvents.emptyDescription"
+  />
+} @else if (eventDetail(); as detail) {
+  <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" routerLink="/organizer/events">
+    {{ labels.organizerTicketTypes.backToEvents }}
+  </a>
+
+  <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
+    <div class="bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.22),transparent_30%),linear-gradient(135deg,rgba(124,58,237,0.16),rgba(14,165,233,0.08))] p-6 sm:p-8">
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.organizerTicketTypes.eyebrow }}</p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.organizerTicketTypes.title }}</h1>
+      <p class="mt-4 max-w-2xl text-slate-300">{{ detail.event.title }} · {{ labels.organizerTicketTypes.description }}</p>
+    </div>
+  </section>
+
+  <section class="mt-8 grid gap-6 xl:grid-cols-[1fr_0.72fr] xl:items-start">
+    <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+      <h2 class="text-2xl font-black text-white">{{ labels.organizerTicketTypes.listTitle }}</h2>
+
+      @if (ticketTypes().length > 0) {
+        <div class="mt-5 grid gap-4">
+          @for (ticketType of ticketTypes(); track ticketType.id) {
+            <div class="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-5">
+              <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                <div>
+                  <div class="flex flex-wrap items-center gap-3">
+                    <h3 class="text-xl font-black text-white">{{ ticketType.name }}</h3>
+                    <app-status-badge [status]="ticketType.status" />
+                  </div>
+                  @if (ticketType.description) {
+                    <p class="mt-2 text-sm text-slate-400">{{ ticketType.description }}</p>
+                  }
+                </div>
+                <button class="btn btn-primary btn-sm" type="button" (click)="edit(ticketType)">{{ labels.organizerTicketTypes.actions.edit }}</button>
+              </div>
+
+              <div class="mt-5 grid gap-3 sm:grid-cols-4">
+                <div class="rounded-2xl border border-white/10 bg-base-100/60 p-3">
+                  <p class="text-xs text-slate-500">{{ labels.organizerTicketTypes.fields.price }}</p>
+                  <p class="mt-1 font-bold text-white">{{ formatMoney(ticketType.price, ticketType.currency) }}</p>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-base-100/60 p-3">
+                  <p class="text-xs text-slate-500">{{ labels.organizerTicketTypes.metrics.sold }}</p>
+                  <p class="mt-1 font-bold text-white">{{ ticketType.quantitySold }}</p>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-base-100/60 p-3">
+                  <p class="text-xs text-slate-500">{{ labels.organizerTicketTypes.metrics.available }}</p>
+                  <p class="mt-1 font-bold text-white">{{ available(ticketType) }}</p>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-base-100/60 p-3">
+                  <p class="text-xs text-slate-500">{{ labels.organizerTicketTypes.metrics.revenue }}</p>
+                  <p class="mt-1 font-bold text-white">{{ revenue(ticketType) }}</p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="mt-5">
+          <app-empty-state [title]="labels.organizerTicketTypes.emptyTitle" [description]="labels.organizerTicketTypes.emptyDescription" />
+        </div>
+      }
+    </article>
+
+    <form class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl" (submit)="$event.preventDefault(); save()">
+      <h2 class="text-2xl font-black text-white">{{ formTitle() }}</h2>
+
+      @if (submitted() && !isValid()) {
+        <p class="mt-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error">
+          {{ editingTicketType() && form().quantityTotal < editingTicketType()!.quantitySold ? labels.organizerTicketTypes.validation.quantityBelowSold : labels.organizerTicketTypes.validation.required }}
+        </p>
+      }
+
+      <div class="mt-5 grid gap-5">
+        <label class="form-control">
+          <span class="label-text mb-2 text-slate-300">{{ labels.organizerTicketTypes.fields.name }}</span>
+          <input
+            class="input input-bordered bg-base-100/80 text-white"
+            required
+            type="text"
+            [placeholder]="labels.organizerTicketTypes.placeholders.name"
+            [value]="form().name"
+            (input)="updateField('name', $any($event.target).value)"
+          />
+        </label>
+
+        <label class="form-control">
+          <span class="label-text mb-2 text-slate-300">{{ labels.organizerTicketTypes.fields.description }}</span>
+          <textarea
+            class="textarea textarea-bordered min-h-24 bg-base-100/80 text-white"
+            [placeholder]="labels.organizerTicketTypes.placeholders.description"
+            [value]="form().description"
+            (input)="updateField('description', $any($event.target).value)"
+          ></textarea>
+        </label>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="form-control">
+            <span class="label-text mb-2 text-slate-300">{{ labels.organizerTicketTypes.fields.price }}</span>
+            <input
+              class="input input-bordered bg-base-100/80 text-white"
+              min="0"
+              step="0.01"
+              type="number"
+              [value]="form().price"
+              (input)="updateField('price', $any($event.target).valueAsNumber)"
+            />
+          </label>
+
+          <label class="form-control">
+            <span class="label-text mb-2 text-slate-300">{{ labels.organizerTicketTypes.fields.currency }}</span>
+            <select class="select select-bordered bg-base-100/80 text-white" [value]="form().currency" (change)="updateField('currency', $any($event.target).value)">
+              @for (currency of currencies; track currency) {
+                <option [value]="currency">{{ currency }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="form-control">
+            <span class="label-text mb-2 text-slate-300">{{ labels.organizerTicketTypes.fields.quantityTotal }}</span>
+            <input
+              class="input input-bordered bg-base-100/80 text-white"
+              min="0"
+              step="1"
+              type="number"
+              [value]="form().quantityTotal"
+              (input)="updateField('quantityTotal', $any($event.target).valueAsNumber)"
+            />
+          </label>
+
+          <label class="form-control">
+            <span class="label-text mb-2 text-slate-300">{{ labels.organizerTicketTypes.fields.status }}</span>
+            <select class="select select-bordered bg-base-100/80 text-white" [value]="form().status" (change)="updateField('status', $any($event.target).value)">
+              @for (status of statuses; track status) {
+                <option [value]="status">{{ labels.shared.statusBadge.ticketType[status] }}</option>
+              }
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <button class="btn btn-primary" type="submit" [disabled]="saving()">
+          {{ saving() ? labels.organizerTicketTypes.actions.saving : (editingTicketTypeId() ? labels.organizerTicketTypes.actions.save : labels.organizerTicketTypes.actions.create) }}
+        </button>
+        @if (editingTicketTypeId()) {
+          <button class="btn btn-outline border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10" type="button" (click)="cancelEdit()">
+            {{ labels.organizerTicketTypes.actions.cancelEdit }}
+          </button>
+        }
+      </div>
+    </form>
+  </section>
+}

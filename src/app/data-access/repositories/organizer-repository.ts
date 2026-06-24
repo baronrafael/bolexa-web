@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Attendee, Event, EventCategory, EventDetail, EventStatus, Order, OrganizerDashboardSummary, Venue } from '../models';
+import { Attendee, Currency, Event, EventCategory, EventDetail, EventStatus, Order, OrganizerDashboardSummary, TicketType, TicketTypeStatus, Venue } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, mockDelay } from '../mock/mock-helpers';
 
@@ -11,6 +11,15 @@ export interface SaveOrganizerEventInput {
   startsAt: string;
   coverImageUrl?: string;
   status: Extract<EventStatus, 'draft' | 'published'>;
+}
+
+export interface SaveTicketTypeInput {
+  name: string;
+  description?: string;
+  price: number;
+  currency: Currency;
+  quantityTotal: number;
+  status: TicketTypeStatus;
 }
 
 @Injectable({
@@ -111,6 +120,61 @@ export class OrganizerRepository {
     return this.getEvent(organizerId, eventId);
   }
 
+  async createTicketType(organizerId: string, eventId: string, input: SaveTicketTypeInput): Promise<EventDetail | null> {
+    await mockDelay();
+
+    if (!this.eventBelongsToOrganizer(organizerId, eventId)) {
+      return null;
+    }
+
+    const now = new Date().toISOString();
+    const ticketType: TicketType = {
+      id: `ticket-type-${crypto.randomUUID()}`,
+      eventId,
+      name: input.name,
+      description: input.description || undefined,
+      price: input.price,
+      currency: input.currency,
+      quantityTotal: input.quantityTotal,
+      quantitySold: 0,
+      status: this.normalizeTicketTypeStatus(input.status, input.quantityTotal, 0),
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    this.database.update((state) => {
+      state.ticketTypes.push(ticketType);
+    });
+
+    return this.getEvent(organizerId, eventId);
+  }
+
+  async updateTicketType(organizerId: string, eventId: string, ticketTypeId: string, input: SaveTicketTypeInput): Promise<EventDetail | null> {
+    await mockDelay();
+
+    if (!this.eventBelongsToOrganizer(organizerId, eventId)) {
+      return null;
+    }
+
+    this.database.update((state) => {
+      const ticketType = state.ticketTypes.find((candidate) => candidate.id === ticketTypeId && candidate.eventId === eventId);
+
+      if (!ticketType) {
+        return;
+      }
+
+      ticketType.name = input.name;
+      ticketType.description = input.description || undefined;
+      ticketType.price = input.price;
+      ticketType.currency = input.currency;
+      ticketType.quantityTotal = Math.max(input.quantityTotal, ticketType.quantitySold);
+      ticketType.status = this.normalizeTicketTypeStatus(input.status, ticketType.quantityTotal, ticketType.quantitySold);
+      ticketType.updatedAt = new Date().toISOString();
+    });
+
+    return this.getEvent(organizerId, eventId);
+  }
+
   async listOrders(eventId: string): Promise<Order[]> {
     await mockDelay();
 
@@ -165,6 +229,14 @@ export class OrganizerRepository {
           ticketTypes: state.ticketTypes.filter((ticketType) => ticketType.eventId === event.id),
         });
       });
+  }
+
+  private eventBelongsToOrganizer(organizerId: string, eventId: string): boolean {
+    return this.database.snapshot().events.some((event) => event.id === eventId && event.organizerId === organizerId);
+  }
+
+  private normalizeTicketTypeStatus(status: TicketTypeStatus, quantityTotal: number, quantitySold: number): TicketTypeStatus {
+    return quantitySold >= quantityTotal ? 'sold_out' : status;
   }
 
   private slugify(value: string): string {
