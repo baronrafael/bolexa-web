@@ -84,7 +84,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/:eventId/orders',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/organizer/orders/orders').then((m) => m.Orders),
         data: appLabels.routes.organizerOrders,
       },
       {

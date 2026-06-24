@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Attendee, Currency, Event, EventCategory, EventDetail, EventStatus, Order, OrganizerDashboardSummary, TicketType, TicketTypeStatus, Venue } from '../models';
+import { Attendee, Currency, Event, EventCategory, EventDetail, EventStatus, Order, OrderItem, OrganizerDashboardSummary, Ticket, TicketType, TicketTypeStatus, User, Venue } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, mockDelay } from '../mock/mock-helpers';
 
@@ -20,6 +20,13 @@ export interface SaveTicketTypeInput {
   currency: Currency;
   quantityTotal: number;
   status: TicketTypeStatus;
+}
+
+export interface OrganizerOrder {
+  order: Order;
+  buyer: User;
+  items: OrderItem[];
+  tickets: Ticket[];
 }
 
 @Injectable({
@@ -183,6 +190,34 @@ export class OrganizerRepository {
       .orders
       .filter((order) => order.eventId === eventId)
       .map((order) => clone(order));
+  }
+
+  async listEventOrders(organizerId: string, eventId: string): Promise<OrganizerOrder[]> {
+    await mockDelay();
+
+    if (!this.eventBelongsToOrganizer(organizerId, eventId)) {
+      return [];
+    }
+
+    const state = this.database.snapshot();
+
+    return state.orders
+      .filter((order) => order.eventId === eventId)
+      .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+      .map((order) => {
+        const buyer = state.users.find((user) => user.id === order.userId);
+
+        if (!buyer) {
+          throw new Error(`Mock order ${order.id} has invalid buyer.`);
+        }
+
+        return clone({
+          order,
+          buyer,
+          items: state.orderItems.filter((item) => item.orderId === order.id),
+          tickets: state.tickets.filter((ticket) => ticket.orderId === order.id),
+        });
+      });
   }
 
   async listAttendees(eventId: string): Promise<Attendee[]> {
