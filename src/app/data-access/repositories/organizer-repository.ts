@@ -223,6 +223,20 @@ export class OrganizerRepository {
   async listAttendees(eventId: string): Promise<Attendee[]> {
     await mockDelay();
 
+    return this.buildAttendees(eventId);
+  }
+
+  async listEventAttendees(organizerId: string, eventId: string): Promise<Attendee[]> {
+    await mockDelay();
+
+    if (!this.eventBelongsToOrganizer(organizerId, eventId)) {
+      return [];
+    }
+
+    return this.buildAttendees(eventId);
+  }
+
+  private buildAttendees(eventId: string): Attendee[] {
     const state = this.database.snapshot();
 
     return state.tickets
