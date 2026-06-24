@@ -64,7 +64,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/new',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/organizer/event-form/event-form').then((m) => m.EventForm),
         data: appLabels.routes.organizerNewEvent,
       },
       {
@@ -74,7 +74,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/:eventId/edit',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/organizer/event-form/event-form').then((m) => m.EventForm),
         data: appLabels.routes.organizerEditEvent,
       },
       {

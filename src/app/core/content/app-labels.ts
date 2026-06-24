@@ -343,6 +343,42 @@ export const appLabels = {
     emptyDescription: 'Crea un evento demo para verlo en esta lista.',
     loadingTitle: 'Cargando eventos',
   },
+  organizerEventForm: {
+    createEyebrow: 'Nuevo evento',
+    editEyebrow: 'Editar evento',
+    createTitle: 'Crea un evento demo',
+    editTitle: 'Edita el evento',
+    description: 'Configura datos basicos, lugar, fecha, cover placeholder y estado de publicacion.',
+    fields: {
+      title: 'Titulo',
+      category: 'Categoria',
+      description: 'Descripcion',
+      venue: 'Venue',
+      startsAt: 'Fecha y hora',
+      coverImageUrl: 'Cover placeholder',
+      status: 'Estado',
+    },
+    placeholders: {
+      title: 'Ej. Caracas Indie Night',
+      description: 'Describe la experiencia, lineup, horarios y detalles importantes.',
+      coverImageUrl: 'https://images.unsplash.com/...',
+    },
+    statuses: {
+      draft: 'Borrador',
+      published: 'Publicado',
+    },
+    validation: {
+      required: 'Completa los campos requeridos antes de guardar.',
+      notFound: 'No encontramos este evento para el organizador demo.',
+    },
+    actions: {
+      cancel: 'Cancelar',
+      create: 'Crear evento',
+      save: 'Guardar cambios',
+      saving: 'Guardando...',
+    },
+    loadingTitle: 'Cargando formulario',
+  },
   routePlaceholder: {
     defaults: {
       eyebrow: 'Bolexa MVP',

@@ -1,7 +1,17 @@
 import { inject, Injectable } from '@angular/core';
-import { Attendee, EventDetail, Order, OrganizerDashboardSummary } from '../models';
+import { Attendee, Event, EventCategory, EventDetail, EventStatus, Order, OrganizerDashboardSummary, Venue } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, mockDelay } from '../mock/mock-helpers';
+
+export interface SaveOrganizerEventInput {
+  title: string;
+  category: EventCategory;
+  description: string;
+  venueId: string;
+  startsAt: string;
+  coverImageUrl?: string;
+  status: Extract<EventStatus, 'draft' | 'published'>;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +41,74 @@ export class OrganizerRepository {
     await mockDelay();
 
     return clone(this.listEventDetailsForOrganizer(organizerId));
+  }
+
+  async getEvent(organizerId: string, eventId: string): Promise<EventDetail | null> {
+    await mockDelay();
+
+    return clone(this.listEventDetailsForOrganizer(organizerId).find((detail) => detail.event.id === eventId) ?? null);
+  }
+
+  async listVenues(): Promise<Venue[]> {
+    await mockDelay();
+
+    return this.database.snapshot().venues.map((venue) => clone(venue));
+  }
+
+  async createEvent(organizerId: string, input: SaveOrganizerEventInput): Promise<EventDetail> {
+    await mockDelay();
+
+    const now = new Date().toISOString();
+    const event: Event = {
+      id: `event-${crypto.randomUUID()}`,
+      organizerId,
+      venueId: input.venueId,
+      title: input.title,
+      slug: this.slugify(input.title),
+      description: input.description,
+      category: input.category,
+      coverImageUrl: input.coverImageUrl || undefined,
+      startsAt: input.startsAt,
+      status: input.status,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    this.database.update((state) => {
+      state.events.push(event);
+    });
+
+    const createdEvent = await this.getEvent(organizerId, event.id);
+
+    if (!createdEvent) {
+      throw new Error(`Mock event ${event.id} was not created.`);
+    }
+
+    return createdEvent;
+  }
+
+  async updateEvent(organizerId: string, eventId: string, input: SaveOrganizerEventInput): Promise<EventDetail | null> {
+    await mockDelay();
+
+    this.database.update((state) => {
+      const event = state.events.find((candidate) => candidate.id === eventId && candidate.organizerId === organizerId);
+
+      if (!event) {
+        return;
+      }
+
+      event.title = input.title;
+      event.slug = this.slugify(input.title);
+      event.description = input.description;
+      event.category = input.category;
+      event.venueId = input.venueId;
+      event.startsAt = input.startsAt;
+      event.coverImageUrl = input.coverImageUrl || undefined;
+      event.status = input.status;
+      event.updatedAt = new Date().toISOString();
+    });
+
+    return this.getEvent(organizerId, eventId);
   }
 
   async listOrders(eventId: string): Promise<Order[]> {
@@ -87,5 +165,15 @@ export class OrganizerRepository {
           ticketTypes: state.ticketTypes.filter((ticketType) => ticketType.eventId === event.id),
         });
       });
+  }
+
+  private slugify(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
 }
