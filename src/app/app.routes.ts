@@ -54,7 +54,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       {
         path: 'dashboard',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/organizer/dashboard/dashboard').then((m) => m.Dashboard),
         data: appLabels.routes.organizerDashboard,
       },
       {
