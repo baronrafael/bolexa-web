@@ -1,0 +1,104 @@
+@if (loading()) {
+  <app-loading-state [title]="labels.organizerReports.loadingTitle" [rows]="5" />
+} @else if (notFound()) {
+  <app-empty-state
+    actionLink="/organizer/events"
+    [actionLabel]="labels.organizerReports.backToEvents"
+    [title]="labels.organizerReports.notFoundTitle"
+    [description]="labels.organizerReports.notFoundDescription"
+  />
+} @else if (eventDetail(); as detail) {
+  <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" routerLink="/organizer/events">
+    {{ labels.organizerReports.backToEvents }}
+  </a>
+
+  <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
+    <div class="bg-[radial-gradient(circle_at_top_left,rgba(124,58,237,0.22),transparent_32%),linear-gradient(135deg,rgba(20,184,166,0.16),rgba(14,165,233,0.08))] p-6 sm:p-8">
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.organizerReports.eyebrow }}</p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.organizerReports.title }}</h1>
+      <p class="mt-4 max-w-2xl text-slate-300">{{ detail.event.title }} · {{ labels.organizerReports.description }}</p>
+    </div>
+  </section>
+
+  @if (hasReportData()) {
+    <section class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      @for (metric of metricCards(); track metric.title) {
+        <app-metric-card [title]="metric.title" [value]="metric.value" [tone]="metric.tone" />
+      }
+    </section>
+
+    <section class="mt-8 grid gap-6 xl:grid-cols-2">
+      <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+        <h2 class="text-2xl font-black text-white">{{ labels.organizerReports.sections.revenueByTicket }}</h2>
+        <div class="mt-5 grid gap-4">
+          @for (bar of revenueByTicketType(); track bar.label) {
+            <div>
+              <div class="flex items-center justify-between gap-4 text-sm">
+                <p class="font-bold text-white">{{ bar.label }}</p>
+                <p class="text-slate-300">{{ bar.displayValue }}</p>
+              </div>
+              <div class="mt-2 h-3 overflow-hidden rounded-full bg-white/[0.06]">
+                <div class="h-full rounded-full bg-primary" [style.width.%]="bar.percentage"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+        <h2 class="text-2xl font-black text-white">{{ labels.organizerReports.sections.ticketsByType }}</h2>
+        <div class="mt-5 grid gap-4">
+          @for (bar of ticketsByType(); track bar.label) {
+            <div>
+              <div class="flex items-center justify-between gap-4 text-sm">
+                <p class="font-bold text-white">{{ bar.label }}</p>
+                <p class="text-slate-300">{{ bar.displayValue }}</p>
+              </div>
+              <div class="mt-2 h-3 overflow-hidden rounded-full bg-white/[0.06]">
+                <div class="h-full rounded-full bg-success" [style.width.%]="bar.percentage"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+        <h2 class="text-2xl font-black text-white">{{ labels.organizerReports.sections.checkInProgress }}</h2>
+        <div class="mt-5 grid gap-4">
+          @for (bar of checkInBars(); track bar.label) {
+            <div>
+              <div class="flex items-center justify-between gap-4 text-sm">
+                <p class="font-bold text-white">{{ bar.label }}</p>
+                <p class="text-slate-300">{{ bar.displayValue }}</p>
+              </div>
+              <div class="mt-2 h-3 overflow-hidden rounded-full bg-white/[0.06]">
+                <div class="h-full rounded-full bg-warning" [style.width.%]="bar.percentage"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+        <h2 class="text-2xl font-black text-white">{{ labels.organizerReports.sections.paymentBreakdown }}</h2>
+        <div class="mt-5 grid gap-4">
+          @for (bar of paymentBars(); track bar.label) {
+            <div>
+              <div class="flex items-center justify-between gap-4 text-sm">
+                <p class="font-bold text-white">{{ bar.label }}</p>
+                <p class="text-slate-300">{{ bar.displayValue }}</p>
+              </div>
+              <div class="mt-2 h-3 overflow-hidden rounded-full bg-white/[0.06]">
+                <div class="h-full rounded-full bg-secondary" [style.width.%]="bar.percentage"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+    </section>
+  } @else {
+    <div class="mt-8">
+      <app-empty-state [title]="labels.organizerReports.emptyTitle" [description]="labels.organizerReports.emptyDescription" />
+    </div>
+  }
+}

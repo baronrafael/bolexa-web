@@ -482,6 +482,37 @@ export const appLabels = {
     notFoundDescription: 'No encontramos este evento para el organizador demo.',
     loadingTitle: 'Cargando asistentes',
   },
+  organizerReports: {
+    eyebrow: 'Reportes',
+    title: 'Pulso comercial del evento',
+    description: 'Revenue, tickets vendidos, avance de entrada y metodos de pago derivados del mock store.',
+    backToEvents: 'Volver a eventos',
+    sections: {
+      revenueByTicket: 'Revenue por tipo de ticket',
+      ticketsByType: 'Tickets vendidos por tipo',
+      checkInProgress: 'Progreso de entrada',
+      paymentBreakdown: 'Metodos de pago',
+    },
+    metrics: {
+      revenue: 'Revenue total',
+      ticketsSold: 'Tickets vendidos',
+      checkedIn: 'Check-ins',
+      paidOrders: 'Ordenes pagadas',
+    },
+    labels: {
+      sold: 'vendidos',
+      available: 'disponibles',
+      checkedIn: 'ingresados',
+      pending: 'pendientes',
+      orders: 'ordenes',
+      noPaymentMethod: 'Sin metodo',
+    },
+    emptyTitle: 'Sin datos para reportar',
+    emptyDescription: 'Los reportes apareceran cuando existan tickets u ordenes para este evento.',
+    notFoundTitle: 'Evento no encontrado',
+    notFoundDescription: 'No encontramos este evento para el organizador demo.',
+    loadingTitle: 'Cargando reportes',
+  },
   routePlaceholder: {
     defaults: {
       eyebrow: 'Bolexa MVP',

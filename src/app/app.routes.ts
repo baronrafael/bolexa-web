@@ -94,7 +94,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/:eventId/reports',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/organizer/reports/reports').then((m) => m.Reports),
         data: appLabels.routes.organizerReports,
       },
     ],
