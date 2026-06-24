@@ -64,6 +64,15 @@
 
       <app-scan-result-panel [result]="currentResult()" />
 
+      @if (canCheckIn()) {
+        <article class="rounded-[1.5rem] border border-success/30 bg-success/10 p-5 shadow-2xl">
+          <p class="text-sm font-semibold text-success">{{ labels.scannerPage.checkInHint }}</p>
+          <button class="btn btn-success mt-4 w-full" type="button" [disabled]="checkingIn()" (click)="checkIn()">
+            {{ checkingIn() ? labels.scannerPage.checkingIn : labels.scannerPage.checkIn }}
+          </button>
+        </article>
+      }
+
       <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
         <h2 class="text-2xl font-black text-white">{{ labels.scannerPage.recentTitle }}</h2>
         @if (recentResults().length > 0) {

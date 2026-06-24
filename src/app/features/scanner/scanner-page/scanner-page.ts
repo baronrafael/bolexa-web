@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { ScanResult, ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
@@ -14,6 +15,7 @@ import { EmptyState, LoadingState, ScanResultPanel, StatusBadge } from '../../..
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScannerPage {
+  private readonly auth = inject(MockAuth);
   private readonly route = inject(ActivatedRoute);
   private readonly scannerRepository = inject(ScannerRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
@@ -22,6 +24,7 @@ export class ScannerPage {
   protected readonly labels = appLabels;
   protected readonly loading = signal(true);
   protected readonly validating = signal(false);
+  protected readonly checkingIn = signal(false);
   protected readonly submitted = signal(false);
   protected readonly eventSummary = signal<ScannerEventSummary | null>(null);
   protected readonly qrCode = signal('');
@@ -29,6 +32,7 @@ export class ScannerPage {
   protected readonly recentResults = signal<ScanResult[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly isValidInput = computed(() => this.qrCode().trim().length > 0);
+  protected readonly canCheckIn = computed(() => this.currentResult()?.status === 'accepted' && Boolean(this.currentResult()?.ticket));
 
   constructor() {
     effect(() => {
@@ -58,10 +62,32 @@ export class ScannerPage {
     try {
       const result = await this.scannerRepository.validateTicket(eventId, this.qrCode());
 
-      this.currentResult.set(result);
-      this.recentResults.update((results) => [result, ...results].slice(0, 5));
+      this.recordResult(result);
     } finally {
       this.validating.set(false);
+    }
+  }
+
+  protected async checkIn(): Promise<void> {
+    if (!this.canCheckIn() || this.checkingIn()) {
+      return;
+    }
+
+    const eventId = this.eventId();
+
+    if (!eventId) {
+      return;
+    }
+
+    this.checkingIn.set(true);
+
+    try {
+      const result = await this.scannerRepository.checkIn(eventId, this.currentResult()?.ticket?.qrCode ?? this.qrCode(), this.auth.currentUser().id);
+
+      this.recordResult(result);
+      await this.loadEvent(eventId, false);
+    } finally {
+      this.checkingIn.set(false);
     }
   }
 
@@ -80,10 +106,17 @@ export class ScannerPage {
     }).format(new Date(value));
   }
 
-  private async loadEvent(eventId: string): Promise<void> {
+  private recordResult(result: ScanResult): void {
+    this.currentResult.set(result);
+    this.recentResults.update((results) => [result, ...results].slice(0, 5));
+  }
+
+  private async loadEvent(eventId: string, showLoading = true): Promise<void> {
     const requestId = ++this.loadRequestId;
 
-    this.loading.set(true);
+    if (showLoading) {
+      this.loading.set(true);
+    }
 
     try {
       const events = await this.scannerRepository.listEvents();
@@ -93,7 +126,7 @@ export class ScannerPage {
         this.eventSummary.set(eventSummary);
       }
     } finally {
-      if (requestId === this.loadRequestId) {
+      if (requestId === this.loadRequestId && showLoading) {
         this.loading.set(false);
       }
     }
