@@ -106,7 +106,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'events' },
       {
         path: 'events',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/scanner/events/events').then((m) => m.Events),
         data: appLabels.routes.scannerEvents,
       },
       {
