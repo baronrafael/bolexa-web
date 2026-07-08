@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ScanResult, ScannerEventSummary } from '../models';
+import { Attendee, ScanResult, ScannerEventSummary } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, mockDelay, nowIso, createMockId } from '../mock/mock-helpers';
 
@@ -41,6 +41,26 @@ export class ScannerRepository {
     await mockDelay(120);
 
     return this.validateTicketSync(eventId, qrCode);
+  }
+
+  async listAttendees(eventId: string): Promise<Attendee[]> {
+    await mockDelay();
+
+    const state = this.database.snapshot();
+
+    return state.tickets
+      .filter((ticket) => ticket.eventId === eventId)
+      .map((ticket) => {
+        const ticketType = state.ticketTypes.find((candidate) => candidate.id === ticket.ticketTypeId);
+        const order = state.orders.find((candidate) => candidate.id === ticket.orderId);
+        const user = state.users.find((candidate) => candidate.id === ticket.userId);
+
+        if (!ticketType || !order || !user) {
+          throw new Error(`Mock scanner attendee ${ticket.id} has invalid relationships.`);
+        }
+
+        return clone({ ticket, ticketType, order, user });
+      });
   }
 
   async checkIn(eventId: string, qrCode: string, scannerUserId: string): Promise<ScanResult> {
