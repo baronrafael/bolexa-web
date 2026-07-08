@@ -582,6 +582,26 @@ export const appLabels = {
     notFoundDescription: 'No encontramos este evento publicado para scanner.',
     loadingTitle: 'Cargando asistentes',
   },
+  scannerStats: {
+    eyebrow: 'Stats de entrada',
+    title: 'Operacion en vivo',
+    description: 'Resumen rapido para el equipo de acceso: emitidos, ingresados, pendientes y ultimos check-ins.',
+    backToScanner: 'Volver al scanner',
+    metrics: {
+      total: 'Tickets emitidos',
+      checkedIn: 'Ingresados',
+      pending: 'Pendientes',
+      progress: 'Progreso',
+    },
+    recentTitle: 'Ultimos check-ins',
+    ticketType: 'Tipo de ticket',
+    checkedInAt: 'Check-in',
+    noRecentTitle: 'Sin check-ins recientes',
+    noRecentDescription: 'Cuando el scanner marque entradas, apareceran aqui.',
+    notFoundTitle: 'Evento no encontrado',
+    notFoundDescription: 'No encontramos este evento publicado para scanner.',
+    loadingTitle: 'Cargando stats',
+  },
   routePlaceholder: {
     defaults: {
       eyebrow: 'Bolexa MVP',

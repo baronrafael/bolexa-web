@@ -1,0 +1,72 @@
+@if (loading()) {
+  <app-loading-state [title]="labels.scannerStats.loadingTitle" [rows]="5" />
+} @else if (eventSummary(); as summary) {
+  <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" [routerLink]="['/scan/events', summary.event.id, 'scanner']">
+    {{ labels.scannerStats.backToScanner }}
+  </a>
+
+  <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
+    <div class="bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.24),transparent_32%),linear-gradient(135deg,rgba(14,165,233,0.16),rgba(124,58,237,0.08))] p-6 sm:p-8">
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.scannerStats.eyebrow }}</p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.scannerStats.title }}</h1>
+      <p class="mt-4 max-w-2xl text-slate-300">{{ summary.event.title }} · {{ labels.scannerStats.description }}</p>
+    </div>
+  </section>
+
+  <section class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    @for (metric of metricCards(); track metric.title) {
+      <app-metric-card [title]="metric.title" [value]="metric.value" [tone]="metric.tone" />
+    }
+  </section>
+
+  <section class="mt-8 rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+    <div class="flex items-center justify-between gap-4 text-sm">
+      <h2 class="text-2xl font-black text-white">{{ labels.scannerStats.metrics.progress }}</h2>
+      <p class="font-bold text-success">{{ progress() }}%</p>
+    </div>
+    <div class="mt-4 h-4 overflow-hidden rounded-full bg-white/[0.06]">
+      <div class="h-full rounded-full bg-success" [style.width.%]="progress()"></div>
+    </div>
+  </section>
+
+  <section class="mt-8 rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+    <h2 class="text-2xl font-black text-white">{{ labels.scannerStats.recentTitle }}</h2>
+
+    @if (recentCheckIns().length > 0) {
+      <div class="mt-5 grid gap-3">
+        @for (attendee of recentCheckIns(); track attendee.ticket.id) {
+          <article class="rounded-[1.25rem] border border-white/10 bg-white/[0.04] p-4">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h3 class="font-black text-white">{{ attendee.ticket.holderName }}</h3>
+                <p class="break-all text-sm text-slate-400">{{ attendee.ticket.holderEmail }}</p>
+              </div>
+              <app-status-badge [status]="attendee.ticket.status" />
+            </div>
+            <div class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+              <div>
+                <p class="text-slate-500">{{ labels.scannerStats.ticketType }}</p>
+                <p class="font-bold text-white">{{ attendee.ticketType.name }}</p>
+              </div>
+              <div>
+                <p class="text-slate-500">{{ labels.scannerStats.checkedInAt }}</p>
+                <p class="font-bold text-white">{{ formatDate(attendee.ticket.checkedInAt) }}</p>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="mt-5">
+        <app-empty-state [title]="labels.scannerStats.noRecentTitle" [description]="labels.scannerStats.noRecentDescription" />
+      </div>
+    }
+  </section>
+} @else {
+  <app-empty-state
+    actionLink="/scan/events"
+    [actionLabel]="labels.scannerEvents.title"
+    [title]="labels.scannerStats.notFoundTitle"
+    [description]="labels.scannerStats.notFoundDescription"
+  />
+}

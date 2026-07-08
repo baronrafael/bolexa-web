@@ -126,7 +126,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/:eventId/stats',
-        loadComponent: () => import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        loadComponent: () => import('./features/scanner/stats/stats').then((m) => m.Stats),
         data: appLabels.routes.scannerStats,
       },
     ],
