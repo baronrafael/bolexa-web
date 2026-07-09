@@ -58,6 +58,8 @@ export class CheckoutPage {
   protected readonly selectedCount = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity, 0));
   protected readonly subtotal = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity * item.unitPrice, 0));
   protected readonly fees = computed(() => Number((this.subtotal() * 0.08).toFixed(2)));
+  protected readonly total = computed(() => this.subtotal() + this.fees());
+  protected readonly selectedCurrency = computed(() => this.selectedItems()[0]?.currency ?? 'USD');
   protected readonly selectedPaymentDescription = computed(() => this.labels.checkout.methodDescriptions[this.paymentMethod()]);
   protected readonly eventDate = computed(() => {
     const eventDetail = this.eventDetail();
@@ -109,6 +111,13 @@ export class CheckoutPage {
 
   protected paymentOptionClass(method: PaymentOption): string {
     return this.paymentMethod() === method ? this.selectedPaymentClass : this.unselectedPaymentClass;
+  }
+
+  protected formatMoney(value: number, currency: string): string {
+    return new Intl.NumberFormat('es-VE', {
+      currency,
+      style: 'currency',
+    }).format(value);
   }
 
   protected updatePaymentReference(event: Event): void {

@@ -1,4 +1,4 @@
-<main class="mx-auto w-full max-w-7xl px-5 pb-28 pt-6 sm:px-8 lg:pb-16 lg:pt-10">
+<main class="mx-auto w-full max-w-7xl px-5 pb-44 pt-6 sm:px-8 lg:pb-16 lg:pt-10">
   @if (loading()) {
     <app-loading-state [title]="labels.checkout.loadingTitle" [rows]="5" />
   } @else if (eventDetail(); as detail) {
@@ -122,6 +122,27 @@
           </button>
         </div>
       </aside>
+    </section>
+
+    <section class="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-base-300/95 p-4 shadow-2xl backdrop-blur lg:hidden">
+      <div class="mx-auto grid max-w-7xl gap-3">
+        <div class="flex items-center justify-between gap-4 text-sm">
+          <span class="text-slate-400">{{ labels.shared.orderSummary.total }}</span>
+          <span class="text-xl font-black text-white">{{ formatMoney(total(), selectedCurrency()) }}</span>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <button class="btn btn-primary" type="button" [disabled]="selectedCount() === 0 || processing()" (click)="submit('approved')">
+            @if (processing()) {
+              {{ labels.checkout.processing }}
+            } @else {
+              {{ labels.checkout.approvedCta }}
+            }
+          </button>
+          <button class="btn btn-outline border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10" type="button" [disabled]="selectedCount() === 0 || processing()" (click)="submit('manual_review')">
+            {{ labels.checkout.manualReviewCta }}
+          </button>
+        </div>
+      </div>
     </section>
   } @else {
     <app-empty-state
