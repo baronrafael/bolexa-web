@@ -5,6 +5,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail, Order, OrderItem, PaymentMethod, Ticket } from '../../../data-access/models';
 import { CheckoutRepository } from '../../../data-access/repositories/checkout-repository';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -19,13 +20,16 @@ export class Confirmation {
   private readonly checkoutRepository = inject(CheckoutRepository);
   private readonly eventsRepository = inject(EventsRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly order = signal<Order | null>(null);
   protected readonly orderItems = signal<OrderItem[]>([]);
   protected readonly tickets = signal<Ticket[]>([]);
   protected readonly eventDetail = signal<EventDetail | null>(null);
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
+  protected readonly errorMessage = this.pageState.errorMessage;
+  protected readonly notFound = this.pageState.notFound;
   protected readonly isPaid = computed(() => this.order()?.status === 'paid');
   protected readonly eyebrow = computed(() => this.isPaid() ? this.labels.confirmation.paidEyebrow : this.labels.confirmation.manualReviewEyebrow);
   protected readonly title = computed(() => this.isPaid() ? this.labels.confirmation.paidTitle : this.labels.confirmation.manualReviewTitle);
@@ -57,17 +61,31 @@ export class Confirmation {
     }).format(value);
   }
 
+  protected retryLoad(): void {
+    const orderId = this.routeParams()?.get('orderId');
+
+    if (orderId) {
+      void this.loadConfirmation(orderId);
+    }
+  }
+
   private async loadConfirmation(orderId: string): Promise<void> {
-    this.loading.set(true);
+    const requestId = this.pageState.start();
 
     try {
       const order = await this.checkoutRepository.getOrder(orderId);
+
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
+      }
+
       this.order.set(order);
 
       if (!order) {
         this.orderItems.set([]);
         this.tickets.set([]);
         this.eventDetail.set(null);
+        this.pageState.setNotFound(requestId);
         return;
       }
 
@@ -77,11 +95,23 @@ export class Confirmation {
         this.eventsRepository.getEventById(order.eventId),
       ]);
 
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
+      }
+
       this.orderItems.set(items);
       this.tickets.set(tickets);
       this.eventDetail.set(eventDetail);
+    } catch {
+      if (this.pageState.isCurrent(requestId)) {
+        this.order.set(null);
+        this.orderItems.set([]);
+        this.tickets.set([]);
+        this.eventDetail.set(null);
+        this.pageState.setError(requestId, this.labels.confirmation.errorDescription);
+      }
     } finally {
-      this.loading.set(false);
+      this.pageState.finish(requestId);
     }
   }
 }

@@ -1,6 +1,17 @@
 <main class="mx-auto w-full max-w-7xl px-5 pb-28 pt-6 sm:px-8 lg:pb-16 lg:pt-10">
   @if (loading()) {
     <app-loading-state [title]="labels.eventDetail.loadingTitle" [rows]="5" />
+  } @else if (errorMessage(); as message) {
+    <app-empty-state
+      actionLink="/events"
+      [actionLabel]="labels.eventDetail.backToEvents"
+      [title]="labels.eventDetail.errorTitle"
+      [description]="message"
+    />
+
+    <div class="mt-5 text-center">
+      <button class="btn btn-error" type="button" (click)="retryLoad()">{{ labels.eventDetail.retry }}</button>
+    </div>
   } @else if (eventDetail(); as detail) {
     <a class="btn btn-ghost btn-sm mb-6" routerLink="/events">{{ labels.eventDetail.backToEvents }}</a>
 
@@ -95,7 +106,7 @@
         </a>
       </aside>
     </section>
-  } @else {
+  } @else if (notFound()) {
     <app-empty-state
       actionLink="/events"
       [actionLabel]="labels.eventDetail.backToEvents"

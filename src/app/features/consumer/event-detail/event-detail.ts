@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventCategory, EventDetail as EventDetailModel } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, OrderSummary, OrderSummaryItem, StatusBadge, TicketTypeSelector } from '../../../shared/ui';
 
 @Component({
@@ -17,10 +18,13 @@ export class EventDetail {
   private readonly route = inject(ActivatedRoute);
   private readonly eventsRepository = inject(EventsRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly eventDetail = signal<EventDetailModel | null>(null);
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
+  protected readonly errorMessage = this.pageState.errorMessage;
+  protected readonly notFound = this.pageState.notFound;
   protected readonly quantities = signal<Record<string, number>>({});
   protected readonly selectedItems = computed<OrderSummaryItem[]>(() => {
     const eventDetail = this.eventDetail();
@@ -101,14 +105,34 @@ export class EventDetail {
     return this.quantities()[ticketTypeId] ?? 0;
   }
 
+  protected retryLoad(): void {
+    const slug = this.routeParams()?.get('eventSlug');
+
+    if (slug) {
+      void this.loadEvent(slug);
+    }
+  }
+
   private async loadEvent(slug: string): Promise<void> {
-    this.loading.set(true);
+    const requestId = this.pageState.start();
     this.quantities.set({});
 
     try {
-      this.eventDetail.set(await this.eventsRepository.getEventBySlug(slug));
+      const eventDetail = await this.eventsRepository.getEventBySlug(slug);
+
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
+      }
+
+      this.eventDetail.set(eventDetail);
+      this.pageState.setNotFound(requestId, !eventDetail);
+    } catch {
+      if (this.pageState.isCurrent(requestId)) {
+        this.eventDetail.set(null);
+        this.pageState.setError(requestId, this.labels.eventDetail.errorDescription);
+      }
     } finally {
-      this.loading.set(false);
+      this.pageState.finish(requestId);
     }
   }
 }

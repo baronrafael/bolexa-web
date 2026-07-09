@@ -194,6 +194,9 @@ export const appLabels = {
     unavailable: 'No hay tickets disponibles para este evento.',
     notFoundTitle: 'Evento no encontrado',
     notFoundDescription: 'El evento que buscas no existe o no esta publicado.',
+    errorTitle: 'No pudimos cargar el evento',
+    errorDescription: 'Intenta nuevamente antes de continuar la compra.',
+    retry: 'Reintentar carga',
     loadingTitle: 'Cargando evento',
   },
   checkout: {
@@ -269,6 +272,9 @@ export const appLabels = {
     keepBrowsing: 'Explorar eventos',
     notFoundTitle: 'Orden no encontrada',
     notFoundDescription: 'No encontramos la orden solicitada en el mock store.',
+    errorTitle: 'No pudimos cargar la confirmacion',
+    errorDescription: 'La orden pudo haberse creado, pero no pudimos cargar el resumen. Intenta nuevamente.',
+    retry: 'Reintentar carga',
     loadingTitle: 'Cargando confirmacion',
   },
   myTickets: {
@@ -309,6 +315,9 @@ export const appLabels = {
     scannerDescription: 'Copia o ingresa este codigo en el flujo de scanner para simular el check-in.',
     notFoundTitle: 'Ticket no encontrado',
     notFoundDescription: 'No encontramos este ticket para el comprador demo actual.',
+    errorTitle: 'No pudimos cargar el ticket',
+    errorDescription: 'Intenta nuevamente antes de presentar el codigo en entrada.',
+    retry: 'Reintentar carga',
     loadingTitle: 'Cargando ticket',
   },
   organizerDashboard: {

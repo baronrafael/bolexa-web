@@ -6,6 +6,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { EventDetail, Ticket, TicketType } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { TicketsRepository } from '../../../data-access/repositories/tickets-repository';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, QrTicketCard, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -21,10 +22,12 @@ export class TicketDetail {
   private readonly ticketsRepository = inject(TicketsRepository);
   private readonly eventsRepository = inject(EventsRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
+  protected readonly errorMessage = this.pageState.errorMessage;
+  protected readonly notFound = this.pageState.notFound;
   protected readonly ticket = signal<Ticket | null>(null);
   protected readonly eventDetail = signal<EventDetail | null>(null);
   protected readonly ticketType = computed<TicketType | undefined>(() => {
@@ -57,15 +60,21 @@ export class TicketDetail {
     }).format(new Date(value));
   }
 
-  private async loadTicket(ticketId: string, userId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
+  protected retryLoad(): void {
+    const ticketId = this.routeParams()?.get('ticketId');
 
-    this.loading.set(true);
+    if (ticketId) {
+      void this.loadTicket(ticketId, this.auth.currentUser().id);
+    }
+  }
+
+  private async loadTicket(ticketId: string, userId: string): Promise<void> {
+    const requestId = this.pageState.start();
 
     try {
       const ticket = await this.ticketsRepository.getTicketById(ticketId, userId);
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
@@ -73,18 +82,23 @@ export class TicketDetail {
 
       if (!ticket) {
         this.eventDetail.set(null);
+        this.pageState.setNotFound(requestId);
         return;
       }
 
       const eventDetail = await this.eventsRepository.getEventById(ticket.eventId);
 
-      if (requestId === this.loadRequestId) {
+      if (this.pageState.isCurrent(requestId)) {
         this.eventDetail.set(eventDetail);
       }
-    } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
+    } catch {
+      if (this.pageState.isCurrent(requestId)) {
+        this.ticket.set(null);
+        this.eventDetail.set(null);
+        this.pageState.setError(requestId, this.labels.ticketDetail.errorDescription);
       }
+    } finally {
+      this.pageState.finish(requestId);
     }
   }
 }
