@@ -15,6 +15,7 @@ import { EventDetail, PaymentMethod } from '../../../data-access/models';
 import { CheckoutRepository } from '../../../data-access/repositories/checkout-repository';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import {
   EmptyState,
   LoadingState,
@@ -41,10 +42,11 @@ export class CheckoutPage {
   private readonly checkoutRepository = inject(CheckoutRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
   private readonly routeQueryParams = toSignal(this.route.queryParamMap);
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly eventDetail = signal<EventDetail | null>(null);
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly processing = signal(false);
   protected readonly submitted = signal(false);
   protected readonly error = signal<string | null>(null);
@@ -236,12 +238,18 @@ export class CheckoutPage {
   }
 
   private async loadCheckout(eventId: string, queryParams: ParamMap): Promise<void> {
-    this.loading.set(true);
+    const requestId = this.pageState.start();
+
     this.error.set(null);
     this.quantities.set({});
 
     try {
       const eventDetail = await this.eventsRepository.getEventById(eventId);
+
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
+      }
+
       this.eventDetail.set(eventDetail);
 
       if (!eventDetail) {
@@ -281,7 +289,7 @@ export class CheckoutPage {
         this.quantities.set({ [firstAvailableTicketType.id]: 1 });
       }
     } finally {
-      this.loading.set(false);
+      this.pageState.finish(requestId);
     }
   }
 }

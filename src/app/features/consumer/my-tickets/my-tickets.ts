@@ -14,6 +14,7 @@ import {
   TicketListItemReadModel,
 } from '../../../data-access/repositories/tickets-repository';
 import { formatDateEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -26,10 +27,10 @@ import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 export class MyTickets {
   private readonly auth = inject(MockAuth);
   private readonly ticketsRepository = inject(TicketsRepository);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly items = signal<TicketListItemReadModel[]>([]);
   protected readonly upcomingTickets = computed(() =>
     this.items().filter((item) => this.isUpcomingValid(item)),
@@ -68,20 +69,18 @@ export class MyTickets {
   }
 
   private async loadTickets(userId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
+    const requestId = this.pageState.start();
 
     try {
       const items = await this.ticketsRepository.listMyTicketItems(userId);
 
-      if (requestId === this.loadRequestId) {
-        this.items.set(items);
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
       }
+
+      this.items.set(items);
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 

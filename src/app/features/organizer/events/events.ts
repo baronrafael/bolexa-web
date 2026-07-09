@@ -12,6 +12,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { Currency, EventDetail } from '../../../data-access/models';
 import { OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -24,10 +25,10 @@ import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 export class Events {
   private readonly auth = inject(MockAuth);
   private readonly organizerRepository = inject(OrganizerRepository);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly events = signal<EventDetail[]>([]);
   protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
 
@@ -67,22 +68,20 @@ export class Events {
   }
 
   private async loadEvents(organizerId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
+    const requestId = this.pageState.start();
 
     try {
       const events = await this.organizerRepository.listEvents(organizerId);
 
-      if (requestId === this.loadRequestId) {
-        this.events.set(
-          events.sort((first, second) => first.event.startsAt.localeCompare(second.event.startsAt)),
-        );
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
       }
+
+      this.events.set(
+        events.sort((first, second) => first.event.startsAt.localeCompare(second.event.startsAt)),
+      );
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 }

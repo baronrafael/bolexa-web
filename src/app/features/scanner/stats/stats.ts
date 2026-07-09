@@ -12,6 +12,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { Attendee, ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
 import { formatDateEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, MetricCard, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -25,11 +26,11 @@ export class Stats {
   private readonly route = inject(ActivatedRoute);
   private readonly scannerRepository = inject(ScannerRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
-  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly loading = this.pageState.loading;
+  protected readonly errorMessage = this.pageState.errorMessage;
   protected readonly eventSummary = signal<ScannerEventSummary | null>(null);
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
@@ -107,10 +108,7 @@ export class Stats {
   }
 
   private async loadStats(eventId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
-    this.errorMessage.set(null);
+    const requestId = this.pageState.start();
 
     try {
       const [eventSummary, attendees] = await Promise.all([
@@ -118,22 +116,20 @@ export class Stats {
         this.scannerRepository.listAttendees(eventId),
       ]);
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
       this.eventSummary.set(eventSummary);
       this.attendees.set(attendees);
     } catch {
-      if (requestId === this.loadRequestId) {
+      if (this.pageState.isCurrent(requestId)) {
         this.eventSummary.set(null);
         this.attendees.set([]);
-        this.errorMessage.set(this.labels.scannerStats.errorDescription);
+        this.pageState.setError(requestId, this.labels.scannerStats.errorDescription);
       }
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 }

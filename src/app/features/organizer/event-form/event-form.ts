@@ -15,6 +15,7 @@ import {
   OrganizerRepository,
   SaveOrganizerEventInput,
 } from '../../../data-access/repositories/organizer-repository';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState } from '../../../shared/ui';
 
 interface EventFormState {
@@ -40,7 +41,7 @@ export class EventForm {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly routeParams = toSignal(this.route.paramMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly categories: EventCategory[] = [
@@ -58,10 +59,10 @@ export class EventForm {
     'published',
   ];
   protected readonly venues = signal<Venue[]>([]);
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly saving = signal(false);
   protected readonly submitted = signal(false);
-  protected readonly notFound = signal(false);
+  protected readonly notFound = this.pageState.notFound;
   protected readonly form = signal<EventFormState>(this.emptyForm());
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly isEdit = computed(() => Boolean(this.eventId()));
@@ -135,16 +136,13 @@ export class EventForm {
   }
 
   private async loadForm(organizerId: string, eventId: string | null): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
-    this.notFound.set(false);
+    const requestId = this.pageState.start();
     this.submitted.set(false);
 
     try {
       const venues = await this.organizerRepository.listVenues();
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
@@ -157,12 +155,12 @@ export class EventForm {
 
       const eventDetail = await this.organizerRepository.getEvent(organizerId, eventId);
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
       if (!eventDetail) {
-        this.notFound.set(true);
+        this.pageState.setNotFound(requestId);
         this.form.set({ ...this.emptyForm(), venueId: venues[0]?.id ?? '' });
         return;
       }
@@ -177,9 +175,7 @@ export class EventForm {
         status: eventDetail.event.status === 'published' ? 'published' : 'draft',
       });
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 

@@ -12,6 +12,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail, Order, OrganizerDashboardSummary } from '../../../data-access/models';
 import { OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, MetricCard, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -24,10 +25,10 @@ import { EmptyState, LoadingState, MetricCard, StatusBadge } from '../../../shar
 export class Dashboard {
   private readonly auth = inject(MockAuth);
   private readonly organizerRepository = inject(OrganizerRepository);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly summary = signal<OrganizerDashboardSummary | null>(null);
   protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly metricCards = computed(() => {
@@ -105,20 +106,18 @@ export class Dashboard {
   }
 
   private async loadDashboard(organizerId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
+    const requestId = this.pageState.start();
 
     try {
       const summary = await this.organizerRepository.getDashboard(organizerId);
 
-      if (requestId === this.loadRequestId) {
-        this.summary.set(summary);
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
       }
+
+      this.summary.set(summary);
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 }

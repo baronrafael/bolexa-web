@@ -16,6 +16,7 @@ import {
   OrganizerRepository,
 } from '../../../data-access/repositories/organizer-repository';
 import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, MetricCard } from '../../../shared/ui';
 
 interface ReportBar {
@@ -37,11 +38,11 @@ export class Reports {
   private readonly organizerRepository = inject(OrganizerRepository);
   private readonly route = inject(ActivatedRoute);
   private readonly routeParams = toSignal(this.route.paramMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
-  protected readonly notFound = signal(false);
+  protected readonly loading = this.pageState.loading;
+  protected readonly notFound = this.pageState.notFound;
   protected readonly eventDetail = signal<EventDetail | null>(null);
   protected readonly orders = signal<OrganizerOrder[]>([]);
   protected readonly attendees = signal<Attendee[]>([]);
@@ -161,10 +162,7 @@ export class Reports {
   }
 
   private async loadReports(organizerId: string, eventId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
-    this.notFound.set(false);
+    const requestId = this.pageState.start();
 
     try {
       const [eventDetail, orders, attendees] = await Promise.all([
@@ -173,18 +171,16 @@ export class Reports {
         this.organizerRepository.listEventAttendees(organizerId, eventId),
       ]);
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
-      this.notFound.set(!eventDetail);
+      this.pageState.setNotFound(requestId, !eventDetail);
       this.eventDetail.set(eventDetail);
       this.orders.set(orders);
       this.attendees.set(attendees);
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 

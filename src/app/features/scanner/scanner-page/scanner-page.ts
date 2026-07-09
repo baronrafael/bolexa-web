@@ -13,6 +13,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { ScanResult, ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
 import { formatDateEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, ScanResultPanel, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -28,13 +29,13 @@ export class ScannerPage {
   private readonly scannerRepository = inject(ScannerRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
   private readonly routeQueryParams = toSignal(this.route.queryParamMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly validating = signal(false);
   protected readonly checkingIn = signal(false);
-  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly errorMessage = this.pageState.errorMessage;
   protected readonly operationError = signal<string | null>(null);
   protected readonly submitted = signal(false);
   protected readonly eventSummary = signal<ScannerEventSummary | null>(null);
@@ -149,29 +150,23 @@ export class ScannerPage {
   }
 
   private async loadEvent(eventId: string, showLoading = true): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    if (showLoading) {
-      this.loading.set(true);
-    }
-
-    this.errorMessage.set(null);
+    const requestId = this.pageState.start(showLoading);
 
     try {
       const eventSummary = await this.scannerRepository.getEventSummary(eventId);
 
-      if (requestId === this.loadRequestId) {
-        this.eventSummary.set(eventSummary);
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
       }
+
+      this.eventSummary.set(eventSummary);
     } catch {
-      if (requestId === this.loadRequestId) {
+      if (this.pageState.isCurrent(requestId)) {
         this.eventSummary.set(null);
-        this.errorMessage.set(this.labels.scannerPage.errorDescription);
+        this.pageState.setError(requestId, this.labels.scannerPage.errorDescription);
       }
     } finally {
-      if (requestId === this.loadRequestId && showLoading) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId, showLoading);
     }
   }
 }

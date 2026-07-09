@@ -4,6 +4,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
 import { formatDateEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, MetricCard, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -15,10 +16,11 @@ import { EmptyState, LoadingState, MetricCard, StatusBadge } from '../../../shar
 })
 export class Events {
   private readonly scannerRepository = inject(ScannerRepository);
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
-  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly loading = this.pageState.loading;
+  protected readonly errorMessage = this.pageState.errorMessage;
   protected readonly events = signal<ScannerEventSummary[]>([]);
 
   constructor() {
@@ -47,20 +49,25 @@ export class Events {
   }
 
   private async loadEvents(): Promise<void> {
-    this.loading.set(true);
-    this.errorMessage.set(null);
+    const requestId = this.pageState.start();
 
     try {
       const events = await this.scannerRepository.listEvents();
+
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
+      }
 
       this.events.set(
         events.sort((first, second) => first.event.startsAt.localeCompare(second.event.startsAt)),
       );
     } catch {
-      this.events.set([]);
-      this.errorMessage.set(this.labels.scannerEvents.errorDescription);
+      if (this.pageState.isCurrent(requestId)) {
+        this.events.set([]);
+        this.pageState.setError(requestId, this.labels.scannerEvents.errorDescription);
+      }
     } finally {
-      this.loading.set(false);
+      this.pageState.finish(requestId);
     }
   }
 }

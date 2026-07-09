@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, EventCard, LoadingState, MetricCard } from '../../../shared/ui';
 
 type CapabilityCardTone = (typeof appLabels.home.capabilityCards)[number]['tone'];
@@ -16,10 +17,11 @@ type CapabilityCardTone = (typeof appLabels.home.capabilityCards)[number]['tone'
 })
 export class Home {
   private readonly eventsRepository = inject(EventsRepository);
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly events = signal<EventDetail[]>([]);
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly featuredEvent = computed(() => this.events()[0]);
   protected readonly upcomingEvents = computed(() => this.events().slice(1, 7));
   protected readonly capabilityCardClasses = {
@@ -38,10 +40,18 @@ export class Home {
   }
 
   private async loadFeaturedEvents(): Promise<void> {
+    const requestId = this.pageState.start();
+
     try {
-      this.events.set(await this.eventsRepository.listEvents());
+      const events = await this.eventsRepository.listEvents();
+
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
+      }
+
+      this.events.set(events);
     } finally {
-      this.loading.set(false);
+      this.pageState.finish(requestId);
     }
   }
 }

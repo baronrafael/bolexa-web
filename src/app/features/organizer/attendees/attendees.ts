@@ -14,6 +14,7 @@ import { Attendee } from '../../../data-access/models';
 import { OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
 import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { normalizeSearch } from '../../../shared/search/normalize-search';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, MetricCard, SearchInput, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -28,11 +29,11 @@ export class Attendees {
   private readonly organizerRepository = inject(OrganizerRepository);
   private readonly route = inject(ActivatedRoute);
   private readonly routeParams = toSignal(this.route.paramMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
-  protected readonly loading = signal(true);
-  protected readonly notFound = signal(false);
+  protected readonly loading = this.pageState.loading;
+  protected readonly notFound = this.pageState.notFound;
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly eventTitle = signal('');
   protected readonly searchQuery = signal('');
@@ -138,10 +139,7 @@ export class Attendees {
   }
 
   private async loadAttendees(organizerId: string, eventId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
-    this.notFound.set(false);
+    const requestId = this.pageState.start();
 
     try {
       const [eventDetail, attendees] = await Promise.all([
@@ -149,11 +147,11 @@ export class Attendees {
         this.organizerRepository.listEventAttendees(organizerId, eventId),
       ]);
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
-      this.notFound.set(!eventDetail);
+      this.pageState.setNotFound(requestId, !eventDetail);
       this.eventTitle.set(eventDetail?.event.title ?? '');
       this.attendees.set(
         attendees.sort((first, second) =>
@@ -161,9 +159,7 @@ export class Attendees {
         ),
       );
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 }

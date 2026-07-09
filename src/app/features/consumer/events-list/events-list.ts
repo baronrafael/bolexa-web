@@ -3,6 +3,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { EventCategory, EventDetail } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { normalizeSearch } from '../../../shared/search/normalize-search';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, EventCard, LoadingState, SearchInput } from '../../../shared/ui';
 
 type CategoryFilter = EventCategory | 'all';
@@ -17,10 +18,11 @@ type DateFilter = 'all' | 'next_90_days' | 'later';
 })
 export class EventsList {
   private readonly eventsRepository = inject(EventsRepository);
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly events = signal<EventDetail[]>([]);
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly query = signal('');
   protected readonly selectedCategory = signal<CategoryFilter>('all');
   protected readonly selectedCity = signal('all');
@@ -89,10 +91,18 @@ export class EventsList {
   }
 
   private async loadEvents(): Promise<void> {
+    const requestId = this.pageState.start();
+
     try {
-      this.events.set(await this.eventsRepository.listEvents());
+      const events = await this.eventsRepository.listEvents();
+
+      if (!this.pageState.isCurrent(requestId)) {
+        return;
+      }
+
+      this.events.set(events);
     } finally {
-      this.loading.set(false);
+      this.pageState.finish(requestId);
     }
   }
 

@@ -17,6 +17,7 @@ import {
 } from '../../../data-access/repositories/organizer-repository';
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { normalizeSearch } from '../../../shared/search/normalize-search';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, SearchInput, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -31,7 +32,7 @@ export class Orders {
   private readonly organizerRepository = inject(OrganizerRepository);
   private readonly route = inject(ActivatedRoute);
   private readonly routeParams = toSignal(this.route.paramMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly orderStatuses: OrderStatus[] = [
@@ -51,8 +52,8 @@ export class Orders {
     'manual',
     'card',
   ];
-  protected readonly loading = signal(true);
-  protected readonly notFound = signal(false);
+  protected readonly loading = this.pageState.loading;
+  protected readonly notFound = this.pageState.notFound;
   protected readonly orders = signal<OrganizerOrder[]>([]);
   protected readonly eventTitle = signal('');
   protected readonly searchQuery = signal('');
@@ -127,10 +128,7 @@ export class Orders {
   }
 
   private async loadOrders(organizerId: string, eventId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
-    this.notFound.set(false);
+    const requestId = this.pageState.start();
 
     try {
       const [eventDetail, orders] = await Promise.all([
@@ -138,17 +136,15 @@ export class Orders {
         this.organizerRepository.listEventOrders(organizerId, eventId),
       ]);
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
-      this.notFound.set(!eventDetail);
+      this.pageState.setNotFound(requestId, !eventDetail);
       this.eventTitle.set(eventDetail?.event.title ?? '');
       this.orders.set(orders);
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 }

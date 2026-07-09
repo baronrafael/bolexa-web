@@ -16,6 +16,7 @@ import {
   SaveTicketTypeInput,
 } from '../../../data-access/repositories/organizer-repository';
 import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
+import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
 interface TicketTypeFormState {
@@ -39,15 +40,15 @@ export class TicketTypes {
   private readonly organizerRepository = inject(OrganizerRepository);
   private readonly route = inject(ActivatedRoute);
   private readonly routeParams = toSignal(this.route.paramMap);
-  private loadRequestId = 0;
+  private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
   protected readonly currencies: Currency[] = ['USD', 'VES'];
   protected readonly statuses: TicketTypeStatus[] = ['active', 'paused', 'sold_out'];
-  protected readonly loading = signal(true);
+  protected readonly loading = this.pageState.loading;
   protected readonly saving = signal(false);
   protected readonly submitted = signal(false);
-  protected readonly notFound = signal(false);
+  protected readonly notFound = this.pageState.notFound;
   protected readonly eventDetail = signal<EventDetail | null>(null);
   protected readonly editingTicketTypeId = signal<string | null>(null);
   protected readonly form = signal<TicketTypeFormState>(this.emptyForm());
@@ -186,25 +187,20 @@ export class TicketTypes {
   }
 
   private async loadEvent(organizerId: string, eventId: string): Promise<void> {
-    const requestId = ++this.loadRequestId;
-
-    this.loading.set(true);
-    this.notFound.set(false);
+    const requestId = this.pageState.start();
 
     try {
       const eventDetail = await this.organizerRepository.getEvent(organizerId, eventId);
 
-      if (requestId !== this.loadRequestId) {
+      if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
       this.eventDetail.set(eventDetail);
-      this.notFound.set(!eventDetail);
+      this.pageState.setNotFound(requestId, !eventDetail);
       this.cancelEdit();
     } finally {
-      if (requestId === this.loadRequestId) {
-        this.loading.set(false);
-      }
+      this.pageState.finish(requestId);
     }
   }
 
