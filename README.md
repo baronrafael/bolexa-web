@@ -44,6 +44,17 @@ To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use th
 ng test
 ```
 
+## Demo Happy Path
+
+Use the `Demo` dropdown in the app header to keep the walkthrough deterministic.
+
+1. Click `Reset demo data` to restore seeded data and switch back to the consumer user.
+2. Open `Comprar ticket` and buy one General ticket for Caracas Music Fest.
+3. Open `Mis tickets` to show the issued QR tickets.
+4. Open `Scanner con QR` or copy `BLX-CMF-GEN-1001` from the demo dropdown.
+5. Validate the QR, then mark entry to show duplicate-prevention behavior.
+6. Open `Dashboard` to review organizer metrics.
+
 ## Running end-to-end tests
 
 For end-to-end (e2e) testing, run:

@@ -20,6 +20,7 @@ export class ScannerPage {
   private readonly route = inject(ActivatedRoute);
   private readonly scannerRepository = inject(ScannerRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
+  private readonly routeQueryParams = toSignal(this.route.queryParamMap);
   private loadRequestId = 0;
 
   protected readonly labels = appLabels;
@@ -40,6 +41,11 @@ export class ScannerPage {
   constructor() {
     effect(() => {
       const eventId = this.eventId();
+      const qrCode = this.routeQueryParams()?.get('qr')?.trim();
+
+      if (qrCode && qrCode !== this.qrCode()) {
+        this.qrCode.set(qrCode);
+      }
 
       if (eventId) {
         void this.loadEvent(eventId);

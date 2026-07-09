@@ -45,6 +45,10 @@ export class MockAuth {
     }
   }
 
+  resetDemoUser(): void {
+    this.switchRole('consumer');
+  }
+
   private findCurrentUser(): User {
     const users = this.database.state().users;
     const selectedUser = users.find((user) => user.id === this.currentUserId());

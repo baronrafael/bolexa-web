@@ -59,6 +59,12 @@ export const appLabels = {
     description: 'Flujo recomendado: compra Caracas Music Fest, abre Mis tickets, valida un QR y revisa dashboard.',
     featuredEvent: 'Evento seed: Caracas Music Fest',
     qrCode: 'QR seed: BLX-CMF-GEN-1001',
+    qrValue: 'BLX-CMF-GEN-1001',
+    copyQr: 'Copiar QR',
+    copyDone: 'QR copiado.',
+    openScannerWithQr: 'Scanner con QR',
+    happyPathTitle: 'Happy path',
+    happyPath: 'Reset demo, compra 1 General, abre Mis tickets, valida BLX-CMF-GEN-1001 y marca entrada.',
     reset: 'Reset demo data',
     resetDone: 'Data demo reiniciada.',
     links: {
