@@ -90,11 +90,13 @@
 
         <section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
           <h2 class="text-2xl font-black text-white">{{ labels.checkout.payment }}</h2>
-          <div class="mt-5 grid gap-3 md:grid-cols-3">
+          <div class="mt-5 grid gap-3 md:grid-cols-3" role="radiogroup" [attr.aria-label]="labels.checkout.payment">
             @for (method of paymentOptions; track method) {
               <button
                 [class]="paymentOptionClass(method)"
                 type="button"
+                role="radio"
+                [attr.aria-checked]="paymentMethod() === method"
                 (click)="updatePaymentMethod(method)"
               >
                 <span class="block font-bold text-white">{{ labels.checkout.paymentMethods[method] }}</span>
@@ -126,7 +128,7 @@
         </section>
 
         @if (error(); as errorMessage) {
-          <section class="rounded-2xl border border-error/30 bg-error/10 p-4 text-error">
+          <section class="rounded-2xl border border-error/30 bg-error/10 p-4 text-error" role="alert">
             <p class="font-bold">{{ labels.checkout.errorTitle }}</p>
             <p class="mt-1 text-sm">{{ errorMessage }}</p>
           </section>

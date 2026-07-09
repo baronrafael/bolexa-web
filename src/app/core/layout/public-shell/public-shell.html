@@ -8,6 +8,7 @@
       @for (link of navLinks; track link.path) {
         <a
           class="transition hover:text-white"
+          ariaCurrentWhenActive="page"
           routerLinkActive="text-white"
           [routerLinkActiveOptions]="{ exact: link.path === '/' }"
           [routerLink]="link.path"

@@ -25,9 +25,9 @@
       }
     </p>
 
-    <div class="join" [attr.aria-label]="labels.quantity">
+    <div class="join" role="group" [attr.aria-label]="labels.quantity">
       <button class="btn join-item btn-sm" type="button" [attr.aria-label]="labels.decrement" [disabled]="quantity() === 0" (click)="decrement()">-</button>
-      <span class="join-item grid min-w-12 place-items-center border border-white/10 bg-white/[0.04] px-4 text-sm font-bold text-white">{{ quantity() }}</span>
+      <span class="join-item grid min-w-12 place-items-center border border-white/10 bg-white/[0.04] px-4 text-sm font-bold text-white" role="status" aria-live="polite" [attr.aria-label]="labels.quantity">{{ quantity() }}</span>
       <button class="btn join-item btn-sm" type="button" [attr.aria-label]="labels.increment" [disabled]="unavailable() || quantity() >= availableTickets()" (click)="increment()">+</button>
     </div>
   </div>

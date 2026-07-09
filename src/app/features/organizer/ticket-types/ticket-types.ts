@@ -79,6 +79,28 @@ export class TicketTypes {
     this.form.update((form) => ({ ...form, [field]: value }));
   }
 
+  protected hasFieldError(field: keyof Pick<TicketTypeFormState, 'name' | 'price' | 'quantityTotal'>): boolean {
+    if (!this.submitted()) {
+      return false;
+    }
+
+    const form = this.form();
+
+    if (field === 'name') {
+      return !form.name.trim();
+    }
+
+    if (field === 'price') {
+      return !Number.isFinite(form.price) || form.price < 0;
+    }
+
+    const editingTicketType = this.editingTicketType();
+
+    return !Number.isInteger(form.quantityTotal)
+      || form.quantityTotal < 0
+      || Boolean(editingTicketType && form.quantityTotal < editingTicketType.quantitySold);
+  }
+
   protected edit(ticketType: TicketType): void {
     this.editingTicketTypeId.set(ticketType.id);
     this.submitted.set(false);

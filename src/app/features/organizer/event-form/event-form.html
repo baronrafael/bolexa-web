@@ -19,7 +19,7 @@
   <form class="mt-8 grid gap-6 xl:grid-cols-[1fr_0.72fr]" (submit)="$event.preventDefault(); save()">
     <section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
       @if (submitted() && !isValid()) {
-        <p class="mb-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error">
+        <p id="event-form-error" class="mb-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error" role="alert">
           {{ labels.organizerEventForm.validation.required }}
         </p>
       }
@@ -31,6 +31,8 @@
             class="input input-bordered bg-base-100/80 text-white"
             required
             type="text"
+            [attr.aria-describedby]="hasFieldError('title') ? 'event-form-error' : null"
+            [attr.aria-invalid]="hasFieldError('title') ? 'true' : null"
             [placeholder]="labels.organizerEventForm.placeholders.title"
             [value]="form().title"
             (input)="updateField('title', $any($event.target).value)"
@@ -62,6 +64,8 @@
           <textarea
             class="textarea textarea-bordered min-h-36 bg-base-100/80 text-white"
             required
+            [attr.aria-describedby]="hasFieldError('description') ? 'event-form-error' : null"
+            [attr.aria-invalid]="hasFieldError('description') ? 'true' : null"
             [placeholder]="labels.organizerEventForm.placeholders.description"
             [value]="form().description"
             (input)="updateField('description', $any($event.target).value)"
@@ -71,7 +75,7 @@
         <div class="grid gap-5 md:grid-cols-2">
           <label class="form-control">
             <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.venue }}</span>
-            <select class="select select-bordered bg-base-100/80 text-white" required [value]="form().venueId" (change)="updateField('venueId', $any($event.target).value)">
+            <select class="select select-bordered bg-base-100/80 text-white" required [attr.aria-describedby]="hasFieldError('venueId') ? 'event-form-error' : null" [attr.aria-invalid]="hasFieldError('venueId') ? 'true' : null" [value]="form().venueId" (change)="updateField('venueId', $any($event.target).value)">
               @for (venue of venues(); track venue.id) {
                 <option [value]="venue.id">{{ venue.name }} · {{ venue.city }}</option>
               }
@@ -84,6 +88,8 @@
               class="input input-bordered bg-base-100/80 text-white"
               required
               type="datetime-local"
+              [attr.aria-describedby]="hasFieldError('startsAt') ? 'event-form-error' : null"
+              [attr.aria-invalid]="hasFieldError('startsAt') ? 'true' : null"
               [value]="form().startsAt"
               (input)="updateField('startsAt', $any($event.target).value)"
             />

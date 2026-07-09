@@ -15,7 +15,7 @@
 
   <nav class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-5 py-4" [attr.aria-label]="labels.navigation.scannerAriaLabel">
     @for (link of navLinks; track link.path) {
-      <a class="btn btn-ghost btn-sm shrink-0" routerLinkActive="btn-success" [routerLink]="link.path">
+      <a class="btn btn-ghost btn-sm shrink-0" ariaCurrentWhenActive="page" routerLinkActive="btn-success" [routerLink]="link.path">
         {{ link.label }}
       </a>
     }

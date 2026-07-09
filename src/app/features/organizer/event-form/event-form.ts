@@ -67,6 +67,10 @@ export class EventForm {
     this.form.update((form) => ({ ...form, [field]: value }));
   }
 
+  protected hasFieldError(field: keyof Pick<EventFormState, 'title' | 'description' | 'venueId' | 'startsAt'>): boolean {
+    return this.submitted() && !String(this.form()[field]).trim();
+  }
+
   protected async save(): Promise<void> {
     this.submitted.set(true);
 
