@@ -150,14 +150,6 @@ export class CheckoutRepository {
     };
   }
 
-  async getOrder(orderId: string): Promise<Order | null> {
-    await mockDelay();
-
-    const order = this.database.snapshot().orders.find((candidate) => candidate.id === orderId);
-
-    return order ? clone(order) : null;
-  }
-
   async getConfirmation(orderId: string): Promise<ConfirmationReadModel | null> {
     await mockDelay();
 
@@ -191,23 +183,5 @@ export class CheckoutRepository {
       tickets: state.tickets.filter((ticket) => ticket.orderId === order.id),
       eventDetail,
     });
-  }
-
-  async getOrderItems(orderId: string): Promise<OrderItem[]> {
-    await mockDelay();
-
-    return this.database
-      .snapshot()
-      .orderItems.filter((item) => item.orderId === orderId)
-      .map((item) => clone(item));
-  }
-
-  async getOrderTickets(orderId: string): Promise<Ticket[]> {
-    await mockDelay();
-
-    return this.database
-      .snapshot()
-      .tickets.filter((ticket) => ticket.orderId === orderId)
-      .map((ticket) => clone(ticket));
   }
 }

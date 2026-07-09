@@ -15,15 +15,6 @@ export interface TicketListItemReadModel {
 export class TicketsRepository {
   private readonly database = inject(MockDatabase);
 
-  async listMyTickets(userId: string): Promise<Ticket[]> {
-    await mockDelay();
-
-    return this.database
-      .snapshot()
-      .tickets.filter((ticket) => ticket.userId === userId)
-      .map((ticket) => clone(ticket));
-  }
-
   async listMyTicketItems(userId: string): Promise<TicketListItemReadModel[]> {
     await mockDelay();
 

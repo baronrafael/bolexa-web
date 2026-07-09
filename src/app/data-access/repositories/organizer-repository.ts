@@ -228,15 +228,6 @@ export class OrganizerRepository {
     return this.getEvent(organizerId, eventId);
   }
 
-  async listOrders(eventId: string): Promise<Order[]> {
-    await mockDelay();
-
-    return this.database
-      .snapshot()
-      .orders.filter((order) => order.eventId === eventId)
-      .map((order) => clone(order));
-  }
-
   async listEventOrders(organizerId: string, eventId: string): Promise<OrganizerOrder[]> {
     await mockDelay();
 
@@ -263,12 +254,6 @@ export class OrganizerRepository {
           tickets: state.tickets.filter((ticket) => ticket.orderId === order.id),
         });
       });
-  }
-
-  async listAttendees(eventId: string): Promise<Attendee[]> {
-    await mockDelay();
-
-    return this.buildAttendees(eventId);
   }
 
   async listEventAttendees(organizerId: string, eventId: string): Promise<Attendee[]> {
