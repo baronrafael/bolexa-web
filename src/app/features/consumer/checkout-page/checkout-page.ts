@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail, PaymentMethod } from '../../../data-access/models';
@@ -24,6 +24,7 @@ export class CheckoutPage {
   private readonly eventsRepository = inject(EventsRepository);
   private readonly checkoutRepository = inject(CheckoutRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
+  private readonly routeQueryParams = toSignal(this.route.queryParamMap);
 
   protected readonly labels = appLabels;
   protected readonly eventDetail = signal<EventDetail | null>(null);
@@ -75,9 +76,10 @@ export class CheckoutPage {
   constructor() {
     effect(() => {
       const eventId = this.routeParams()?.get('eventId');
+      const queryParams = this.routeQueryParams();
 
-      if (eventId) {
-        void this.loadCheckout(eventId);
+      if (eventId && queryParams) {
+        void this.loadCheckout(eventId, queryParams);
       }
     });
   }
@@ -161,7 +163,7 @@ export class CheckoutPage {
     }
   }
 
-  private async loadCheckout(eventId: string): Promise<void> {
+  private async loadCheckout(eventId: string, queryParams: ParamMap): Promise<void> {
     this.loading.set(true);
     this.error.set(null);
     this.quantities.set({});
@@ -170,7 +172,27 @@ export class CheckoutPage {
       const eventDetail = await this.eventsRepository.getEventById(eventId);
       this.eventDetail.set(eventDetail);
 
-      const firstAvailableTicketType = eventDetail?.ticketTypes.find((ticketType) => ticketType.status === 'active' && ticketType.quantityTotal > ticketType.quantitySold);
+      if (!eventDetail) {
+        return;
+      }
+
+      const restoredQuantities = eventDetail.ticketTypes.reduce<Record<string, number>>((quantities, ticketType) => {
+        const available = Math.max(ticketType.quantityTotal - ticketType.quantitySold, 0);
+        const requestedQuantity = Number(queryParams.get(ticketType.id));
+
+        if (ticketType.status === 'active' && available > 0 && Number.isFinite(requestedQuantity) && requestedQuantity > 0) {
+          quantities[ticketType.id] = Math.min(Math.trunc(requestedQuantity), available);
+        }
+
+        return quantities;
+      }, {});
+
+      if (Object.keys(restoredQuantities).length > 0) {
+        this.quantities.set(restoredQuantities);
+        return;
+      }
+
+      const firstAvailableTicketType = eventDetail.ticketTypes.find((ticketType) => ticketType.status === 'active' && ticketType.quantityTotal > ticketType.quantitySold);
 
       if (firstAvailableTicketType) {
         this.quantities.set({ [firstAvailableTicketType.id]: 1 });

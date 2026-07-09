@@ -88,6 +88,7 @@
           class="btn btn-primary mt-4 w-full shadow-[0_0_36px_rgba(10,132,255,0.28)]"
           [class.btn-disabled]="selectedCount() === 0"
           [routerLink]="checkoutLink()"
+          [queryParams]="checkoutQueryParams()"
           [attr.aria-disabled]="selectedCount() === 0"
         >
           {{ labels.eventDetail.continueToCheckout }}

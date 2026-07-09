@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventCategory, EventDetail as EventDetailModel } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
@@ -45,6 +45,24 @@ export class EventDetail {
     const eventDetail = this.eventDetail();
 
     return eventDetail ? ['/checkout', eventDetail.event.id] : ['/events'];
+  });
+  protected readonly checkoutQueryParams = computed<Params>(() => {
+    const eventDetail = this.eventDetail();
+
+    if (!eventDetail) {
+      return {};
+    }
+
+    return eventDetail.ticketTypes.reduce<Params>((params, ticketType) => {
+      const available = Math.max(ticketType.quantityTotal - ticketType.quantitySold, 0);
+      const quantity = Math.min(this.quantities()[ticketType.id] ?? 0, available);
+
+      if (ticketType.status === 'active' && quantity > 0) {
+        params[ticketType.id] = quantity;
+      }
+
+      return params;
+    }, {});
   });
   protected readonly eventDate = computed(() => {
     const eventDetail = this.eventDetail();
