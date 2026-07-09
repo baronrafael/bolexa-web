@@ -32,11 +32,7 @@ export class Orders {
   protected readonly statusFilter = signal<OrderStatus | ''>('');
   protected readonly paymentMethodFilter = signal<PaymentMethod | ''>('');
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
-  protected readonly organizerId = computed(() => {
-    const currentUser = this.auth.currentUser();
-
-    return currentUser.organizerId ?? this.auth.demoUsers().find((user) => user.role === 'organizer')?.organizerId ?? null;
-  });
+  protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly filteredOrders = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
     const status = this.statusFilter();

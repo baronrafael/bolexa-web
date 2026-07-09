@@ -41,11 +41,7 @@ export class TicketTypes {
   protected readonly editingTicketTypeId = signal<string | null>(null);
   protected readonly form = signal<TicketTypeFormState>(this.emptyForm());
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
-  protected readonly organizerId = computed(() => {
-    const currentUser = this.auth.currentUser();
-
-    return currentUser.organizerId ?? this.auth.demoUsers().find((user) => user.role === 'organizer')?.organizerId ?? null;
-  });
+  protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly ticketTypes = computed(() => this.eventDetail()?.ticketTypes ?? []);
   protected readonly editingTicketType = computed(() => {
     const editingId = this.editingTicketTypeId();

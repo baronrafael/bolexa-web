@@ -35,11 +35,7 @@ export class Reports {
   protected readonly orders = signal<OrganizerOrder[]>([]);
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
-  protected readonly organizerId = computed(() => {
-    const currentUser = this.auth.currentUser();
-
-    return currentUser.organizerId ?? this.auth.demoUsers().find((user) => user.role === 'organizer')?.organizerId ?? null;
-  });
+  protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly paidOrders = computed(() => this.orders().filter((entry) => entry.order.status === 'paid'));
   protected readonly totalRevenue = computed(() => this.paidOrders().reduce((total, entry) => total + entry.order.total, 0));
   protected readonly ticketsSold = computed(() => this.attendees().length);

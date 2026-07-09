@@ -91,8 +91,9 @@ export class Attendees {
   protected async checkInSelected(): Promise<void> {
     const eventId = this.eventId();
     const attendee = this.selectedAttendee();
+    const scannerUserId = this.auth.currentScannerUserId();
 
-    if (!eventId || !attendee || !this.canCheckIn() || this.checkingIn()) {
+    if (!eventId || !attendee || !scannerUserId || !this.canCheckIn() || this.checkingIn()) {
       return;
     }
 
@@ -100,7 +101,7 @@ export class Attendees {
     this.operationError.set(null);
 
     try {
-      this.currentResult.set(await this.scannerRepository.checkIn(eventId, attendee.ticket.qrCode, this.auth.currentUser().id));
+      this.currentResult.set(await this.scannerRepository.checkIn(eventId, attendee.ticket.qrCode, scannerUserId));
       await this.loadData(eventId, false);
     } catch {
       this.operationError.set(this.labels.scannerAttendees.operationError);

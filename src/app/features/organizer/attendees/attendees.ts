@@ -28,11 +28,7 @@ export class Attendees {
   protected readonly eventTitle = signal('');
   protected readonly searchQuery = signal('');
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
-  protected readonly organizerId = computed(() => {
-    const currentUser = this.auth.currentUser();
-
-    return currentUser.organizerId ?? this.auth.demoUsers().find((user) => user.role === 'organizer')?.organizerId ?? null;
-  });
+  protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly filteredAttendees = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
 

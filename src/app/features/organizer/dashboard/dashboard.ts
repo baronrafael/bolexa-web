@@ -21,11 +21,7 @@ export class Dashboard {
   protected readonly labels = appLabels;
   protected readonly loading = signal(true);
   protected readonly summary = signal<OrganizerDashboardSummary | null>(null);
-  protected readonly organizerId = computed(() => {
-    const currentUser = this.auth.currentUser();
-
-    return currentUser.organizerId ?? this.auth.demoUsers().find((user) => user.role === 'organizer')?.organizerId ?? null;
-  });
+  protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly metricCards = computed(() => {
     const summary = this.summary();
     const labels = this.labels.organizerDashboard.metrics;

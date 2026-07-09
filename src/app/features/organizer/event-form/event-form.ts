@@ -43,11 +43,7 @@ export class EventForm {
   protected readonly form = signal<EventFormState>(this.emptyForm());
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly isEdit = computed(() => Boolean(this.eventId()));
-  protected readonly organizerId = computed(() => {
-    const currentUser = this.auth.currentUser();
-
-    return currentUser.organizerId ?? this.auth.demoUsers().find((user) => user.role === 'organizer')?.organizerId ?? null;
-  });
+  protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly eyebrow = computed(() => this.isEdit() ? this.labels.organizerEventForm.editEyebrow : this.labels.organizerEventForm.createEyebrow);
   protected readonly title = computed(() => this.isEdit() ? this.labels.organizerEventForm.editTitle : this.labels.organizerEventForm.createTitle);
   protected readonly isValid = computed(() => {

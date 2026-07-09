@@ -79,8 +79,9 @@ export class ScannerPage {
     }
 
     const eventId = this.eventId();
+    const scannerUserId = this.auth.currentScannerUserId();
 
-    if (!eventId) {
+    if (!eventId || !scannerUserId) {
       return;
     }
 
@@ -88,7 +89,7 @@ export class ScannerPage {
     this.operationError.set(null);
 
     try {
-      const result = await this.scannerRepository.checkIn(eventId, this.currentResult()?.ticket?.qrCode ?? this.qrCode(), this.auth.currentUser().id);
+      const result = await this.scannerRepository.checkIn(eventId, this.currentResult()?.ticket?.qrCode ?? this.qrCode(), scannerUserId);
 
       this.recordResult(result);
       await this.loadEvent(eventId, false);

@@ -13,6 +13,20 @@ export class MockAuth {
   readonly demoUsers = computed(() => this.database.state().users.filter((user) => user.role !== 'admin'));
   readonly currentUser = computed(() => this.findCurrentUser());
   readonly currentRole = computed(() => this.currentUser().role);
+  readonly currentOrganizerId = computed(() => {
+    const user = this.currentUser();
+
+    return user.role === 'organizer' ? user.organizerId ?? null : null;
+  });
+  readonly currentScannerUserId = computed(() => {
+    const user = this.currentUser();
+
+    return user.role === 'scanner' ? user.id : null;
+  });
+
+  hasRole(role: UserRole): boolean {
+    return this.currentRole() === role;
+  }
 
   switchUser(userId: string): void {
     if (!this.database.state().users.some((user) => user.id === userId)) {

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { demoRoleGuard } from './core/auth/demo-role-guard';
 import { appLabels } from './core/content/app-labels';
 
 export const routes: Routes = [
@@ -49,6 +50,8 @@ export const routes: Routes = [
   },
   {
     path: 'organizer',
+    canMatch: [demoRoleGuard],
+    data: { requiredRole: 'organizer' },
     loadComponent: () => import('./core/layout/organizer-shell/organizer-shell').then((m) => m.OrganizerShell),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -101,6 +104,8 @@ export const routes: Routes = [
   },
   {
     path: 'scan',
+    canMatch: [demoRoleGuard],
+    data: { requiredRole: 'scanner' },
     loadComponent: () => import('./core/layout/scanner-shell/scanner-shell').then((m) => m.ScannerShell),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'events' },
