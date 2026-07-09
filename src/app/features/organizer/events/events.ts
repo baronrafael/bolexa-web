@@ -4,6 +4,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { Currency, EventDetail } from '../../../data-access/models';
 import { OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
+import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -45,17 +46,14 @@ export class Events {
   }
 
   protected formatDate(value: string): string {
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'medium',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   private formatMoney(value: number, currency: Currency): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 
   private async loadEvents(organizerId: string): Promise<void> {

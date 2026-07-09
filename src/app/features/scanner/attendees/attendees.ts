@@ -5,6 +5,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { Attendee, ScanResult, ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
+import { normalizeSearch } from '../../../shared/search/normalize-search';
 import { EmptyState, LoadingState, ScanResultPanel, SearchInput, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -34,14 +35,14 @@ export class Attendees {
   protected readonly currentResult = signal<ScanResult | null>(null);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly filteredAttendees = computed(() => {
-    const query = this.searchQuery().trim().toLowerCase();
+    const query = normalizeSearch(this.searchQuery());
 
     if (!query) {
       return this.attendees();
     }
 
     return this.attendees().filter((attendee) => {
-      const searchable = `${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`.toLowerCase();
+      const searchable = normalizeSearch(`${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`);
 
       return searchable.includes(query);
     });

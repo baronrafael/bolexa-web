@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Event, EventDetail, EventFilters, TicketType } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, mockDelay } from '../mock/mock-helpers';
+import { normalizeSearch } from '../../shared/search/normalize-search';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class EventsRepository {
     await mockDelay();
 
     const state = this.database.snapshot();
-    const query = filters.query?.trim().toLowerCase();
+    const query = filters.query ? normalizeSearch(filters.query) : undefined;
 
     const events = state.events
       .filter((event) => event.status === 'published')
@@ -23,7 +24,7 @@ export class EventsRepository {
 
         return !filters.city || venue?.city === filters.city;
       })
-      .filter((event) => !query || `${event.title} ${event.description}`.toLowerCase().includes(query))
+      .filter((event) => !query || normalizeSearch(`${event.title} ${event.description}`).includes(query))
       .sort((first, second) => first.startsAt.localeCompare(second.startsAt));
 
     return events.map((event) => this.toEventDetail(event));

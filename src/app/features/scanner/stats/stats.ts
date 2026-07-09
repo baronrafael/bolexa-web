@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
 import { Attendee, ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
+import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, MetricCard, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -73,10 +74,10 @@ export class Stats {
       return '-';
     }
 
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'medium',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   protected retryLoad(): void {

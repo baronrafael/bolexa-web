@@ -2,13 +2,13 @@ import { inject, Injectable } from '@angular/core';
 import { CreateOrderInput, Order, OrderItem, PayOrderInput, Ticket } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, createMockId, mockDelay, nowIso } from '../mock/mock-helpers';
+import { calculateOrderTotals } from '../pricing/checkout-pricing';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CheckoutRepository {
   private readonly database = inject(MockDatabase);
-  private readonly platformFeeRate = 0.08;
 
   async createOrder(input: CreateOrderInput): Promise<Order> {
     await mockDelay();
@@ -28,8 +28,11 @@ export class CheckoutRepository {
       return { item, ticketType };
     });
 
-    const subtotal = ticketTypes.reduce((total, { item, ticketType }) => total + ticketType.price * item.quantity, 0);
-    const fees = Number((subtotal * this.platformFeeRate).toFixed(2));
+    const totals = calculateOrderTotals(ticketTypes.map(({ item, ticketType }) => ({
+      currency: ticketType.currency,
+      quantity: item.quantity,
+      unitPrice: ticketType.price,
+    })));
     const now = nowIso();
     const orderId = createMockId('order');
     const order: Order = {
@@ -40,10 +43,10 @@ export class CheckoutRepository {
       buyerEmail: input.buyerEmail?.trim() || undefined,
       buyerPhone: input.buyerPhone?.trim() || undefined,
       status: 'pending',
-      subtotal,
-      fees,
-      total: Number((subtotal + fees).toFixed(2)),
-      currency: ticketTypes[0]?.ticketType.currency ?? 'USD',
+      subtotal: totals.subtotal,
+      fees: totals.fees,
+      total: totals.total,
+      currency: totals.currency,
       createdAt: now,
       updatedAt: now,
     };

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, numberAttribute, output } from '@angular/core';
 import { appLabels } from '../../../core/content/app-labels';
 import { TicketType } from '../../../data-access/models';
+import { formatMoneyEsVe } from '../../formatting/formatters';
 import { StatusBadge } from '../status-badge/status-badge';
 
 @Component({
@@ -20,11 +21,9 @@ export class TicketTypeSelector {
   protected readonly unavailable = computed(() => this.ticketType().status !== 'active' || this.availableTickets() === 0);
 
   protected formatMoney(value: number, currency: string): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
+    return formatMoneyEsVe(value, currency, {
       maximumFractionDigits: 0,
-      style: 'currency',
-    }).format(value);
+    });
   }
 
   protected decrement(): void {

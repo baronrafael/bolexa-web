@@ -5,6 +5,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { Currency, EventDetail, TicketType, TicketTypeStatus } from '../../../data-access/models';
 import { OrganizerRepository, SaveTicketTypeInput } from '../../../data-access/repositories/organizer-repository';
+import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
 interface TicketTypeFormState {
@@ -106,10 +107,7 @@ export class TicketTypes {
   }
 
   protected formatMoney(value: number, currency: Currency): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 
   protected async save(): Promise<void> {

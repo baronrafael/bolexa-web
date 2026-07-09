@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
+import { calculateOrderTotals } from '../../../data-access/pricing/checkout-pricing';
 import { EventCategory, EventDetail as EventDetailModel } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
+import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, OrderSummary, OrderSummaryItem, StatusBadge, TicketTypeSelector } from '../../../shared/ui';
 
@@ -42,8 +44,9 @@ export class EventDetail {
       }))
       .filter((item) => item.quantity > 0);
   });
-  protected readonly subtotal = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity * item.unitPrice, 0));
-  protected readonly fees = computed(() => Number((this.subtotal() * 0.08).toFixed(2)));
+  protected readonly totals = computed(() => calculateOrderTotals(this.selectedItems()));
+  protected readonly subtotal = computed(() => this.totals().subtotal);
+  protected readonly fees = computed(() => this.totals().fees);
   protected readonly selectedCount = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity, 0));
   protected readonly checkoutLink = computed(() => {
     const eventDetail = this.eventDetail();
@@ -72,10 +75,10 @@ export class EventDetail {
     const eventDetail = this.eventDetail();
 
     return eventDetail
-      ? new Intl.DateTimeFormat('es-VE', {
+      ? formatDateEsVe(eventDetail.event.startsAt, {
           dateStyle: 'full',
           timeStyle: 'short',
-        }).format(new Date(eventDetail.event.startsAt))
+        })
       : '';
   });
   protected readonly categoryLabel = computed(() => {

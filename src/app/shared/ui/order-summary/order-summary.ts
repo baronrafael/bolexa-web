@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, numberAttribute } from '@angular/core';
 import { appLabels } from '../../../core/content/app-labels';
 import { Currency } from '../../../data-access/models';
+import { formatMoneyEsVe } from '../../formatting/formatters';
 
 export interface OrderSummaryItem {
   label: string;
@@ -26,9 +27,6 @@ export class OrderSummary {
   protected readonly total = computed(() => this.subtotal() + this.fees());
 
   protected formatMoney(value: number, currency = this.currency()): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 }

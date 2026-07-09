@@ -6,6 +6,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { EventDetail, Ticket, TicketType } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { TicketsRepository } from '../../../data-access/repositories/tickets-repository';
+import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, QrTicketCard, StatusBadge } from '../../../shared/ui';
 
@@ -54,10 +55,10 @@ export class TicketDetail {
       return '-';
     }
 
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'full',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   protected retryLoad(): void {

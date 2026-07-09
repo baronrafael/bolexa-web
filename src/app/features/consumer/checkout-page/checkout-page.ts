@@ -3,9 +3,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
+import { calculateOrderTotals } from '../../../data-access/pricing/checkout-pricing';
 import { EventDetail, PaymentMethod } from '../../../data-access/models';
 import { CheckoutRepository } from '../../../data-access/repositories/checkout-repository';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
+import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, OrderSummary, OrderSummaryItem, StatusBadge, TicketTypeSelector } from '../../../shared/ui';
 
 type PaymentOption = Exclude<PaymentMethod, 'card'> | 'card';
@@ -58,10 +60,11 @@ export class CheckoutPage {
       .filter((item) => item.quantity > 0);
   });
   protected readonly selectedCount = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity, 0));
-  protected readonly subtotal = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity * item.unitPrice, 0));
-  protected readonly fees = computed(() => Number((this.subtotal() * 0.08).toFixed(2)));
-  protected readonly total = computed(() => this.subtotal() + this.fees());
-  protected readonly selectedCurrency = computed(() => this.selectedItems()[0]?.currency ?? 'USD');
+  protected readonly totals = computed(() => calculateOrderTotals(this.selectedItems()));
+  protected readonly subtotal = computed(() => this.totals().subtotal);
+  protected readonly fees = computed(() => this.totals().fees);
+  protected readonly total = computed(() => this.totals().total);
+  protected readonly selectedCurrency = computed(() => this.totals().currency);
   protected readonly selectedPaymentDescription = computed(() => this.labels.checkout.methodDescriptions[this.paymentMethod()]);
   protected readonly requiresPaymentReference = computed(() => this.paymentMethod() !== 'manual' && this.paymentMethod() !== 'card');
   protected readonly buyerNameError = computed(() => this.buyerName().trim() ? null : this.labels.checkout.validation.nameRequired);
@@ -80,10 +83,10 @@ export class CheckoutPage {
     const eventDetail = this.eventDetail();
 
     return eventDetail
-      ? new Intl.DateTimeFormat('es-VE', {
+      ? formatDateEsVe(eventDetail.event.startsAt, {
           dateStyle: 'medium',
           timeStyle: 'short',
-        }).format(new Date(eventDetail.event.startsAt))
+        })
       : '';
   });
 
@@ -130,10 +133,7 @@ export class CheckoutPage {
   }
 
   protected formatMoney(value: number, currency: string): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 
   protected updatePaymentReference(event: Event): void {

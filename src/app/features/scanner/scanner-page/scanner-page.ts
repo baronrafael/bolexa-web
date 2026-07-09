@@ -5,6 +5,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { ScanResult, ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
+import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, ScanResultPanel, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -109,10 +110,10 @@ export class ScannerPage {
       return '-';
     }
 
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'medium',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   protected retryLoad(): void {

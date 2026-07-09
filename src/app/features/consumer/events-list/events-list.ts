@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { appLabels } from '../../../core/content/app-labels';
 import { EventCategory, EventDetail } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
+import { normalizeSearch } from '../../../shared/search/normalize-search';
 import { EmptyState, EventCard, LoadingState, SearchInput } from '../../../shared/ui';
 
 type CategoryFilter = EventCategory | 'all';
@@ -39,13 +40,13 @@ export class EventsList {
     return [...cities].sort((first, second) => first.localeCompare(second));
   });
   protected readonly filteredEvents = computed(() => {
-    const query = this.normalize(this.query());
+    const query = normalizeSearch(this.query());
     const selectedCategory = this.selectedCategory();
     const selectedCity = this.selectedCity();
     const selectedDate = this.selectedDate();
 
     return this.events().filter((eventDetail) => {
-      const searchableText = this.normalize(`${eventDetail.event.title} ${eventDetail.event.description} ${eventDetail.venue.name} ${eventDetail.venue.city}`);
+      const searchableText = normalizeSearch(`${eventDetail.event.title} ${eventDetail.event.description} ${eventDetail.venue.name} ${eventDetail.venue.city}`);
 
       return (!query || searchableText.includes(query))
         && (selectedCategory === 'all' || eventDetail.event.category === selectedCategory)
@@ -102,7 +103,4 @@ export class EventsList {
       : eventDate > next90Days;
   }
 
-  private normalize(value: string): string {
-    return value.trim().toLowerCase();
-  }
 }

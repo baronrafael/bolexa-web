@@ -4,6 +4,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail, Order, OrganizerDashboardSummary } from '../../../data-access/models';
 import { OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
+import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, MetricCard, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -80,17 +81,14 @@ export class Dashboard {
   }
 
   protected formatDate(value: string): string {
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'medium',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   protected formatMoney(value: number, currency = 'USD'): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 
   private async loadDashboard(organizerId: string): Promise<void> {

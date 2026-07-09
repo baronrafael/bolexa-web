@@ -5,6 +5,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { Attendee, EventDetail, PaymentMethod } from '../../../data-access/models';
 import { OrganizerOrder, OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
+import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, MetricCard } from '../../../shared/ui';
 
 interface ReportBar {
@@ -122,10 +123,7 @@ export class Reports {
   }
 
   protected formatMoney(value: number, currency = 'USD'): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 
   private async loadReports(organizerId: string, eventId: string): Promise<void> {

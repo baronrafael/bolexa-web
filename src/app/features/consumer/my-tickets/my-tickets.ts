@@ -5,6 +5,7 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { EventDetail, Ticket } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { TicketsRepository } from '../../../data-access/repositories/tickets-repository';
+import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
 interface TicketListItem {
@@ -45,10 +46,10 @@ export class MyTickets {
       return this.labels.myTickets.venueFallback;
     }
 
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'medium',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   protected eventVenue(item: TicketListItem): string {

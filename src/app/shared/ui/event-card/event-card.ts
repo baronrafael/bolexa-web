@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail, TicketType } from '../../../data-access/models';
+import { formatDateEsVe, formatMoneyEsVe } from '../../formatting/formatters';
 
 @Component({
   selector: 'app-event-card',
@@ -20,20 +21,18 @@ export class EventCard {
 
     return ticketType ? Math.max(ticketType.quantityTotal - ticketType.quantitySold, 0) : 0;
   });
-  protected readonly eventDate = computed(() => new Intl.DateTimeFormat('es-VE', {
+  protected readonly eventDate = computed(() => formatDateEsVe(this.eventDetail().event.startsAt, {
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
     month: 'short',
-  }).format(new Date(this.eventDetail().event.startsAt)));
+  }));
   protected readonly categoryLabel = computed(() => this.labels.categories[this.eventDetail().event.category]);
 
   protected formatMoney(value: number, currency: string): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
+    return formatMoneyEsVe(value, currency, {
       maximumFractionDigits: 0,
-      style: 'currency',
-    }).format(value);
+    });
   }
 
   private findLowestTicketType(ticketTypes: TicketType[]): TicketType | undefined {

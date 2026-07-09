@@ -5,6 +5,8 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { Attendee } from '../../../data-access/models';
 import { OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
+import { formatDateEsVe } from '../../../shared/formatting/formatters';
+import { normalizeSearch } from '../../../shared/search/normalize-search';
 import { EmptyState, LoadingState, MetricCard, SearchInput, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -30,14 +32,14 @@ export class Attendees {
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly filteredAttendees = computed(() => {
-    const query = this.searchQuery().trim().toLowerCase();
+    const query = normalizeSearch(this.searchQuery());
 
     if (!query) {
       return this.attendees();
     }
 
     return this.attendees().filter((attendee) => {
-      const searchable = `${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.id} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`.toLowerCase();
+      const searchable = normalizeSearch(`${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.id} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`);
 
       return searchable.includes(query);
     });
@@ -78,10 +80,10 @@ export class Attendees {
   }
 
   protected formatDate(value: string): string {
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'medium',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   protected exportCsv(): void {

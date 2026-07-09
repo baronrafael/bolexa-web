@@ -5,6 +5,8 @@ import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { OrderStatus, PaymentMethod } from '../../../data-access/models';
 import { OrganizerOrder, OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
+import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
+import { normalizeSearch } from '../../../shared/search/normalize-search';
 import { EmptyState, LoadingState, SearchInput, StatusBadge } from '../../../shared/ui';
 
 @Component({
@@ -34,12 +36,12 @@ export class Orders {
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
   protected readonly filteredOrders = computed(() => {
-    const query = this.searchQuery().trim().toLowerCase();
+    const query = normalizeSearch(this.searchQuery());
     const status = this.statusFilter();
     const paymentMethod = this.paymentMethodFilter();
 
     return this.orders().filter((entry) => {
-      const searchable = `${entry.order.id} ${entry.buyer.name} ${entry.buyer.email}`.toLowerCase();
+      const searchable = normalizeSearch(`${entry.order.id} ${entry.buyer.name} ${entry.buyer.email}`);
 
       return (!query || searchable.includes(query))
         && (!status || entry.order.status === status)
@@ -79,17 +81,14 @@ export class Orders {
   }
 
   protected formatDate(value: string): string {
-    return new Intl.DateTimeFormat('es-VE', {
+    return formatDateEsVe(value, {
       dateStyle: 'medium',
       timeStyle: 'short',
-    }).format(new Date(value));
+    });
   }
 
   protected formatMoney(value: number, currency: string): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 
   private async loadOrders(organizerId: string, eventId: string): Promise<void> {

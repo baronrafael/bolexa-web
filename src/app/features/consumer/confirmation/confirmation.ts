@@ -5,6 +5,7 @@ import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail, Order, OrderItem, PaymentMethod, Ticket } from '../../../data-access/models';
 import { CheckoutRepository } from '../../../data-access/repositories/checkout-repository';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
+import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
@@ -55,10 +56,7 @@ export class Confirmation {
   }
 
   protected formatMoney(value: number, currency: string): string {
-    return new Intl.NumberFormat('es-VE', {
-      currency,
-      style: 'currency',
-    }).format(value);
+    return formatMoneyEsVe(value, currency);
   }
 
   protected retryLoad(): void {
