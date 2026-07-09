@@ -1,8 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { CreateOrderInput, Order, OrderItem, PayOrderInput, Ticket } from '../models';
+import { CreateOrderInput, EventDetail, Order, OrderItem, PayOrderInput, Ticket } from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, createMockId, mockDelay, nowIso } from '../mock/mock-helpers';
 import { calculateOrderTotals } from '../pricing/checkout-pricing';
+
+export interface ConfirmationReadModel {
+  order: Order;
+  orderItems: OrderItem[];
+  tickets: Ticket[];
+  eventDetail: EventDetail | null;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -143,6 +150,36 @@ export class CheckoutRepository {
     const order = this.database.snapshot().orders.find((candidate) => candidate.id === orderId);
 
     return order ? clone(order) : null;
+  }
+
+  async getConfirmation(orderId: string): Promise<ConfirmationReadModel | null> {
+    await mockDelay();
+
+    const state = this.database.snapshot();
+    const order = state.orders.find((candidate) => candidate.id === orderId);
+
+    if (!order) {
+      return null;
+    }
+
+    const event = state.events.find((candidate) => candidate.id === order.eventId);
+    const venue = event ? state.venues.find((candidate) => candidate.id === event.venueId) : undefined;
+    const organizer = event ? state.organizers.find((candidate) => candidate.id === event.organizerId) : undefined;
+    const eventDetail = event && venue && organizer
+      ? {
+          event,
+          venue,
+          organizer,
+          ticketTypes: state.ticketTypes.filter((ticketType) => ticketType.eventId === event.id),
+        }
+      : null;
+
+    return clone({
+      order,
+      orderItems: state.orderItems.filter((item) => item.orderId === order.id),
+      tickets: state.tickets.filter((ticket) => ticket.orderId === order.id),
+      eventDetail,
+    });
   }
 
   async getOrderItems(orderId: string): Promise<OrderItem[]> {

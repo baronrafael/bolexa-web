@@ -29,7 +29,7 @@
               <a class="group rounded-[1.5rem] border border-success/20 bg-success/10 p-5 shadow-xl transition hover:-translate-y-0.5 hover:border-success/50 hover:bg-success/15" [routerLink]="['/my-tickets', item.ticket.id]">
                 <div class="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-success">{{ item.ticketTypeName }}</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-success">{{ item.ticketTypeName ?? labels.myTickets.ticketTypeFallback }}</p>
                     <h3 class="mt-2 text-2xl font-black text-white">{{ item.eventDetail?.event?.title ?? labels.myTickets.eventFallback }}</h3>
                   </div>
                   <app-status-badge [status]="item.ticket.status" />
@@ -62,7 +62,7 @@
             @for (item of historicalTickets(); track item.ticket.id) {
               <a class="flex flex-col gap-4 rounded-[1.25rem] border border-white/10 bg-base-300/70 p-5 transition hover:border-primary/40 sm:flex-row sm:items-center sm:justify-between" [routerLink]="['/my-tickets', item.ticket.id]">
                 <div>
-                  <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ item.ticketTypeName }}</p>
+                  <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ item.ticketTypeName ?? labels.myTickets.ticketTypeFallback }}</p>
                   <h3 class="mt-2 text-xl font-black text-white">{{ item.eventDetail?.event?.title ?? labels.myTickets.eventFallback }}</h3>
                   <p class="mt-2 text-sm text-slate-400">{{ formatDate(item.eventDetail?.event?.startsAt) }} · {{ eventVenue(item) }}</p>
                 </div>

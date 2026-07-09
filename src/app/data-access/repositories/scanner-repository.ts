@@ -16,25 +16,16 @@ export class ScannerRepository {
 
     return state.events
       .filter((event) => event.status === 'published')
-      .map((event) => {
-        const organizer = state.organizers.find((candidate) => candidate.id === event.organizerId);
-        const venue = state.venues.find((candidate) => candidate.id === event.venueId);
+      .map((event) => this.buildEventSummary(state, event.id));
+  }
 
-        if (!organizer || !venue) {
-          throw new Error(`Mock scanner event ${event.id} has invalid relationships.`);
-        }
+  async getEventSummary(eventId: string): Promise<ScannerEventSummary | null> {
+    await mockDelay();
 
-        const tickets = state.tickets.filter((ticket) => ticket.eventId === event.id);
+    const state = this.database.snapshot();
+    const event = state.events.find((candidate) => candidate.id === eventId && candidate.status === 'published');
 
-        return clone({
-          event,
-          organizer,
-          venue,
-          ticketTypes: state.ticketTypes.filter((ticketType) => ticketType.eventId === event.id),
-          totalTickets: tickets.length,
-          checkedInTickets: tickets.filter((ticket) => ticket.status === 'used').length,
-        });
-      });
+    return event ? this.buildEventSummary(state, event.id) : null;
   }
 
   async validateTicket(eventId: string, qrCode: string): Promise<ScanResult> {
@@ -154,5 +145,31 @@ export class ScannerRepository {
       ticketType: ticketType ? clone(ticketType) : undefined,
       holderName: ticket.holderName,
     };
+  }
+
+  private buildEventSummary(state: ReturnType<MockDatabase['snapshot']>, eventId: string): ScannerEventSummary {
+    const event = state.events.find((candidate) => candidate.id === eventId);
+
+    if (!event) {
+      throw new Error(`Mock scanner event ${eventId} does not exist.`);
+    }
+
+    const organizer = state.organizers.find((candidate) => candidate.id === event.organizerId);
+    const venue = state.venues.find((candidate) => candidate.id === event.venueId);
+
+    if (!organizer || !venue) {
+      throw new Error(`Mock scanner event ${event.id} has invalid relationships.`);
+    }
+
+    const tickets = state.tickets.filter((ticket) => ticket.eventId === event.id);
+
+    return clone({
+      event,
+      organizer,
+      venue,
+      ticketTypes: state.ticketTypes.filter((ticketType) => ticketType.eventId === event.id),
+      totalTickets: tickets.length,
+      checkedInTickets: tickets.filter((ticket) => ticket.status === 'used').length,
+    });
   }
 }

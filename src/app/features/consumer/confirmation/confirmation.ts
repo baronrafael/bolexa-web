@@ -4,7 +4,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventDetail, Order, OrderItem, PaymentMethod, Ticket } from '../../../data-access/models';
 import { CheckoutRepository } from '../../../data-access/repositories/checkout-repository';
-import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
@@ -19,7 +18,6 @@ import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 export class Confirmation {
   private readonly route = inject(ActivatedRoute);
   private readonly checkoutRepository = inject(CheckoutRepository);
-  private readonly eventsRepository = inject(EventsRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
   private readonly pageState = createAsyncPageState();
 
@@ -71,15 +69,14 @@ export class Confirmation {
     const requestId = this.pageState.start();
 
     try {
-      const order = await this.checkoutRepository.getOrder(orderId);
+      const confirmation = await this.checkoutRepository.getConfirmation(orderId);
 
       if (!this.pageState.isCurrent(requestId)) {
         return;
       }
 
-      this.order.set(order);
-
-      if (!order) {
+      if (!confirmation) {
+        this.order.set(null);
         this.orderItems.set([]);
         this.tickets.set([]);
         this.eventDetail.set(null);
@@ -87,19 +84,10 @@ export class Confirmation {
         return;
       }
 
-      const [items, tickets, eventDetail] = await Promise.all([
-        this.checkoutRepository.getOrderItems(order.id),
-        this.checkoutRepository.getOrderTickets(order.id),
-        this.eventsRepository.getEventById(order.eventId),
-      ]);
-
-      if (!this.pageState.isCurrent(requestId)) {
-        return;
-      }
-
-      this.orderItems.set(items);
-      this.tickets.set(tickets);
-      this.eventDetail.set(eventDetail);
+      this.order.set(confirmation.order);
+      this.orderItems.set(confirmation.orderItems);
+      this.tickets.set(confirmation.tickets);
+      this.eventDetail.set(confirmation.eventDetail);
     } catch {
       if (this.pageState.isCurrent(requestId)) {
         this.order.set(null);

@@ -95,8 +95,8 @@ export class Stats {
     this.errorMessage.set(null);
 
     try {
-      const [events, attendees] = await Promise.all([
-        this.scannerRepository.listEvents(),
+      const [eventSummary, attendees] = await Promise.all([
+        this.scannerRepository.getEventSummary(eventId),
         this.scannerRepository.listAttendees(eventId),
       ]);
 
@@ -104,7 +104,7 @@ export class Stats {
         return;
       }
 
-      this.eventSummary.set(events.find((event) => event.event.id === eventId) ?? null);
+      this.eventSummary.set(eventSummary);
       this.attendees.set(attendees);
     } catch {
       if (requestId === this.loadRequestId) {

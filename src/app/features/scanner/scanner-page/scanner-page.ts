@@ -139,8 +139,7 @@ export class ScannerPage {
     this.errorMessage.set(null);
 
     try {
-      const events = await this.scannerRepository.listEvents();
-      const eventSummary = events.find((event) => event.event.id === eventId) ?? null;
+      const eventSummary = await this.scannerRepository.getEventSummary(eventId);
 
       if (requestId === this.loadRequestId) {
         this.eventSummary.set(eventSummary);

@@ -129,8 +129,8 @@ export class Attendees {
     this.errorMessage.set(null);
 
     try {
-      const [events, attendees] = await Promise.all([
-        this.scannerRepository.listEvents(),
+      const [eventSummary, attendees] = await Promise.all([
+        this.scannerRepository.getEventSummary(eventId),
         this.scannerRepository.listAttendees(eventId),
       ]);
 
@@ -138,7 +138,7 @@ export class Attendees {
         return;
       }
 
-      this.eventSummary.set(events.find((event) => event.event.id === eventId) ?? null);
+      this.eventSummary.set(eventSummary);
       this.attendees.set(attendees.sort((first, second) => first.ticket.holderName.localeCompare(second.ticket.holderName)));
     } catch {
       if (requestId === this.loadRequestId) {
