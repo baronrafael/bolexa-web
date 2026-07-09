@@ -11,7 +11,7 @@ import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { calculateOrderTotals } from '../../../data-access/pricing/checkout-pricing';
-import { EventDetail, PaymentMethod } from '../../../data-access/models';
+import { EventDetail } from '../../../data-access/models';
 import { CheckoutRepository } from '../../../data-access/repositories/checkout-repository';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
@@ -21,15 +21,29 @@ import {
   LoadingState,
   OrderSummary,
   OrderSummaryItem,
-  StatusBadge,
   TicketTypeSelector,
 } from '../../../shared/ui';
-
-type PaymentOption = Exclude<PaymentMethod, 'card'> | 'card';
+import { CheckoutActions } from './components/checkout-actions/checkout-actions';
+import { CheckoutBuyerForm } from './components/checkout-buyer-form/checkout-buyer-form';
+import { CheckoutEventSummary } from './components/checkout-event-summary/checkout-event-summary';
+import {
+  CheckoutPaymentMethodSelector,
+  PaymentOption,
+} from './components/checkout-payment-method-selector/checkout-payment-method-selector';
 
 @Component({
   selector: 'app-checkout-page',
-  imports: [EmptyState, LoadingState, OrderSummary, RouterLink, StatusBadge, TicketTypeSelector],
+  imports: [
+    CheckoutActions,
+    CheckoutBuyerForm,
+    CheckoutEventSummary,
+    CheckoutPaymentMethodSelector,
+    EmptyState,
+    LoadingState,
+    OrderSummary,
+    RouterLink,
+    TicketTypeSelector,
+  ],
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,10 +70,6 @@ export class CheckoutPage {
   protected readonly buyerPhone = signal(this.auth.currentUser().phone ?? '');
   protected readonly paymentMethod = signal<PaymentOption>('pago_movil');
   protected readonly paymentReference = signal('');
-  protected readonly selectedPaymentClass =
-    'rounded-2xl border border-primary/50 bg-primary/10 p-4 text-left transition hover:border-primary/60';
-  protected readonly unselectedPaymentClass =
-    'rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-primary/40';
   protected readonly paymentOptions: PaymentOption[] = [
     'pago_movil',
     'zelle',
@@ -92,9 +102,6 @@ export class CheckoutPage {
   protected readonly fees = computed(() => this.totals().fees);
   protected readonly total = computed(() => this.totals().total);
   protected readonly selectedCurrency = computed(() => this.totals().currency);
-  protected readonly selectedPaymentDescription = computed(
-    () => this.labels.checkout.methodDescriptions[this.paymentMethod()],
-  );
   protected readonly requiresPaymentReference = computed(
     () => this.paymentMethod() !== 'manual' && this.paymentMethod() !== 'card',
   );
@@ -153,34 +160,28 @@ export class CheckoutPage {
     return this.quantities()[ticketTypeId] ?? 0;
   }
 
-  protected updateBuyerName(event: Event): void {
-    this.buyerName.set((event.target as HTMLInputElement).value);
+  protected updateBuyerName(value: string): void {
+    this.buyerName.set(value);
   }
 
-  protected updateBuyerEmail(event: Event): void {
-    this.buyerEmail.set((event.target as HTMLInputElement).value);
+  protected updateBuyerEmail(value: string): void {
+    this.buyerEmail.set(value);
   }
 
-  protected updateBuyerPhone(event: Event): void {
-    this.buyerPhone.set((event.target as HTMLInputElement).value);
+  protected updateBuyerPhone(value: string): void {
+    this.buyerPhone.set(value);
   }
 
   protected updatePaymentMethod(method: PaymentOption): void {
     this.paymentMethod.set(method);
   }
 
-  protected paymentOptionClass(method: PaymentOption): string {
-    return this.paymentMethod() === method
-      ? this.selectedPaymentClass
-      : this.unselectedPaymentClass;
-  }
-
   protected formatMoney(value: number, currency: string): string {
     return formatMoneyEsVe(value, currency);
   }
 
-  protected updatePaymentReference(event: Event): void {
-    this.paymentReference.set((event.target as HTMLInputElement).value);
+  protected updatePaymentReference(value: string): void {
+    this.paymentReference.set(value);
   }
 
   protected displayError(errorMessage: string | null): string | null {

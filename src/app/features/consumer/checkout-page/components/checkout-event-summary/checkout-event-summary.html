@@ -1,0 +1,22 @@
+<section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+  <h2 class="text-2xl font-black text-white">{{ title() }}</h2>
+  <div class="mt-5 grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-center">
+    <div class="aspect-square overflow-hidden rounded-2xl bg-base-200">
+      @if (detail().event.coverImageUrl; as coverImageUrl) {
+        <img
+          class="h-full w-full object-cover"
+          [src]="coverImageUrl"
+          [alt]="detail().event.title"
+        />
+      }
+    </div>
+    <div>
+      <div class="mb-3 flex flex-wrap gap-2">
+        <app-status-badge [status]="detail().event.status" />
+      </div>
+      <h3 class="text-2xl font-black text-white">{{ detail().event.title }}</h3>
+      <p class="mt-2 text-slate-300">{{ eventDate() }}</p>
+      <p class="text-sm text-slate-400">{{ detail().venue.name }} · {{ detail().venue.city }}</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+<section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
+  <h2 class="text-2xl font-black text-white">{{ labels().payment }}</h2>
+  <div
+    class="mt-5 grid gap-3 md:grid-cols-3"
+    role="radiogroup"
+    [attr.aria-label]="labels().payment"
+  >
+    @for (method of paymentOptions(); track method) {
+      <button
+        [class]="paymentOptionClass(method)"
+        type="button"
+        role="radio"
+        [attr.aria-checked]="paymentMethod() === method"
+        (click)="paymentMethodChange.emit(method)"
+      >
+        <span class="block font-bold text-white">{{ labels().paymentMethods[method] }}</span>
+        <span class="mt-2 block text-sm text-slate-400">{{
+          labels().methodDescriptions[method]
+        }}</span>
+      </button>
+    }
+  </div>
+
+  <div class="mt-5 rounded-2xl border border-primary/20 bg-primary/10 p-4">
+    <p class="text-sm font-semibold text-primary">{{ labels().paymentInstructions }}</p>
+    <p class="mt-2 text-sm text-slate-300">{{ selectedPaymentDescription() }}</p>
+  </div>
+
+  <label class="form-control mt-5">
+    <span class="label-text mb-2 text-slate-300">{{ labels().fields.reference }}</span>
+    <input
+      class="input input-bordered border-white/10 bg-white/[0.04]"
+      type="text"
+      [attr.aria-describedby]="paymentReferenceError() ? 'checkout-reference-error' : null"
+      [attr.aria-invalid]="paymentReferenceError() ? 'true' : null"
+      [placeholder]="labels().placeholders.reference"
+      [value]="paymentReference()"
+      (input)="updatePaymentReference($event)"
+    />
+    @if (paymentReferenceError(); as message) {
+      <span id="checkout-reference-error" class="mt-2 text-xs font-semibold text-error">{{
+        message
+      }}</span>
+    }
+  </label>
+</section>

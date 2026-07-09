@@ -1,0 +1,28 @@
+@if (showNoTicketsWarning() && selectedCount() === 0) {
+  <p class="mt-4 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-sm text-warning">
+    {{ labels().noTicketsSelected }}
+  </p>
+}
+
+<div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+  <button
+    class="btn btn-primary w-full"
+    type="button"
+    [disabled]="isDisabled()"
+    (click)="approve.emit()"
+  >
+    @if (processing()) {
+      {{ labels().processing }}
+    } @else {
+      {{ labels().approvedCta }}
+    }
+  </button>
+  <button
+    class="btn btn-outline w-full border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10"
+    type="button"
+    [disabled]="isDisabled()"
+    (click)="requestManualReview.emit()"
+  >
+    {{ labels().manualReviewCta }}
+  </button>
+</div>

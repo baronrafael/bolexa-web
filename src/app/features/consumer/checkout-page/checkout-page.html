@@ -18,30 +18,11 @@
           <p class="mt-4 max-w-2xl text-slate-300">{{ labels.checkout.description }}</p>
         </header>
 
-        <section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
-          <h2 class="text-2xl font-black text-white">{{ labels.checkout.eventSummary }}</h2>
-          <div class="mt-5 grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-center">
-            <div class="aspect-square overflow-hidden rounded-2xl bg-base-200">
-              @if (detail.event.coverImageUrl; as coverImageUrl) {
-                <img
-                  class="h-full w-full object-cover"
-                  [src]="coverImageUrl"
-                  [alt]="detail.event.title"
-                />
-              }
-            </div>
-            <div>
-              <div class="mb-3 flex flex-wrap gap-2">
-                <app-status-badge [status]="detail.event.status" />
-              </div>
-              <h3 class="text-2xl font-black text-white">{{ detail.event.title }}</h3>
-              <p class="mt-2 text-slate-300">{{ eventDate() }}</p>
-              <p class="text-sm text-slate-400">
-                {{ detail.venue.name }} · {{ detail.venue.city }}
-              </p>
-            </div>
-          </div>
-        </section>
+        <app-checkout-event-summary
+          [detail]="detail"
+          [title]="labels.checkout.eventSummary"
+          [eventDate]="eventDate()"
+        />
 
         <section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
           <h2 class="text-2xl font-black text-white">{{ labels.checkout.tickets }}</h2>
@@ -60,114 +41,27 @@
           </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
-          <h2 class="text-2xl font-black text-white">{{ labels.checkout.buyerInfo }}</h2>
-          <div class="mt-5 grid gap-4 md:grid-cols-3">
-            <label class="form-control">
-              <span class="label-text mb-2 text-slate-300">{{ labels.checkout.fields.name }}</span>
-              <input
-                class="input input-bordered border-white/10 bg-white/[0.04]"
-                type="text"
-                [attr.aria-describedby]="
-                  displayError(buyerNameError()) ? 'checkout-name-error' : null
-                "
-                [attr.aria-invalid]="displayError(buyerNameError()) ? 'true' : null"
-                [placeholder]="labels.checkout.placeholders.name"
-                [value]="buyerName()"
-                (input)="updateBuyerName($event)"
-              />
-              @if (displayError(buyerNameError()); as message) {
-                <span id="checkout-name-error" class="mt-2 text-xs font-semibold text-error">{{
-                  message
-                }}</span>
-              }
-            </label>
-            <label class="form-control">
-              <span class="label-text mb-2 text-slate-300">{{ labels.checkout.fields.email }}</span>
-              <input
-                class="input input-bordered border-white/10 bg-white/[0.04]"
-                type="email"
-                [attr.aria-describedby]="
-                  displayError(buyerEmailError()) ? 'checkout-email-error' : null
-                "
-                [attr.aria-invalid]="displayError(buyerEmailError()) ? 'true' : null"
-                [placeholder]="labels.checkout.placeholders.email"
-                [value]="buyerEmail()"
-                (input)="updateBuyerEmail($event)"
-              />
-              @if (displayError(buyerEmailError()); as message) {
-                <span id="checkout-email-error" class="mt-2 text-xs font-semibold text-error">{{
-                  message
-                }}</span>
-              }
-            </label>
-            <label class="form-control">
-              <span class="label-text mb-2 text-slate-300">{{ labels.checkout.fields.phone }}</span>
-              <input
-                class="input input-bordered border-white/10 bg-white/[0.04]"
-                type="tel"
-                [placeholder]="labels.checkout.placeholders.phone"
-                [value]="buyerPhone()"
-                (input)="updateBuyerPhone($event)"
-              />
-            </label>
-          </div>
-        </section>
+        <app-checkout-buyer-form
+          [labels]="labels.checkout"
+          [buyerName]="buyerName()"
+          [buyerEmail]="buyerEmail()"
+          [buyerPhone]="buyerPhone()"
+          [buyerNameError]="displayError(buyerNameError())"
+          [buyerEmailError]="displayError(buyerEmailError())"
+          (buyerNameChange)="updateBuyerName($event)"
+          (buyerEmailChange)="updateBuyerEmail($event)"
+          (buyerPhoneChange)="updateBuyerPhone($event)"
+        />
 
-        <section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
-          <h2 class="text-2xl font-black text-white">{{ labels.checkout.payment }}</h2>
-          <div
-            class="mt-5 grid gap-3 md:grid-cols-3"
-            role="radiogroup"
-            [attr.aria-label]="labels.checkout.payment"
-          >
-            @for (method of paymentOptions; track method) {
-              <button
-                [class]="paymentOptionClass(method)"
-                type="button"
-                role="radio"
-                [attr.aria-checked]="paymentMethod() === method"
-                (click)="updatePaymentMethod(method)"
-              >
-                <span class="block font-bold text-white">{{
-                  labels.checkout.paymentMethods[method]
-                }}</span>
-                <span class="mt-2 block text-sm text-slate-400">{{
-                  labels.checkout.methodDescriptions[method]
-                }}</span>
-              </button>
-            }
-          </div>
-
-          <div class="mt-5 rounded-2xl border border-primary/20 bg-primary/10 p-4">
-            <p class="text-sm font-semibold text-primary">
-              {{ labels.checkout.paymentInstructions }}
-            </p>
-            <p class="mt-2 text-sm text-slate-300">{{ selectedPaymentDescription() }}</p>
-          </div>
-
-          <label class="form-control mt-5">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.checkout.fields.reference
-            }}</span>
-            <input
-              class="input input-bordered border-white/10 bg-white/[0.04]"
-              type="text"
-              [attr.aria-describedby]="
-                displayError(paymentReferenceError()) ? 'checkout-reference-error' : null
-              "
-              [attr.aria-invalid]="displayError(paymentReferenceError()) ? 'true' : null"
-              [placeholder]="labels.checkout.placeholders.reference"
-              [value]="paymentReference()"
-              (input)="updatePaymentReference($event)"
-            />
-            @if (displayError(paymentReferenceError()); as message) {
-              <span id="checkout-reference-error" class="mt-2 text-xs font-semibold text-error">{{
-                message
-              }}</span>
-            }
-          </label>
-        </section>
+        <app-checkout-payment-method-selector
+          [labels]="labels.checkout"
+          [paymentOptions]="paymentOptions"
+          [paymentMethod]="paymentMethod()"
+          [paymentReference]="paymentReference()"
+          [paymentReferenceError]="displayError(paymentReferenceError())"
+          (paymentMethodChange)="updatePaymentMethod($event)"
+          (paymentReferenceChange)="updatePaymentReference($event)"
+        />
 
         @if (error(); as errorMessage) {
           <section
@@ -182,37 +76,14 @@
 
       <aside class="lg:sticky lg:top-6">
         <app-order-summary [items]="selectedItems()" [fees]="fees()" />
-
-        @if (selectedCount() === 0) {
-          <p
-            class="mt-4 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-sm text-warning"
-          >
-            {{ labels.checkout.noTicketsSelected }}
-          </p>
-        }
-
-        <div class="mt-4 grid gap-3">
-          <button
-            class="btn btn-primary w-full"
-            type="button"
-            [disabled]="selectedCount() === 0 || processing()"
-            (click)="submit('approved')"
-          >
-            @if (processing()) {
-              {{ labels.checkout.processing }}
-            } @else {
-              {{ labels.checkout.approvedCta }}
-            }
-          </button>
-          <button
-            class="btn btn-outline w-full border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10"
-            type="button"
-            [disabled]="selectedCount() === 0 || processing()"
-            (click)="submit('manual_review')"
-          >
-            {{ labels.checkout.manualReviewCta }}
-          </button>
-        </div>
+        <app-checkout-actions
+          [labels]="labels.checkout"
+          [selectedCount]="selectedCount()"
+          [processing]="processing()"
+          [showNoTicketsWarning]="true"
+          (approve)="submit('approved')"
+          (requestManualReview)="submit('manual_review')"
+        />
       </aside>
     </section>
 
@@ -226,28 +97,13 @@
             formatMoney(total(), selectedCurrency())
           }}</span>
         </div>
-        <div class="grid gap-3 sm:grid-cols-2">
-          <button
-            class="btn btn-primary"
-            type="button"
-            [disabled]="selectedCount() === 0 || processing()"
-            (click)="submit('approved')"
-          >
-            @if (processing()) {
-              {{ labels.checkout.processing }}
-            } @else {
-              {{ labels.checkout.approvedCta }}
-            }
-          </button>
-          <button
-            class="btn btn-outline border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10"
-            type="button"
-            [disabled]="selectedCount() === 0 || processing()"
-            (click)="submit('manual_review')"
-          >
-            {{ labels.checkout.manualReviewCta }}
-          </button>
-        </div>
+        <app-checkout-actions
+          [labels]="labels.checkout"
+          [selectedCount]="selectedCount()"
+          [processing]="processing()"
+          (approve)="submit('approved')"
+          (requestManualReview)="submit('manual_review')"
+        />
       </div>
     </section>
   } @else {
