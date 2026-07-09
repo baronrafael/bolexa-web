@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { DemoRoleSwitcher } from '../../auth/demo-role-switcher/demo-role-switcher';
 import { appLabels } from '../../content/app-labels';
+import { DemoControls } from '../../demo/demo-controls/demo-controls';
 
 @Component({
   selector: 'app-scanner-shell',
-  imports: [DemoRoleSwitcher, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [DemoControls, DemoRoleSwitcher, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './scanner-shell.html',
   styleUrl: './scanner-shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

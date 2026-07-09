@@ -53,6 +53,21 @@ export const appLabels = {
       admin: 'Admin',
     } satisfies Record<UserRole, string>,
   },
+  demo: {
+    trigger: 'Demo',
+    title: 'Script demo 5 min',
+    description: 'Flujo recomendado: compra Caracas Music Fest, abre Mis tickets, valida un QR y revisa dashboard.',
+    featuredEvent: 'Evento seed: Caracas Music Fest',
+    qrCode: 'QR seed: BLX-CMF-GEN-1001',
+    reset: 'Reset demo data',
+    resetDone: 'Data demo reiniciada.',
+    links: {
+      event: 'Comprar ticket',
+      tickets: 'Mis tickets',
+      scanner: 'Scanner CMF',
+      dashboard: 'Dashboard',
+    },
+  },
   shells: {
     organizer: {
       subtitle: 'Portal organizador',
