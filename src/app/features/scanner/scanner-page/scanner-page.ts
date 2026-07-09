@@ -25,6 +25,8 @@ export class ScannerPage {
   protected readonly loading = signal(true);
   protected readonly validating = signal(false);
   protected readonly checkingIn = signal(false);
+  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly operationError = signal<string | null>(null);
   protected readonly submitted = signal(false);
   protected readonly eventSummary = signal<ScannerEventSummary | null>(null);
   protected readonly qrCode = signal('');
@@ -58,11 +60,14 @@ export class ScannerPage {
     }
 
     this.validating.set(true);
+    this.operationError.set(null);
 
     try {
       const result = await this.scannerRepository.validateTicket(eventId, this.qrCode());
 
       this.recordResult(result);
+    } catch {
+      this.operationError.set(this.labels.scannerPage.operationError);
     } finally {
       this.validating.set(false);
     }
@@ -80,12 +85,15 @@ export class ScannerPage {
     }
 
     this.checkingIn.set(true);
+    this.operationError.set(null);
 
     try {
       const result = await this.scannerRepository.checkIn(eventId, this.currentResult()?.ticket?.qrCode ?? this.qrCode(), this.auth.currentUser().id);
 
       this.recordResult(result);
       await this.loadEvent(eventId, false);
+    } catch {
+      this.operationError.set(this.labels.scannerPage.operationError);
     } finally {
       this.checkingIn.set(false);
     }
@@ -106,6 +114,14 @@ export class ScannerPage {
     }).format(new Date(value));
   }
 
+  protected retryLoad(): void {
+    const eventId = this.eventId();
+
+    if (eventId) {
+      void this.loadEvent(eventId);
+    }
+  }
+
   private recordResult(result: ScanResult): void {
     this.currentResult.set(result);
     this.recentResults.update((results) => [result, ...results].slice(0, 5));
@@ -118,12 +134,19 @@ export class ScannerPage {
       this.loading.set(true);
     }
 
+    this.errorMessage.set(null);
+
     try {
       const events = await this.scannerRepository.listEvents();
       const eventSummary = events.find((event) => event.event.id === eventId) ?? null;
 
       if (requestId === this.loadRequestId) {
         this.eventSummary.set(eventSummary);
+      }
+    } catch {
+      if (requestId === this.loadRequestId) {
+        this.eventSummary.set(null);
+        this.errorMessage.set(this.labels.scannerPage.errorDescription);
       }
     } finally {
       if (requestId === this.loadRequestId && showLoading) {

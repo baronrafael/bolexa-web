@@ -21,6 +21,7 @@ export class Stats {
 
   protected readonly labels = appLabels;
   protected readonly loading = signal(true);
+  protected readonly errorMessage = signal<string | null>(null);
   protected readonly eventSummary = signal<ScannerEventSummary | null>(null);
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
@@ -78,10 +79,19 @@ export class Stats {
     }).format(new Date(value));
   }
 
+  protected retryLoad(): void {
+    const eventId = this.eventId();
+
+    if (eventId) {
+      void this.loadStats(eventId);
+    }
+  }
+
   private async loadStats(eventId: string): Promise<void> {
     const requestId = ++this.loadRequestId;
 
     this.loading.set(true);
+    this.errorMessage.set(null);
 
     try {
       const [events, attendees] = await Promise.all([
@@ -95,6 +105,12 @@ export class Stats {
 
       this.eventSummary.set(events.find((event) => event.event.id === eventId) ?? null);
       this.attendees.set(attendees);
+    } catch {
+      if (requestId === this.loadRequestId) {
+        this.eventSummary.set(null);
+        this.attendees.set([]);
+        this.errorMessage.set(this.labels.scannerStats.errorDescription);
+      }
     } finally {
       if (requestId === this.loadRequestId) {
         this.loading.set(false);

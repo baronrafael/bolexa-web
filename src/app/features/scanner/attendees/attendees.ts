@@ -25,6 +25,8 @@ export class Attendees {
   protected readonly loading = signal(true);
   protected readonly validating = signal(false);
   protected readonly checkingIn = signal(false);
+  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly operationError = signal<string | null>(null);
   protected readonly eventSummary = signal<ScannerEventSummary | null>(null);
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly searchQuery = signal('');
@@ -75,9 +77,12 @@ export class Attendees {
     }
 
     this.validating.set(true);
+    this.operationError.set(null);
 
     try {
       this.currentResult.set(await this.scannerRepository.validateTicket(eventId, attendee.ticket.qrCode));
+    } catch {
+      this.operationError.set(this.labels.scannerAttendees.operationError);
     } finally {
       this.validating.set(false);
     }
@@ -92,12 +97,23 @@ export class Attendees {
     }
 
     this.checkingIn.set(true);
+    this.operationError.set(null);
 
     try {
       this.currentResult.set(await this.scannerRepository.checkIn(eventId, attendee.ticket.qrCode, this.auth.currentUser().id));
       await this.loadData(eventId, false);
+    } catch {
+      this.operationError.set(this.labels.scannerAttendees.operationError);
     } finally {
       this.checkingIn.set(false);
+    }
+  }
+
+  protected retryLoad(): void {
+    const eventId = this.eventId();
+
+    if (eventId) {
+      void this.loadData(eventId);
     }
   }
 
@@ -107,6 +123,8 @@ export class Attendees {
     if (showLoading) {
       this.loading.set(true);
     }
+
+    this.errorMessage.set(null);
 
     try {
       const [events, attendees] = await Promise.all([
@@ -120,6 +138,12 @@ export class Attendees {
 
       this.eventSummary.set(events.find((event) => event.event.id === eventId) ?? null);
       this.attendees.set(attendees.sort((first, second) => first.ticket.holderName.localeCompare(second.ticket.holderName)));
+    } catch {
+      if (requestId === this.loadRequestId) {
+        this.eventSummary.set(null);
+        this.attendees.set([]);
+        this.errorMessage.set(this.labels.scannerAttendees.errorDescription);
+      }
     } finally {
       if (requestId === this.loadRequestId && showLoading) {
         this.loading.set(false);

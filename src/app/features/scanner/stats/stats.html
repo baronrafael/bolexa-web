@@ -1,5 +1,17 @@
 @if (loading()) {
   <app-loading-state [title]="labels.scannerStats.loadingTitle" [rows]="5" />
+} @else if (errorMessage(); as message) {
+  <app-empty-state
+    actionLink="/scan/events"
+    [actionLabel]="labels.scannerEvents.title"
+    [eyebrow]="labels.scannerStats.eyebrow"
+    [title]="labels.scannerStats.errorTitle"
+    [description]="message"
+  />
+
+  <div class="mt-5 text-center">
+    <button class="btn btn-error" type="button" (click)="retryLoad()">{{ labels.scannerStats.retry }}</button>
+  </div>
 } @else if (eventSummary(); as summary) {
   <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" [routerLink]="['/scan/events', summary.event.id, 'scanner']">
     {{ labels.scannerStats.backToScanner }}

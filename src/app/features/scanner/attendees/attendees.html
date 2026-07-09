@@ -1,5 +1,17 @@
 @if (loading()) {
   <app-loading-state [title]="labels.scannerAttendees.loadingTitle" [rows]="5" />
+} @else if (errorMessage(); as message) {
+  <app-empty-state
+    actionLink="/scan/events"
+    [actionLabel]="labels.scannerPage.backToEvents"
+    [eyebrow]="labels.scannerAttendees.eyebrow"
+    [title]="labels.scannerAttendees.errorTitle"
+    [description]="message"
+  />
+
+  <div class="mt-5 text-center">
+    <button class="btn btn-error" type="button" (click)="retryLoad()">{{ labels.scannerAttendees.retry }}</button>
+  </div>
 } @else if (eventSummary(); as summary) {
   <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" [routerLink]="['/scan/events', summary.event.id, 'scanner']">
     {{ labels.scannerAttendees.backToScanner }}
@@ -68,6 +80,10 @@
     <aside class="grid gap-5">
       <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
         <h2 class="text-2xl font-black text-white">{{ labels.scannerAttendees.selectedTitle }}</h2>
+
+        @if (operationError(); as message) {
+          <p class="mt-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error">{{ message }}</p>
+        }
 
         @if (selectedAttendee(); as attendee) {
           <div class="mt-5 grid gap-4 text-sm">

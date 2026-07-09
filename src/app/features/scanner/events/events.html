@@ -1,5 +1,12 @@
 @if (loading()) {
   <app-loading-state [title]="labels.scannerEvents.loadingTitle" [rows]="5" />
+} @else if (errorMessage(); as message) {
+  <section class="rounded-[1.5rem] border border-error/30 bg-error/10 p-8 text-center shadow-2xl">
+    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-error">{{ labels.scannerEvents.eyebrow }}</p>
+    <h2 class="mt-4 text-2xl font-black text-white">{{ labels.scannerEvents.errorTitle }}</h2>
+    <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-error/80">{{ message }}</p>
+    <button class="btn btn-error mt-6" type="button" (click)="retryLoad()">{{ labels.scannerEvents.retry }}</button>
+  </section>
 } @else {
   <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
     <div class="bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.24),transparent_32%),linear-gradient(135deg,rgba(14,165,233,0.16),rgba(124,58,237,0.08))] p-6 sm:p-8">
