@@ -1,9 +1,13 @@
 <main class="mx-auto w-full max-w-7xl px-5 pb-16 pt-8 sm:px-8 lg:pt-14">
   <section class="rounded-[2rem] border border-white/10 bg-base-300/50 p-6 shadow-2xl sm:p-8">
-    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.eventsList.eyebrow }}</p>
+    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+      {{ labels.eventsList.eyebrow }}
+    </p>
     <div class="mt-4 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
       <div>
-        <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.eventsList.title }}</h1>
+        <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl">
+          {{ labels.eventsList.title }}
+        </h1>
         <p class="mt-4 max-w-2xl text-slate-300">{{ labels.eventsList.description }}</p>
       </div>
 
@@ -16,11 +20,17 @@
     </div>
   </section>
 
-  <section class="mt-8 grid gap-4 rounded-[1.5rem] border border-white/10 bg-base-300/40 p-4 shadow-2xl lg:grid-cols-[1fr_auto] lg:items-center">
+  <section
+    class="mt-8 grid gap-4 rounded-[1.5rem] border border-white/10 bg-base-300/40 p-4 shadow-2xl lg:grid-cols-[1fr_auto] lg:items-center"
+  >
     <div class="grid gap-3 md:grid-cols-3">
       <label class="form-control">
         <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.category }}</span>
-        <select class="select select-bordered w-full border-white/10 bg-white/[0.04]" [value]="selectedCategory()" (change)="setCategory($event)">
+        <select
+          class="select select-bordered w-full border-white/10 bg-white/[0.04]"
+          [value]="selectedCategory()"
+          (change)="setCategory($event)"
+        >
           <option value="all">{{ labels.eventsList.filters.allCategories }}</option>
           @for (category of categoryOptions; track category.value) {
             <option [value]="category.value">{{ category.label }}</option>
@@ -30,7 +40,11 @@
 
       <label class="form-control">
         <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.city }}</span>
-        <select class="select select-bordered w-full border-white/10 bg-white/[0.04]" [value]="selectedCity()" (change)="setCity($event)">
+        <select
+          class="select select-bordered w-full border-white/10 bg-white/[0.04]"
+          [value]="selectedCity()"
+          (change)="setCity($event)"
+        >
           <option value="all">{{ labels.eventsList.filters.allCities }}</option>
           @for (city of cityOptions(); track city) {
             <option [value]="city">{{ city }}</option>
@@ -40,7 +54,11 @@
 
       <label class="form-control">
         <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.date }}</span>
-        <select class="select select-bordered w-full border-white/10 bg-white/[0.04]" [value]="selectedDate()" (change)="setDate($event)">
+        <select
+          class="select select-bordered w-full border-white/10 bg-white/[0.04]"
+          [value]="selectedDate()"
+          (change)="setDate($event)"
+        >
           @for (dateOption of dateOptions; track dateOption.value) {
             <option [value]="dateOption.value">{{ dateOption.label }}</option>
           }
@@ -61,7 +79,10 @@
         }
       </div>
     } @else {
-      <app-empty-state [title]="labels.eventsList.empty.title" [description]="labels.eventsList.empty.description" />
+      <app-empty-state
+        [title]="labels.eventsList.empty.title"
+        [description]="labels.eventsList.empty.description"
+      />
     }
   </section>
 </main>

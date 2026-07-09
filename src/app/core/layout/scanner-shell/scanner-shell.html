@@ -3,7 +3,9 @@
     <div class="mx-auto flex max-w-5xl items-center justify-between gap-3">
       <div>
         <a class="text-lg font-black text-white" routerLink="/">{{ labels.brand.scannerName }}</a>
-        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-success">{{ labels.shells.scanner.mode }}</p>
+        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-success">
+          {{ labels.shells.scanner.mode }}
+        </p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -13,9 +15,17 @@
     </div>
   </header>
 
-  <nav class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-5 py-4" [attr.aria-label]="labels.navigation.scannerAriaLabel">
+  <nav
+    class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-5 py-4"
+    [attr.aria-label]="labels.navigation.scannerAriaLabel"
+  >
     @for (link of navLinks; track link.path) {
-      <a class="btn btn-ghost btn-sm shrink-0" ariaCurrentWhenActive="page" routerLinkActive="btn-success" [routerLink]="link.path">
+      <a
+        class="btn btn-ghost btn-sm shrink-0"
+        ariaCurrentWhenActive="page"
+        routerLinkActive="btn-success"
+        [routerLink]="link.path"
+      >
         {{ link.label }}
       </a>
     }

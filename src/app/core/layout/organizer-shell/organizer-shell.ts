@@ -16,8 +16,17 @@ export class OrganizerShell {
   protected readonly navLinks = [
     { label: appLabels.navigation.organizerLinks.dashboard, path: '/organizer/dashboard' },
     { label: appLabels.navigation.organizerLinks.events, path: '/organizer/events' },
-    { label: appLabels.navigation.organizerLinks.orders, path: '/organizer/events/event-caracas-music-fest/orders' },
-    { label: appLabels.navigation.organizerLinks.attendees, path: '/organizer/events/event-caracas-music-fest/attendees' },
-    { label: appLabels.navigation.organizerLinks.reports, path: '/organizer/events/event-caracas-music-fest/reports' },
+    {
+      label: appLabels.navigation.organizerLinks.orders,
+      path: '/organizer/events/event-caracas-music-fest/orders',
+    },
+    {
+      label: appLabels.navigation.organizerLinks.attendees,
+      path: '/organizer/events/event-caracas-music-fest/attendees',
+    },
+    {
+      label: appLabels.navigation.organizerLinks.reports,
+      path: '/organizer/events/event-caracas-music-fest/reports',
+    },
   ];
 }

@@ -1,10 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventCategory, EventStatus, Venue } from '../../../data-access/models';
-import { OrganizerRepository, SaveOrganizerEventInput } from '../../../data-access/repositories/organizer-repository';
+import {
+  OrganizerRepository,
+  SaveOrganizerEventInput,
+} from '../../../data-access/repositories/organizer-repository';
 import { EmptyState, LoadingState } from '../../../shared/ui';
 
 interface EventFormState {
@@ -33,8 +43,20 @@ export class EventForm {
   private loadRequestId = 0;
 
   protected readonly labels = appLabels;
-  protected readonly categories: EventCategory[] = ['concert', 'sports', 'running', 'theater', 'conference', 'party', 'festival', 'other'];
-  protected readonly statuses: Array<Extract<EventStatus, 'draft' | 'published'>> = ['draft', 'published'];
+  protected readonly categories: EventCategory[] = [
+    'concert',
+    'sports',
+    'running',
+    'theater',
+    'conference',
+    'party',
+    'festival',
+    'other',
+  ];
+  protected readonly statuses: Array<Extract<EventStatus, 'draft' | 'published'>> = [
+    'draft',
+    'published',
+  ];
   protected readonly venues = signal<Venue[]>([]);
   protected readonly loading = signal(true);
   protected readonly saving = signal(false);
@@ -44,8 +66,16 @@ export class EventForm {
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly isEdit = computed(() => Boolean(this.eventId()));
   protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
-  protected readonly eyebrow = computed(() => this.isEdit() ? this.labels.organizerEventForm.editEyebrow : this.labels.organizerEventForm.createEyebrow);
-  protected readonly title = computed(() => this.isEdit() ? this.labels.organizerEventForm.editTitle : this.labels.organizerEventForm.createTitle);
+  protected readonly eyebrow = computed(() =>
+    this.isEdit()
+      ? this.labels.organizerEventForm.editEyebrow
+      : this.labels.organizerEventForm.createEyebrow,
+  );
+  protected readonly title = computed(() =>
+    this.isEdit()
+      ? this.labels.organizerEventForm.editTitle
+      : this.labels.organizerEventForm.createTitle,
+  );
   protected readonly isValid = computed(() => {
     const form = this.form();
 
@@ -67,7 +97,9 @@ export class EventForm {
     this.form.update((form) => ({ ...form, [field]: value }));
   }
 
-  protected hasFieldError(field: keyof Pick<EventFormState, 'title' | 'description' | 'venueId' | 'startsAt'>): boolean {
+  protected hasFieldError(
+    field: keyof Pick<EventFormState, 'title' | 'description' | 'venueId' | 'startsAt'>,
+  ): boolean {
     return this.submitted() && !String(this.form()[field]).trim();
   }
 

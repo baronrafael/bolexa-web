@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
@@ -70,14 +77,20 @@ export class Dashboard {
   }
 
   protected eventRevenue(event: EventDetail): string {
-    const total = event.ticketTypes.reduce((sum, ticketType) => sum + ticketType.quantitySold * ticketType.price, 0);
+    const total = event.ticketTypes.reduce(
+      (sum, ticketType) => sum + ticketType.quantitySold * ticketType.price,
+      0,
+    );
     const currency = event.ticketTypes[0]?.currency ?? 'USD';
 
     return this.formatMoney(total, currency);
   }
 
   protected orderEventTitle(order: Order): string {
-    return this.summary()?.upcomingEvents.find((detail) => detail.event.id === order.eventId)?.event.title ?? order.eventId;
+    return (
+      this.summary()?.upcomingEvents.find((detail) => detail.event.id === order.eventId)?.event
+        .title ?? order.eventId
+    );
   }
 
   protected formatDate(value: string): string {

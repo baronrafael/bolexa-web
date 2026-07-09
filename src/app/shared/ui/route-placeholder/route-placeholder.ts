@@ -17,9 +17,15 @@ export class RoutePlaceholder {
 
   protected readonly eyebrow = computed(() => this.readData('eyebrow', this.defaults.eyebrow));
   protected readonly title = computed(() => this.readData('title', this.defaults.title));
-  protected readonly description = computed(() => this.readData('description', this.defaults.description));
-  protected readonly primaryLink = computed(() => this.readData('primaryLink', this.defaults.primaryLink));
-  protected readonly primaryLabel = computed(() => this.readData('primaryLabel', this.defaults.primaryLabel));
+  protected readonly description = computed(() =>
+    this.readData('description', this.defaults.description),
+  );
+  protected readonly primaryLink = computed(() =>
+    this.readData('primaryLink', this.defaults.primaryLink),
+  );
+  protected readonly primaryLabel = computed(() =>
+    this.readData('primaryLabel', this.defaults.primaryLabel),
+  );
 
   private readData(key: string, fallback: string): string {
     const data = this.routeData() as Record<string, unknown>;

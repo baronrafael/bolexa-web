@@ -48,7 +48,8 @@ export function createInitialMockDatabase(): MockDatabaseState {
         id: 'org-producciones-avila',
         name: 'Producciones Avila',
         slug: 'producciones-avila',
-        description: 'Productora de conciertos, experiencias culturales y eventos masivos en Caracas.',
+        description:
+          'Productora de conciertos, experiencias culturales y eventos masivos en Caracas.',
         contactEmail: 'operaciones@avila.example.com',
         contactPhone: '+58 412-555-0202',
         status: 'active',
@@ -59,7 +60,8 @@ export function createInitialMockDatabase(): MockDatabaseState {
         id: 'org-running-oriente',
         name: 'Running Oriente Club',
         slug: 'running-oriente-club',
-        description: 'Club dedicado a carreras urbanas y experiencias deportivas en el oriente del pais.',
+        description:
+          'Club dedicado a carreras urbanas y experiencias deportivas en el oriente del pais.',
         status: 'active',
         createdAt,
         updatedAt,
@@ -160,7 +162,8 @@ export function createInitialMockDatabase(): MockDatabaseState {
         venueId: 'venue-terraza-ccct',
         title: 'Caracas Music Fest',
         slug: 'caracas-music-fest',
-        description: 'Una noche de musica en vivo con artistas nacionales, food trucks y acceso rapido por QR.',
+        description:
+          'Una noche de musica en vivo con artistas nacionales, food trucks y acceso rapido por QR.',
         category: 'concert',
         coverImageUrl: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4',
         startsAt: '2026-07-18T23:00:00.000Z',
@@ -175,7 +178,8 @@ export function createInitialMockDatabase(): MockDatabaseState {
         venueId: 'venue-paseo-lecheria',
         title: 'Lecheria 10K',
         slug: 'lecheria-10k',
-        description: 'Carrera urbana frente al mar con kit de corredor, hidratacion y chip de participacion.',
+        description:
+          'Carrera urbana frente al mar con kit de corredor, hidratacion y chip de participacion.',
         category: 'running',
         coverImageUrl: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8',
         startsAt: '2026-08-02T10:00:00.000Z',
@@ -203,7 +207,8 @@ export function createInitialMockDatabase(): MockDatabaseState {
         venueId: 'venue-hotel-maracaibo',
         title: 'Tech Summit Venezuela',
         slug: 'tech-summit-venezuela',
-        description: 'Conferencias, demos y networking para builders, startups y equipos de producto.',
+        description:
+          'Conferencias, demos y networking para builders, startups y equipos de producto.',
         category: 'conference',
         coverImageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87',
         startsAt: '2026-09-05T13:00:00.000Z',

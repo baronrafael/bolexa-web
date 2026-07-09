@@ -10,18 +10,31 @@
   />
 
   <div class="mt-5 text-center">
-    <button class="btn btn-error" type="button" (click)="retryLoad()">{{ labels.scannerStats.retry }}</button>
+    <button class="btn btn-error" type="button" (click)="retryLoad()">
+      {{ labels.scannerStats.retry }}
+    </button>
   </div>
 } @else if (eventSummary(); as summary) {
-  <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" [routerLink]="['/scan/events', summary.event.id, 'scanner']">
+  <a
+    class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white"
+    [routerLink]="['/scan/events', summary.event.id, 'scanner']"
+  >
     {{ labels.scannerStats.backToScanner }}
   </a>
 
   <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
-    <div class="bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.24),transparent_32%),linear-gradient(135deg,rgba(14,165,233,0.16),rgba(124,58,237,0.08))] p-6 sm:p-8">
-      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.scannerStats.eyebrow }}</p>
-      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.scannerStats.title }}</h1>
-      <p class="mt-4 max-w-2xl text-slate-300">{{ summary.event.title }} · {{ labels.scannerStats.description }}</p>
+    <div
+      class="bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.24),transparent_32%),linear-gradient(135deg,rgba(14,165,233,0.16),rgba(124,58,237,0.08))] p-6 sm:p-8"
+    >
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+        {{ labels.scannerStats.eyebrow }}
+      </p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">
+        {{ labels.scannerStats.title }}
+      </h1>
+      <p class="mt-4 max-w-2xl text-slate-300">
+        {{ summary.event.title }} · {{ labels.scannerStats.description }}
+      </p>
     </div>
   </section>
 
@@ -70,7 +83,10 @@
       </div>
     } @else {
       <div class="mt-5">
-        <app-empty-state [title]="labels.scannerStats.noRecentTitle" [description]="labels.scannerStats.noRecentDescription" />
+        <app-empty-state
+          [title]="labels.scannerStats.noRecentTitle"
+          [description]="labels.scannerStats.noRecentDescription"
+        />
       </div>
     }
   </section>

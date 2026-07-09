@@ -1,10 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { Currency, EventDetail, TicketType, TicketTypeStatus } from '../../../data-access/models';
-import { OrganizerRepository, SaveTicketTypeInput } from '../../../data-access/repositories/organizer-repository';
+import {
+  OrganizerRepository,
+  SaveTicketTypeInput,
+} from '../../../data-access/repositories/organizer-repository';
 import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
@@ -47,20 +57,26 @@ export class TicketTypes {
   protected readonly editingTicketType = computed(() => {
     const editingId = this.editingTicketTypeId();
 
-    return editingId ? this.ticketTypes().find((ticketType) => ticketType.id === editingId) ?? null : null;
+    return editingId
+      ? (this.ticketTypes().find((ticketType) => ticketType.id === editingId) ?? null)
+      : null;
   });
-  protected readonly formTitle = computed(() => this.editingTicketTypeId() ? this.labels.organizerTicketTypes.formTitleEdit : this.labels.organizerTicketTypes.formTitleCreate);
+  protected readonly formTitle = computed(() =>
+    this.editingTicketTypeId()
+      ? this.labels.organizerTicketTypes.formTitleEdit
+      : this.labels.organizerTicketTypes.formTitleCreate,
+  );
   protected readonly isValid = computed(() => {
     const form = this.form();
     const editingTicketType = this.editingTicketType();
 
     return Boolean(
-      form.name.trim()
-      && Number.isFinite(form.price)
-      && form.price >= 0
-      && Number.isInteger(form.quantityTotal)
-      && form.quantityTotal >= 0
-      && (!editingTicketType || form.quantityTotal >= editingTicketType.quantitySold),
+      form.name.trim() &&
+      Number.isFinite(form.price) &&
+      form.price >= 0 &&
+      Number.isInteger(form.quantityTotal) &&
+      form.quantityTotal >= 0 &&
+      (!editingTicketType || form.quantityTotal >= editingTicketType.quantitySold),
     );
   });
 
@@ -75,11 +91,16 @@ export class TicketTypes {
     });
   }
 
-  protected updateField<K extends keyof TicketTypeFormState>(field: K, value: TicketTypeFormState[K]): void {
+  protected updateField<K extends keyof TicketTypeFormState>(
+    field: K,
+    value: TicketTypeFormState[K],
+  ): void {
     this.form.update((form) => ({ ...form, [field]: value }));
   }
 
-  protected hasFieldError(field: keyof Pick<TicketTypeFormState, 'name' | 'price' | 'quantityTotal'>): boolean {
+  protected hasFieldError(
+    field: keyof Pick<TicketTypeFormState, 'name' | 'price' | 'quantityTotal'>,
+  ): boolean {
     if (!this.submitted()) {
       return false;
     }
@@ -96,9 +117,11 @@ export class TicketTypes {
 
     const editingTicketType = this.editingTicketType();
 
-    return !Number.isInteger(form.quantityTotal)
-      || form.quantityTotal < 0
-      || Boolean(editingTicketType && form.quantityTotal < editingTicketType.quantitySold);
+    return (
+      !Number.isInteger(form.quantityTotal) ||
+      form.quantityTotal < 0 ||
+      Boolean(editingTicketType && form.quantityTotal < editingTicketType.quantitySold)
+    );
   }
 
   protected edit(ticketType: TicketType): void {

@@ -1,10 +1,19 @@
 <div class="min-h-screen overflow-hidden bg-base-100 text-base-content">
-  <header class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
-    <a class="text-xl font-black tracking-tight text-white" routerLink="/" [attr.aria-label]="labels.brand.homeAriaLabel">
+  <header
+    class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-5 sm:px-8"
+  >
+    <a
+      class="text-xl font-black tracking-tight text-white"
+      routerLink="/"
+      [attr.aria-label]="labels.brand.homeAriaLabel"
+    >
       {{ labels.brand.name }}
     </a>
 
-    <nav class="hidden items-center gap-6 text-sm font-medium text-slate-300 lg:flex" [attr.aria-label]="labels.navigation.primaryAriaLabel">
+    <nav
+      class="hidden items-center gap-6 text-sm font-medium text-slate-300 lg:flex"
+      [attr.aria-label]="labels.navigation.primaryAriaLabel"
+    >
       @for (link of navLinks; track link.path) {
         <a
           class="transition hover:text-white"

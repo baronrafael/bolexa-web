@@ -1,48 +1,45 @@
-# BolexaWeb
+# Bolexa Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.11.
+Bolexa Web is the Angular MVP for a dark-mode-first ticketing platform focused on Venezuela. It includes consumer ticket purchase, organizer event management, and scanner/check-in demo flows backed by a persisted mock database.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- Angular `21.2.x`
+- Tailwind CSS plus daisyUI custom `bolexa` theme
+- Vitest through Angular CLI
+- Mock repositories backed by `localStorage`
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Commands
 
 ```bash
-ng generate component component-name
+npm start
+npm run build
+npm test
+npm run format
+npm run format:check
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Demo Roles
 
-```bash
-ng generate --help
-```
+Use the role switcher in the header.
 
-## Building
+- Consumer: `Andrea Perez`
+- Organizer: `Producciones Avila`
+- Scanner: `Carlos Entrada`
 
-To build the project run:
+Organizer and scanner routes are protected by demo role guards. Switch roles before opening those sections.
 
-```bash
-ng build
-```
+## Key Routes
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
+- `/` marketplace home
+- `/events` event list
+- `/events/caracas-music-fest` event detail
+- `/checkout/event-caracas-music-fest` checkout
+- `/my-tickets` consumer tickets
+- `/organizer/dashboard` organizer dashboard
+- `/organizer/events` organizer events
+- `/scan/events` scanner event selector
+- `/scan/events/event-caracas-music-fest/scanner?qr=BLX-CMF-GEN-1001` scanner with sample QR
 
 ## Demo Happy Path
 
@@ -55,16 +52,14 @@ Use the `Demo` dropdown in the app header to keep the walkthrough deterministic.
 5. Validate the QR, then mark entry to show duplicate-prevention behavior.
 6. Open `Dashboard` to review organizer metrics.
 
-## Running end-to-end tests
+## Mock Data
 
-For end-to-end (e2e) testing, run:
+The demo store is persisted in `localStorage` under `bolexa.mock-db.v1`. Use `Reset demo data` whenever a walkthrough needs a clean seed state.
 
-```bash
-ng e2e
-```
+Sample QR: `BLX-CMF-GEN-1001`.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Documentation
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Frontend tickets: `../docs/frontend-tickets.md`
+- BFF tickets: `../docs/bff-tickets.md`
+- Design system notes: `../docs/opendesign-design-system.md`

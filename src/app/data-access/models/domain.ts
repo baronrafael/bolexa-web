@@ -1,15 +1,42 @@
 export type UserRole = 'consumer' | 'organizer' | 'scanner' | 'admin';
 export type OrganizerStatus = 'pending' | 'active' | 'suspended';
-export type EventCategory = 'concert' | 'sports' | 'running' | 'theater' | 'conference' | 'party' | 'festival' | 'other';
+export type EventCategory =
+  | 'concert'
+  | 'sports'
+  | 'running'
+  | 'theater'
+  | 'conference'
+  | 'party'
+  | 'festival'
+  | 'other';
 export type EventStatus = 'draft' | 'published' | 'cancelled' | 'completed';
 export type Currency = 'USD' | 'VES';
 export type TicketTypeStatus = 'active' | 'paused' | 'sold_out';
-export type PaymentMethod = 'card' | 'zelle' | 'pago_movil' | 'binance' | 'bank_transfer' | 'manual';
-export type OrderStatus = 'pending' | 'paid' | 'cancelled' | 'expired' | 'refunded' | 'manual_review' | 'failed';
+export type PaymentMethod =
+  | 'card'
+  | 'zelle'
+  | 'pago_movil'
+  | 'binance'
+  | 'bank_transfer'
+  | 'manual';
+export type OrderStatus =
+  | 'pending'
+  | 'paid'
+  | 'cancelled'
+  | 'expired'
+  | 'refunded'
+  | 'manual_review'
+  | 'failed';
 export type TicketStatus = 'valid' | 'used' | 'cancelled' | 'refunded';
 export type CheckInStatus = 'accepted' | 'rejected' | 'duplicate';
 export type PromoCodeStatus = 'active' | 'expired' | 'disabled';
-export type ScanResultStatus = 'accepted' | 'already_used' | 'invalid_ticket' | 'wrong_event' | 'cancelled' | 'refunded';
+export type ScanResultStatus =
+  | 'accepted'
+  | 'already_used'
+  | 'invalid_ticket'
+  | 'wrong_event'
+  | 'cancelled'
+  | 'refunded';
 
 export interface User {
   id: string;

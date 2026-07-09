@@ -23,7 +23,9 @@ export class ScannerRepository {
     await mockDelay();
 
     const state = this.database.snapshot();
-    const event = state.events.find((candidate) => candidate.id === eventId && candidate.status === 'published');
+    const event = state.events.find(
+      (candidate) => candidate.id === eventId && candidate.status === 'published',
+    );
 
     return event ? this.buildEventSummary(state, event.id) : null;
   }
@@ -42,7 +44,9 @@ export class ScannerRepository {
     return state.tickets
       .filter((ticket) => ticket.eventId === eventId)
       .map((ticket) => {
-        const ticketType = state.ticketTypes.find((candidate) => candidate.id === ticket.ticketTypeId);
+        const ticketType = state.ticketTypes.find(
+          (candidate) => candidate.id === ticket.ticketTypeId,
+        );
         const order = state.orders.find((candidate) => candidate.id === ticket.orderId);
         const user = state.users.find((candidate) => candidate.id === ticket.userId);
 
@@ -96,7 +100,9 @@ export class ScannerRepository {
   private validateTicketSync(eventId: string, qrCode: string): ScanResult {
     const state = this.database.snapshot();
     const normalizedQrCode = qrCode.trim().toUpperCase();
-    const ticket = state.tickets.find((candidate) => candidate.qrCode.toUpperCase() === normalizedQrCode);
+    const ticket = state.tickets.find(
+      (candidate) => candidate.qrCode.toUpperCase() === normalizedQrCode,
+    );
 
     if (!ticket) {
       return {
@@ -131,7 +137,10 @@ export class ScannerRepository {
     if (ticket.status === 'cancelled' || ticket.status === 'refunded') {
       return {
         status: ticket.status,
-        message: ticket.status === 'cancelled' ? 'Este ticket fue cancelado.' : 'Este ticket fue reembolsado.',
+        message:
+          ticket.status === 'cancelled'
+            ? 'Este ticket fue cancelado.'
+            : 'Este ticket fue reembolsado.',
         ticket: clone(ticket),
         ticketType: ticketType ? clone(ticketType) : undefined,
         holderName: ticket.holderName,
@@ -147,7 +156,10 @@ export class ScannerRepository {
     };
   }
 
-  private buildEventSummary(state: ReturnType<MockDatabase['snapshot']>, eventId: string): ScannerEventSummary {
+  private buildEventSummary(
+    state: ReturnType<MockDatabase['snapshot']>,
+    eventId: string,
+  ): ScannerEventSummary {
     const event = state.events.find((candidate) => candidate.id === eventId);
 
     if (!event) {

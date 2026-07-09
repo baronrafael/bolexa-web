@@ -10,25 +10,42 @@
   />
 
   <div class="mt-5 text-center">
-    <button class="btn btn-error" type="button" (click)="retryLoad()">{{ labels.scannerAttendees.retry }}</button>
+    <button class="btn btn-error" type="button" (click)="retryLoad()">
+      {{ labels.scannerAttendees.retry }}
+    </button>
   </div>
 } @else if (eventSummary(); as summary) {
-  <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" [routerLink]="['/scan/events', summary.event.id, 'scanner']">
+  <a
+    class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white"
+    [routerLink]="['/scan/events', summary.event.id, 'scanner']"
+  >
     {{ labels.scannerAttendees.backToScanner }}
   </a>
 
   <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
-    <div class="bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.22),transparent_32%),linear-gradient(135deg,rgba(20,184,166,0.16),rgba(124,58,237,0.08))] p-6 sm:p-8">
-      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.scannerAttendees.eyebrow }}</p>
-      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.scannerAttendees.title }}</h1>
-      <p class="mt-4 max-w-2xl text-slate-300">{{ summary.event.title }} · {{ labels.scannerAttendees.description }}</p>
+    <div
+      class="bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.22),transparent_32%),linear-gradient(135deg,rgba(20,184,166,0.16),rgba(124,58,237,0.08))] p-6 sm:p-8"
+    >
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+        {{ labels.scannerAttendees.eyebrow }}
+      </p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">
+        {{ labels.scannerAttendees.title }}
+      </h1>
+      <p class="mt-4 max-w-2xl text-slate-300">
+        {{ summary.event.title }} · {{ labels.scannerAttendees.description }}
+      </p>
     </div>
   </section>
 
   <section class="mt-8 grid gap-6 xl:grid-cols-[1fr_0.8fr] xl:items-start">
     <div class="grid gap-5">
       <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-5 shadow-2xl">
-        <app-search-input [placeholder]="labels.scannerAttendees.searchPlaceholder" [value]="searchQuery()" (queryChange)="searchQuery.set($event)" />
+        <app-search-input
+          [placeholder]="labels.scannerAttendees.searchPlaceholder"
+          [value]="searchQuery()"
+          (queryChange)="searchQuery.set($event)"
+        />
       </article>
 
       @if (attendees().length > 0) {
@@ -47,7 +64,9 @@
                 <div class="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h2 class="text-xl font-black text-white">{{ attendee.ticket.holderName }}</h2>
-                    <p class="break-all text-sm text-slate-400">{{ attendee.ticket.holderEmail }}</p>
+                    <p class="break-all text-sm text-slate-400">
+                      {{ attendee.ticket.holderEmail }}
+                    </p>
                   </div>
                   <app-status-badge [status]="attendee.ticket.status" />
                 </div>
@@ -63,17 +82,25 @@
                   </div>
                   <div>
                     <p class="text-slate-500">{{ labels.scannerAttendees.columns.qr }}</p>
-                    <p class="break-all font-mono text-xs font-bold text-white">{{ attendee.ticket.qrCode }}</p>
+                    <p class="break-all font-mono text-xs font-bold text-white">
+                      {{ attendee.ticket.qrCode }}
+                    </p>
                   </div>
                 </div>
               </button>
             }
           </div>
         } @else {
-          <app-empty-state [title]="labels.scannerAttendees.noResultsTitle" [description]="labels.scannerAttendees.noResultsDescription" />
+          <app-empty-state
+            [title]="labels.scannerAttendees.noResultsTitle"
+            [description]="labels.scannerAttendees.noResultsDescription"
+          />
         }
       } @else {
-        <app-empty-state [title]="labels.scannerAttendees.emptyTitle" [description]="labels.scannerAttendees.emptyDescription" />
+        <app-empty-state
+          [title]="labels.scannerAttendees.emptyTitle"
+          [description]="labels.scannerAttendees.emptyDescription"
+        />
       }
     </div>
 
@@ -82,7 +109,11 @@
         <h2 class="text-2xl font-black text-white">{{ labels.scannerAttendees.selectedTitle }}</h2>
 
         @if (operationError(); as message) {
-          <p class="mt-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error">{{ message }}</p>
+          <p
+            class="mt-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error"
+          >
+            {{ message }}
+          </p>
         }
 
         @if (selectedAttendee(); as attendee) {
@@ -102,11 +133,24 @@
             </div>
           </div>
 
-          <button class="btn btn-primary mt-6 w-full" type="button" [disabled]="validating()" (click)="validateSelected()">
-            {{ validating() ? labels.scannerAttendees.validating : labels.scannerAttendees.validateSelected }}
+          <button
+            class="btn btn-primary mt-6 w-full"
+            type="button"
+            [disabled]="validating()"
+            (click)="validateSelected()"
+          >
+            {{
+              validating()
+                ? labels.scannerAttendees.validating
+                : labels.scannerAttendees.validateSelected
+            }}
           </button>
         } @else {
-          <p class="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-slate-400">{{ labels.scannerAttendees.noSelection }}</p>
+          <p
+            class="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-slate-400"
+          >
+            {{ labels.scannerAttendees.noSelection }}
+          </p>
         }
       </article>
 
@@ -114,8 +158,17 @@
 
       @if (canCheckIn()) {
         <article class="rounded-[1.5rem] border border-success/30 bg-success/10 p-5 shadow-2xl">
-          <button class="btn btn-success w-full" type="button" [disabled]="checkingIn()" (click)="checkInSelected()">
-            {{ checkingIn() ? labels.scannerAttendees.checkingIn : labels.scannerAttendees.checkInSelected }}
+          <button
+            class="btn btn-success w-full"
+            type="button"
+            [disabled]="checkingIn()"
+            (click)="checkInSelected()"
+          >
+            {{
+              checkingIn()
+                ? labels.scannerAttendees.checkingIn
+                : labels.scannerAttendees.checkInSelected
+            }}
           </button>
         </article>
       }

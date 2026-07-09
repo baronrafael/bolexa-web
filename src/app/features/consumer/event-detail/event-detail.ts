@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
@@ -7,7 +14,14 @@ import { EventCategory, EventDetail as EventDetailModel } from '../../../data-ac
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
-import { EmptyState, LoadingState, OrderSummary, OrderSummaryItem, StatusBadge, TicketTypeSelector } from '../../../shared/ui';
+import {
+  EmptyState,
+  LoadingState,
+  OrderSummary,
+  OrderSummaryItem,
+  StatusBadge,
+  TicketTypeSelector,
+} from '../../../shared/ui';
 
 @Component({
   selector: 'app-event-detail',
@@ -47,7 +61,9 @@ export class EventDetail {
   protected readonly totals = computed(() => calculateOrderTotals(this.selectedItems()));
   protected readonly subtotal = computed(() => this.totals().subtotal);
   protected readonly fees = computed(() => this.totals().fees);
-  protected readonly selectedCount = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity, 0));
+  protected readonly selectedCount = computed(() =>
+    this.selectedItems().reduce((total, item) => total + item.quantity, 0),
+  );
   protected readonly checkoutLink = computed(() => {
     const eventDetail = this.eventDetail();
 

@@ -11,7 +11,9 @@
     </div>
 
     <div class="text-right">
-      <p class="text-2xl font-black text-white">{{ formatMoney(ticketType().price, ticketType().currency) }}</p>
+      <p class="text-2xl font-black text-white">
+        {{ formatMoney(ticketType().price, ticketType().currency) }}
+      </p>
       <p class="text-xs text-slate-400">{{ labels.each }}</p>
     </div>
   </div>
@@ -26,9 +28,31 @@
     </p>
 
     <div class="join" role="group" [attr.aria-label]="labels.quantity">
-      <button class="btn join-item btn-sm" type="button" [attr.aria-label]="labels.decrement" [disabled]="quantity() === 0" (click)="decrement()">-</button>
-      <span class="join-item grid min-w-12 place-items-center border border-white/10 bg-white/[0.04] px-4 text-sm font-bold text-white" role="status" aria-live="polite" [attr.aria-label]="labels.quantity">{{ quantity() }}</span>
-      <button class="btn join-item btn-sm" type="button" [attr.aria-label]="labels.increment" [disabled]="unavailable() || quantity() >= availableTickets()" (click)="increment()">+</button>
+      <button
+        class="btn join-item btn-sm"
+        type="button"
+        [attr.aria-label]="labels.decrement"
+        [disabled]="quantity() === 0"
+        (click)="decrement()"
+      >
+        -
+      </button>
+      <span
+        class="join-item grid min-w-12 place-items-center border border-white/10 bg-white/[0.04] px-4 text-sm font-bold text-white"
+        role="status"
+        aria-live="polite"
+        [attr.aria-label]="labels.quantity"
+        >{{ quantity() }}</span
+      >
+      <button
+        class="btn join-item btn-sm"
+        type="button"
+        [attr.aria-label]="labels.increment"
+        [disabled]="unavailable() || quantity() >= availableTickets()"
+        (click)="increment()"
+      >
+        +
+      </button>
     </div>
   </div>
 </article>

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
@@ -36,7 +43,9 @@ export class ScannerPage {
   protected readonly recentResults = signal<ScanResult[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly isValidInput = computed(() => this.qrCode().trim().length > 0);
-  protected readonly canCheckIn = computed(() => this.currentResult()?.status === 'accepted' && Boolean(this.currentResult()?.ticket));
+  protected readonly canCheckIn = computed(
+    () => this.currentResult()?.status === 'accepted' && Boolean(this.currentResult()?.ticket),
+  );
 
   constructor() {
     effect(() => {
@@ -96,7 +105,11 @@ export class ScannerPage {
     this.operationError.set(null);
 
     try {
-      const result = await this.scannerRepository.checkIn(eventId, this.currentResult()?.ticket?.qrCode ?? this.qrCode(), scannerUserId);
+      const result = await this.scannerRepository.checkIn(
+        eventId,
+        this.currentResult()?.ticket?.qrCode ?? this.qrCode(),
+        scannerUserId,
+      );
 
       this.recordResult(result);
       await this.loadEvent(eventId, false);

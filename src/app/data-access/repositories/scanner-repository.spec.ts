@@ -22,8 +22,15 @@ describe('ScannerRepository', () => {
   });
 
   it('marks a ticket used and rejects duplicate scans', async () => {
-    const checkIn = await repository.checkIn('event-caracas-music-fest', 'BLX-CMF-GEN-1001', 'user-carlos-entrada');
-    const duplicate = await repository.validateTicket('event-caracas-music-fest', 'BLX-CMF-GEN-1001');
+    const checkIn = await repository.checkIn(
+      'event-caracas-music-fest',
+      'BLX-CMF-GEN-1001',
+      'user-carlos-entrada',
+    );
+    const duplicate = await repository.validateTicket(
+      'event-caracas-music-fest',
+      'BLX-CMF-GEN-1001',
+    );
 
     expect(checkIn.status).toBe('accepted');
     expect(checkIn.checkedInAt).toBeTruthy();

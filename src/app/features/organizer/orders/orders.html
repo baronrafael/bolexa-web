@@ -8,26 +8,45 @@
     [description]="labels.organizerOrders.notFoundDescription"
   />
 } @else {
-  <a class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white" routerLink="/organizer/events">
+  <a
+    class="btn btn-ghost mb-6 text-slate-300 hover:bg-white/10 hover:text-white"
+    routerLink="/organizer/events"
+  >
     {{ labels.organizerOrders.backToEvents }}
   </a>
 
   <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
-    <div class="bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.2),transparent_32%),linear-gradient(135deg,rgba(124,58,237,0.16),rgba(20,184,166,0.08))] p-6 sm:p-8">
-      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.organizerOrders.eyebrow }}</p>
-      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.organizerOrders.title }}</h1>
-      <p class="mt-4 max-w-2xl text-slate-300">{{ eventTitle() }} · {{ labels.organizerOrders.description }}</p>
+    <div
+      class="bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.2),transparent_32%),linear-gradient(135deg,rgba(124,58,237,0.16),rgba(20,184,166,0.08))] p-6 sm:p-8"
+    >
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+        {{ labels.organizerOrders.eyebrow }}
+      </p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">
+        {{ labels.organizerOrders.title }}
+      </h1>
+      <p class="mt-4 max-w-2xl text-slate-300">
+        {{ eventTitle() }} · {{ labels.organizerOrders.description }}
+      </p>
     </div>
   </section>
 
   @if (orders().length > 0) {
     <section class="mt-8 rounded-[1.5rem] border border-white/10 bg-base-300/70 p-5 shadow-2xl">
       <div class="grid gap-4 lg:grid-cols-[1fr_14rem_14rem]">
-        <app-search-input [placeholder]="labels.organizerOrders.filters.search" [value]="searchQuery()" (queryChange)="searchQuery.set($event)" />
+        <app-search-input
+          [placeholder]="labels.organizerOrders.filters.search"
+          [value]="searchQuery()"
+          (queryChange)="searchQuery.set($event)"
+        />
 
         <label class="form-control">
           <span class="sr-only">{{ labels.organizerOrders.filters.status }}</span>
-          <select class="select select-bordered bg-base-100/80 text-white" [value]="statusFilter()" (change)="updateStatusFilter($any($event.target).value)">
+          <select
+            class="select select-bordered bg-base-100/80 text-white"
+            [value]="statusFilter()"
+            (change)="updateStatusFilter($any($event.target).value)"
+          >
             <option value="">{{ labels.organizerOrders.filters.allStatuses }}</option>
             @for (status of orderStatuses; track status) {
               <option [value]="status">{{ labels.shared.statusBadge.order[status] }}</option>
@@ -37,10 +56,16 @@
 
         <label class="form-control">
           <span class="sr-only">{{ labels.organizerOrders.filters.paymentMethod }}</span>
-          <select class="select select-bordered bg-base-100/80 text-white" [value]="paymentMethodFilter()" (change)="updatePaymentMethodFilter($any($event.target).value)">
+          <select
+            class="select select-bordered bg-base-100/80 text-white"
+            [value]="paymentMethodFilter()"
+            (change)="updatePaymentMethodFilter($any($event.target).value)"
+          >
             <option value="">{{ labels.organizerOrders.filters.allPaymentMethods }}</option>
             @for (paymentMethod of paymentMethods; track paymentMethod) {
-              <option [value]="paymentMethod">{{ labels.checkout.paymentMethods[paymentMethod] }}</option>
+              <option [value]="paymentMethod">
+                {{ labels.checkout.paymentMethods[paymentMethod] }}
+              </option>
             }
           </select>
         </label>
@@ -53,7 +78,9 @@
           <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-5 shadow-2xl">
             <div class="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ labels.organizerOrders.columns.order }}</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  {{ labels.organizerOrders.columns.order }}
+                </p>
                 <h2 class="mt-2 break-all text-xl font-black text-white">{{ entry.order.id }}</h2>
               </div>
               <app-status-badge [status]="entry.order.status" />
@@ -67,16 +94,24 @@
               </div>
               <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
                 <p class="text-slate-500">{{ labels.organizerOrders.columns.payment }}</p>
-                <p class="mt-1 font-bold text-white">{{ paymentMethodLabel(entry.order.paymentMethod) }}</p>
+                <p class="mt-1 font-bold text-white">
+                  {{ paymentMethodLabel(entry.order.paymentMethod) }}
+                </p>
               </div>
               <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
                 <p class="text-slate-500">{{ labels.organizerOrders.columns.tickets }}</p>
-                <p class="mt-1 font-bold text-white">{{ ticketCount(entry) }} {{ labels.organizerOrders.ticketsIssued }}</p>
-                <p class="text-slate-400">{{ itemCount(entry) }} {{ labels.organizerOrders.items }}</p>
+                <p class="mt-1 font-bold text-white">
+                  {{ ticketCount(entry) }} {{ labels.organizerOrders.ticketsIssued }}
+                </p>
+                <p class="text-slate-400">
+                  {{ itemCount(entry) }} {{ labels.organizerOrders.items }}
+                </p>
               </div>
               <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
                 <p class="text-slate-500">{{ labels.organizerOrders.columns.total }}</p>
-                <p class="mt-1 font-bold text-white">{{ formatMoney(entry.order.total, entry.order.currency) }}</p>
+                <p class="mt-1 font-bold text-white">
+                  {{ formatMoney(entry.order.total, entry.order.currency) }}
+                </p>
                 <p class="text-slate-400">{{ formatDate(entry.order.createdAt) }}</p>
               </div>
             </div>
@@ -84,7 +119,9 @@
         }
       </section>
 
-      <section class="mt-6 hidden overflow-hidden rounded-[1.5rem] border border-white/10 bg-base-300/70 shadow-2xl lg:block">
+      <section
+        class="mt-6 hidden overflow-hidden rounded-[1.5rem] border border-white/10 bg-base-300/70 shadow-2xl lg:block"
+      >
         <table class="table">
           <thead>
             <tr class="border-white/10 text-slate-400">
@@ -108,11 +145,17 @@
                 <td><app-status-badge [status]="entry.order.status" /></td>
                 <td class="text-slate-300">{{ paymentMethodLabel(entry.order.paymentMethod) }}</td>
                 <td>
-                  <p class="font-bold text-white">{{ ticketCount(entry) }} {{ labels.organizerOrders.ticketsIssued }}</p>
-                  <p class="text-sm text-slate-400">{{ itemCount(entry) }} {{ labels.organizerOrders.items }}</p>
+                  <p class="font-bold text-white">
+                    {{ ticketCount(entry) }} {{ labels.organizerOrders.ticketsIssued }}
+                  </p>
+                  <p class="text-sm text-slate-400">
+                    {{ itemCount(entry) }} {{ labels.organizerOrders.items }}
+                  </p>
                 </td>
                 <td class="text-slate-300">{{ formatDate(entry.order.createdAt) }}</td>
-                <td class="text-right font-black text-white">{{ formatMoney(entry.order.total, entry.order.currency) }}</td>
+                <td class="text-right font-black text-white">
+                  {{ formatMoney(entry.order.total, entry.order.currency) }}
+                </td>
               </tr>
             }
           </tbody>
@@ -120,12 +163,18 @@
       </section>
     } @else {
       <div class="mt-6">
-        <app-empty-state [title]="labels.organizerOrders.noResultsTitle" [description]="labels.organizerOrders.noResultsDescription" />
+        <app-empty-state
+          [title]="labels.organizerOrders.noResultsTitle"
+          [description]="labels.organizerOrders.noResultsDescription"
+        />
       </div>
     }
   } @else {
     <div class="mt-8">
-      <app-empty-state [title]="labels.organizerOrders.emptyTitle" [description]="labels.organizerOrders.emptyDescription" />
+      <app-empty-state
+        [title]="labels.organizerOrders.emptyTitle"
+        [description]="labels.organizerOrders.emptyDescription"
+      />
     </div>
   }
 }

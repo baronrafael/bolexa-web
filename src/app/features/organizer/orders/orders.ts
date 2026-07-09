@@ -1,10 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { OrderStatus, PaymentMethod } from '../../../data-access/models';
-import { OrganizerOrder, OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
+import {
+  OrganizerOrder,
+  OrganizerRepository,
+} from '../../../data-access/repositories/organizer-repository';
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { normalizeSearch } from '../../../shared/search/normalize-search';
 import { EmptyState, LoadingState, SearchInput, StatusBadge } from '../../../shared/ui';
@@ -24,8 +34,23 @@ export class Orders {
   private loadRequestId = 0;
 
   protected readonly labels = appLabels;
-  protected readonly orderStatuses: OrderStatus[] = ['pending', 'paid', 'manual_review', 'cancelled', 'expired', 'refunded', 'failed'];
-  protected readonly paymentMethods: PaymentMethod[] = ['pago_movil', 'zelle', 'binance', 'bank_transfer', 'manual', 'card'];
+  protected readonly orderStatuses: OrderStatus[] = [
+    'pending',
+    'paid',
+    'manual_review',
+    'cancelled',
+    'expired',
+    'refunded',
+    'failed',
+  ];
+  protected readonly paymentMethods: PaymentMethod[] = [
+    'pago_movil',
+    'zelle',
+    'binance',
+    'bank_transfer',
+    'manual',
+    'card',
+  ];
   protected readonly loading = signal(true);
   protected readonly notFound = signal(false);
   protected readonly orders = signal<OrganizerOrder[]>([]);
@@ -41,11 +66,15 @@ export class Orders {
     const paymentMethod = this.paymentMethodFilter();
 
     return this.orders().filter((entry) => {
-      const searchable = normalizeSearch(`${entry.order.id} ${entry.buyer.name} ${entry.buyer.email}`);
+      const searchable = normalizeSearch(
+        `${entry.order.id} ${entry.buyer.name} ${entry.buyer.email}`,
+      );
 
-      return (!query || searchable.includes(query))
-        && (!status || entry.order.status === status)
-        && (!paymentMethod || entry.order.paymentMethod === paymentMethod);
+      return (
+        (!query || searchable.includes(query)) &&
+        (!status || entry.order.status === status) &&
+        (!paymentMethod || entry.order.paymentMethod === paymentMethod)
+      );
     });
   });
 
@@ -61,15 +90,21 @@ export class Orders {
   }
 
   protected updateStatusFilter(value: string): void {
-    this.statusFilter.set(this.orderStatuses.includes(value as OrderStatus) ? value as OrderStatus : '');
+    this.statusFilter.set(
+      this.orderStatuses.includes(value as OrderStatus) ? (value as OrderStatus) : '',
+    );
   }
 
   protected updatePaymentMethodFilter(value: string): void {
-    this.paymentMethodFilter.set(this.paymentMethods.includes(value as PaymentMethod) ? value as PaymentMethod : '');
+    this.paymentMethodFilter.set(
+      this.paymentMethods.includes(value as PaymentMethod) ? (value as PaymentMethod) : '',
+    );
   }
 
   protected paymentMethodLabel(paymentMethod?: PaymentMethod): string {
-    return paymentMethod ? this.labels.checkout.paymentMethods[paymentMethod] : this.labels.organizerOrders.noPaymentMethod;
+    return paymentMethod
+      ? this.labels.checkout.paymentMethods[paymentMethod]
+      : this.labels.organizerOrders.noPaymentMethod;
   }
 
   protected ticketCount(entry: OrganizerOrder): number {

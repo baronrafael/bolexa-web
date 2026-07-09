@@ -9,9 +9,13 @@
         <div class="flex items-start justify-between gap-4 text-sm">
           <div>
             <p class="font-semibold text-white">{{ item.label }}</p>
-            <p class="text-slate-400">{{ item.quantity }} x {{ formatMoney(item.unitPrice, item.currency) }}</p>
+            <p class="text-slate-400">
+              {{ item.quantity }} x {{ formatMoney(item.unitPrice, item.currency) }}
+            </p>
           </div>
-          <p class="font-bold text-white">{{ formatMoney(item.quantity * item.unitPrice, item.currency) }}</p>
+          <p class="font-bold text-white">
+            {{ formatMoney(item.quantity * item.unitPrice, item.currency) }}
+          </p>
         </div>
       }
     </div>

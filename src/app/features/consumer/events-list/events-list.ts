@@ -25,7 +25,9 @@ export class EventsList {
   protected readonly selectedCategory = signal<CategoryFilter>('all');
   protected readonly selectedCity = signal('all');
   protected readonly selectedDate = signal<DateFilter>('all');
-  protected readonly categoryOptions = (Object.entries(appLabels.shared.eventCard.categories) as Array<[EventCategory, string]>).map(([value, label]) => ({
+  protected readonly categoryOptions = (
+    Object.entries(appLabels.shared.eventCard.categories) as Array<[EventCategory, string]>
+  ).map(([value, label]) => ({
     label,
     value,
   }));
@@ -46,17 +48,22 @@ export class EventsList {
     const selectedDate = this.selectedDate();
 
     return this.events().filter((eventDetail) => {
-      const searchableText = normalizeSearch(`${eventDetail.event.title} ${eventDetail.event.description} ${eventDetail.venue.name} ${eventDetail.venue.city}`);
+      const searchableText = normalizeSearch(
+        `${eventDetail.event.title} ${eventDetail.event.description} ${eventDetail.venue.name} ${eventDetail.venue.city}`,
+      );
 
-      return (!query || searchableText.includes(query))
-        && (selectedCategory === 'all' || eventDetail.event.category === selectedCategory)
-        && (selectedCity === 'all' || eventDetail.venue.city === selectedCity)
-        && this.matchesDateFilter(eventDetail, selectedDate);
+      return (
+        (!query || searchableText.includes(query)) &&
+        (selectedCategory === 'all' || eventDetail.event.category === selectedCategory) &&
+        (selectedCity === 'all' || eventDetail.venue.city === selectedCity) &&
+        this.matchesDateFilter(eventDetail, selectedDate)
+      );
     });
   });
   protected readonly resultCountLabel = computed(() => {
     const count = this.filteredEvents().length;
-    const suffix = count === 1 ? this.labels.eventsList.results.singular : this.labels.eventsList.results.plural;
+    const suffix =
+      count === 1 ? this.labels.eventsList.results.singular : this.labels.eventsList.results.plural;
 
     return `${count} ${suffix}`;
   });
@@ -102,5 +109,4 @@ export class EventsList {
       ? eventDate >= now && eventDate <= next90Days
       : eventDate > next90Days;
   }
-
 }

@@ -18,21 +18,35 @@
   </aside>
 
   <div class="min-w-0">
-    <header class="flex items-center justify-between gap-3 border-b border-white/10 bg-base-200/40 px-5 py-4 sm:px-8">
+    <header
+      class="flex items-center justify-between gap-3 border-b border-white/10 bg-base-200/40 px-5 py-4 sm:px-8"
+    >
       <div>
         <a class="font-black text-white lg:hidden" routerLink="/">{{ labels.brand.name }}</a>
-        <p class="hidden text-sm text-slate-400 lg:block">{{ labels.shells.organizer.demoContext }}</p>
+        <p class="hidden text-sm text-slate-400 lg:block">
+          {{ labels.shells.organizer.demoContext }}
+        </p>
       </div>
       <div class="flex items-center gap-2">
         <app-demo-controls />
-        <a class="btn btn-ghost btn-sm" routerLink="/events">{{ labels.navigation.actions.viewMarketplace }}</a>
+        <a class="btn btn-ghost btn-sm" routerLink="/events">{{
+          labels.navigation.actions.viewMarketplace
+        }}</a>
         <app-demo-role-switcher />
       </div>
     </header>
 
-    <nav class="flex gap-2 overflow-x-auto border-b border-white/10 px-5 py-3 lg:hidden" [attr.aria-label]="labels.navigation.organizerMobileAriaLabel">
+    <nav
+      class="flex gap-2 overflow-x-auto border-b border-white/10 px-5 py-3 lg:hidden"
+      [attr.aria-label]="labels.navigation.organizerMobileAriaLabel"
+    >
       @for (link of navLinks; track link.path) {
-        <a class="btn btn-ghost btn-sm shrink-0" ariaCurrentWhenActive="page" routerLinkActive="btn-primary" [routerLink]="link.path">
+        <a
+          class="btn btn-ghost btn-sm shrink-0"
+          ariaCurrentWhenActive="page"
+          routerLinkActive="btn-primary"
+          [routerLink]="link.path"
+        >
           {{ link.label }}
         </a>
       }

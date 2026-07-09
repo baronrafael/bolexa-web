@@ -15,19 +15,25 @@ export class EventCard {
   readonly eventDetail = input.required<EventDetail>();
 
   protected readonly labels = appLabels.shared.eventCard;
-  protected readonly lowestTicketType = computed(() => this.findLowestTicketType(this.eventDetail().ticketTypes));
+  protected readonly lowestTicketType = computed(() =>
+    this.findLowestTicketType(this.eventDetail().ticketTypes),
+  );
   protected readonly availableTickets = computed(() => {
     const ticketType = this.lowestTicketType();
 
     return ticketType ? Math.max(ticketType.quantityTotal - ticketType.quantitySold, 0) : 0;
   });
-  protected readonly eventDate = computed(() => formatDateEsVe(this.eventDetail().event.startsAt, {
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    month: 'short',
-  }));
-  protected readonly categoryLabel = computed(() => this.labels.categories[this.eventDetail().event.category]);
+  protected readonly eventDate = computed(() =>
+    formatDateEsVe(this.eventDetail().event.startsAt, {
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      month: 'short',
+    }),
+  );
+  protected readonly categoryLabel = computed(
+    () => this.labels.categories[this.eventDetail().event.category],
+  );
 
   protected formatMoney(value: number, currency: string): string {
     return formatMoneyEsVe(value, currency, {

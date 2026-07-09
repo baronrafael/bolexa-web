@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, numberAttribute } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  numberAttribute,
+} from '@angular/core';
 import { appLabels } from '../../../core/content/app-labels';
 import { Currency } from '../../../data-access/models';
 import { formatMoneyEsVe } from '../../formatting/formatters';
@@ -23,7 +29,9 @@ export class OrderSummary {
   readonly currency = input<Currency>('USD');
 
   protected readonly labels = appLabels.shared.orderSummary;
-  protected readonly subtotal = computed(() => this.items().reduce((total, item) => total + item.quantity * item.unitPrice, 0));
+  protected readonly subtotal = computed(() =>
+    this.items().reduce((total, item) => total + item.quantity * item.unitPrice, 0),
+  );
   protected readonly total = computed(() => this.subtotal() + this.fees());
 
   protected formatMoney(value: number, currency = this.currency()): string {

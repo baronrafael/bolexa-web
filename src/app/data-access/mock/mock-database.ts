@@ -49,7 +49,7 @@ export class MockDatabase {
 
       const rawState = localStorage.getItem(this.storageKey);
 
-      return rawState ? JSON.parse(rawState) as MockDatabaseState : null;
+      return rawState ? (JSON.parse(rawState) as MockDatabaseState) : null;
     } catch {
       return null;
     }

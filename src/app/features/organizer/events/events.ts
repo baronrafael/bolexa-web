@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
@@ -39,7 +46,10 @@ export class Events {
   }
 
   protected revenue(event: EventDetail): string {
-    const total = event.ticketTypes.reduce((sum, ticketType) => sum + ticketType.quantitySold * ticketType.price, 0);
+    const total = event.ticketTypes.reduce(
+      (sum, ticketType) => sum + ticketType.quantitySold * ticketType.price,
+      0,
+    );
     const currency = event.ticketTypes[0]?.currency ?? 'USD';
 
     return this.formatMoney(total, currency);
@@ -65,7 +75,9 @@ export class Events {
       const events = await this.organizerRepository.listEvents(organizerId);
 
       if (requestId === this.loadRequestId) {
-        this.events.set(events.sort((first, second) => first.event.startsAt.localeCompare(second.event.startsAt)));
+        this.events.set(
+          events.sort((first, second) => first.event.startsAt.localeCompare(second.event.startsAt)),
+        );
       }
     } finally {
       if (requestId === this.loadRequestId) {

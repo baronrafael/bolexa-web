@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
@@ -26,11 +33,18 @@ export class Stats {
   protected readonly eventSummary = signal<ScannerEventSummary | null>(null);
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
-  protected readonly pendingTickets = computed(() => Math.max((this.eventSummary()?.totalTickets ?? 0) - (this.eventSummary()?.checkedInTickets ?? 0), 0));
+  protected readonly pendingTickets = computed(() =>
+    Math.max(
+      (this.eventSummary()?.totalTickets ?? 0) - (this.eventSummary()?.checkedInTickets ?? 0),
+      0,
+    ),
+  );
   protected readonly progress = computed(() => {
     const summary = this.eventSummary();
 
-    return summary && summary.totalTickets > 0 ? Math.round((summary.checkedInTickets / summary.totalTickets) * 100) : 0;
+    return summary && summary.totalTickets > 0
+      ? Math.round((summary.checkedInTickets / summary.totalTickets) * 100)
+      : 0;
   });
   protected readonly metricCards = computed(() => [
     {
@@ -54,10 +68,14 @@ export class Stats {
       tone: 'neutral' as const,
     },
   ]);
-  protected readonly recentCheckIns = computed(() => this.attendees()
-    .filter((attendee) => Boolean(attendee.ticket.checkedInAt))
-    .sort((first, second) => (second.ticket.checkedInAt ?? '').localeCompare(first.ticket.checkedInAt ?? ''))
-    .slice(0, 8));
+  protected readonly recentCheckIns = computed(() =>
+    this.attendees()
+      .filter((attendee) => Boolean(attendee.ticket.checkedInAt))
+      .sort((first, second) =>
+        (second.ticket.checkedInAt ?? '').localeCompare(first.ticket.checkedInAt ?? ''),
+      )
+      .slice(0, 8),
+  );
 
   constructor() {
     effect(() => {

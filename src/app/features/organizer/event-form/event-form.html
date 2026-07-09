@@ -9,24 +9,35 @@
   />
 } @else {
   <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
-    <div class="bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.2),transparent_32%),linear-gradient(135deg,rgba(124,58,237,0.16),rgba(20,184,166,0.08))] p-6 sm:p-8">
+    <div
+      class="bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.2),transparent_32%),linear-gradient(135deg,rgba(124,58,237,0.16),rgba(20,184,166,0.08))] p-6 sm:p-8"
+    >
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ eyebrow() }}</p>
       <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ title() }}</h1>
       <p class="mt-4 max-w-2xl text-slate-300">{{ labels.organizerEventForm.description }}</p>
     </div>
   </section>
 
-  <form class="mt-8 grid gap-6 xl:grid-cols-[1fr_0.72fr]" (submit)="$event.preventDefault(); save()">
+  <form
+    class="mt-8 grid gap-6 xl:grid-cols-[1fr_0.72fr]"
+    (submit)="$event.preventDefault(); save()"
+  >
     <section class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
       @if (submitted() && !isValid()) {
-        <p id="event-form-error" class="mb-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error" role="alert">
+        <p
+          id="event-form-error"
+          class="mb-5 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm font-semibold text-error"
+          role="alert"
+        >
           {{ labels.organizerEventForm.validation.required }}
         </p>
       }
 
       <div class="grid gap-5">
         <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.title }}</span>
+          <span class="label-text mb-2 text-slate-300">{{
+            labels.organizerEventForm.fields.title
+          }}</span>
           <input
             class="input input-bordered bg-base-100/80 text-white"
             required
@@ -41,17 +52,31 @@
 
         <div class="grid gap-5 md:grid-cols-2">
           <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.category }}</span>
-            <select class="select select-bordered bg-base-100/80 text-white" [value]="form().category" (change)="updateField('category', $any($event.target).value)">
+            <span class="label-text mb-2 text-slate-300">{{
+              labels.organizerEventForm.fields.category
+            }}</span>
+            <select
+              class="select select-bordered bg-base-100/80 text-white"
+              [value]="form().category"
+              (change)="updateField('category', $any($event.target).value)"
+            >
               @for (category of categories; track category) {
-                <option [value]="category">{{ labels.shared.eventCard.categories[category] }}</option>
+                <option [value]="category">
+                  {{ labels.shared.eventCard.categories[category] }}
+                </option>
               }
             </select>
           </label>
 
           <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.status }}</span>
-            <select class="select select-bordered bg-base-100/80 text-white" [value]="form().status" (change)="updateField('status', $any($event.target).value)">
+            <span class="label-text mb-2 text-slate-300">{{
+              labels.organizerEventForm.fields.status
+            }}</span>
+            <select
+              class="select select-bordered bg-base-100/80 text-white"
+              [value]="form().status"
+              (change)="updateField('status', $any($event.target).value)"
+            >
               @for (status of statuses; track status) {
                 <option [value]="status">{{ labels.organizerEventForm.statuses[status] }}</option>
               }
@@ -60,7 +85,9 @@
         </div>
 
         <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.description }}</span>
+          <span class="label-text mb-2 text-slate-300">{{
+            labels.organizerEventForm.fields.description
+          }}</span>
           <textarea
             class="textarea textarea-bordered min-h-36 bg-base-100/80 text-white"
             required
@@ -74,8 +101,17 @@
 
         <div class="grid gap-5 md:grid-cols-2">
           <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.venue }}</span>
-            <select class="select select-bordered bg-base-100/80 text-white" required [attr.aria-describedby]="hasFieldError('venueId') ? 'event-form-error' : null" [attr.aria-invalid]="hasFieldError('venueId') ? 'true' : null" [value]="form().venueId" (change)="updateField('venueId', $any($event.target).value)">
+            <span class="label-text mb-2 text-slate-300">{{
+              labels.organizerEventForm.fields.venue
+            }}</span>
+            <select
+              class="select select-bordered bg-base-100/80 text-white"
+              required
+              [attr.aria-describedby]="hasFieldError('venueId') ? 'event-form-error' : null"
+              [attr.aria-invalid]="hasFieldError('venueId') ? 'true' : null"
+              [value]="form().venueId"
+              (change)="updateField('venueId', $any($event.target).value)"
+            >
               @for (venue of venues(); track venue.id) {
                 <option [value]="venue.id">{{ venue.name }} · {{ venue.city }}</option>
               }
@@ -83,7 +119,9 @@
           </label>
 
           <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.startsAt }}</span>
+            <span class="label-text mb-2 text-slate-300">{{
+              labels.organizerEventForm.fields.startsAt
+            }}</span>
             <input
               class="input input-bordered bg-base-100/80 text-white"
               required
@@ -97,7 +135,9 @@
         </div>
 
         <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{ labels.organizerEventForm.fields.coverImageUrl }}</span>
+          <span class="label-text mb-2 text-slate-300">{{
+            labels.organizerEventForm.fields.coverImageUrl
+          }}</span>
           <input
             class="input input-bordered bg-base-100/80 text-white"
             type="url"
@@ -110,27 +150,46 @@
 
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <button class="btn btn-primary" type="submit" [disabled]="saving()">
-          {{ saving() ? labels.organizerEventForm.actions.saving : (isEdit() ? labels.organizerEventForm.actions.save : labels.organizerEventForm.actions.create) }}
+          {{
+            saving()
+              ? labels.organizerEventForm.actions.saving
+              : isEdit()
+                ? labels.organizerEventForm.actions.save
+                : labels.organizerEventForm.actions.create
+          }}
         </button>
-        <a class="btn btn-outline border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10" routerLink="/organizer/events">
+        <a
+          class="btn btn-outline border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10"
+          routerLink="/organizer/events"
+        >
           {{ labels.organizerEventForm.actions.cancel }}
         </a>
       </div>
     </section>
 
     <aside class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-6 shadow-2xl">
-      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">{{ labels.organizerEvents.event }}</p>
-      <h2 class="mt-3 text-3xl font-black text-white">{{ form().title || labels.organizerEventForm.placeholders.title }}</h2>
-      <p class="mt-3 text-sm text-slate-300">{{ form().description || labels.organizerEventForm.placeholders.description }}</p>
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+        {{ labels.organizerEvents.event }}
+      </p>
+      <h2 class="mt-3 text-3xl font-black text-white">
+        {{ form().title || labels.organizerEventForm.placeholders.title }}
+      </h2>
+      <p class="mt-3 text-sm text-slate-300">
+        {{ form().description || labels.organizerEventForm.placeholders.description }}
+      </p>
 
       <div class="mt-6 grid gap-3 text-sm">
         <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
           <p class="text-slate-500">{{ labels.organizerEventForm.fields.category }}</p>
-          <p class="mt-1 font-bold text-white">{{ labels.shared.eventCard.categories[form().category] }}</p>
+          <p class="mt-1 font-bold text-white">
+            {{ labels.shared.eventCard.categories[form().category] }}
+          </p>
         </div>
         <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
           <p class="text-slate-500">{{ labels.organizerEventForm.fields.status }}</p>
-          <p class="mt-1 font-bold text-white">{{ labels.organizerEventForm.statuses[form().status] }}</p>
+          <p class="mt-1 font-bold text-white">
+            {{ labels.organizerEventForm.statuses[form().status] }}
+          </p>
         </div>
       </div>
     </aside>

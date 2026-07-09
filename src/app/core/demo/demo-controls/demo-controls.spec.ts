@@ -25,7 +25,9 @@ describe('DemoControls', () => {
     const fixture = TestBed.createComponent(DemoControls);
     fixture.detectChanges();
 
-    const buttons = Array.from(fixture.nativeElement.querySelectorAll('button')) as HTMLButtonElement[];
+    const buttons = Array.from(
+      fixture.nativeElement.querySelectorAll('button'),
+    ) as HTMLButtonElement[];
     const resetButton = buttons.find((button) => button.textContent?.includes('Reset demo data'));
 
     expect(resetButton).toBeTruthy();

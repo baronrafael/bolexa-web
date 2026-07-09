@@ -1,8 +1,18 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
 import { MockAuth } from '../../../core/auth/mock-auth';
-import { TicketsRepository, TicketListItemReadModel } from '../../../data-access/repositories/tickets-repository';
+import {
+  TicketsRepository,
+  TicketListItemReadModel,
+} from '../../../data-access/repositories/tickets-repository';
 import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
 
@@ -21,8 +31,12 @@ export class MyTickets {
   protected readonly labels = appLabels;
   protected readonly loading = signal(true);
   protected readonly items = signal<TicketListItemReadModel[]>([]);
-  protected readonly upcomingTickets = computed(() => this.items().filter((item) => this.isUpcomingValid(item)));
-  protected readonly historicalTickets = computed(() => this.items().filter((item) => !this.isUpcomingValid(item)));
+  protected readonly upcomingTickets = computed(() =>
+    this.items().filter((item) => this.isUpcomingValid(item)),
+  );
+  protected readonly historicalTickets = computed(() =>
+    this.items().filter((item) => !this.isUpcomingValid(item)),
+  );
 
   constructor() {
     effect(() => {
@@ -74,7 +88,8 @@ export class MyTickets {
   private isUpcomingValid(item: TicketListItemReadModel): boolean {
     const startsAt = item.eventDetail?.event.startsAt;
 
-    return item.ticket.status === 'valid' && (!startsAt || new Date(startsAt).getTime() >= Date.now());
+    return (
+      item.ticket.status === 'valid' && (!startsAt || new Date(startsAt).getTime() >= Date.now())
+    );
   }
-
 }

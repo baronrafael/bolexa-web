@@ -1,5 +1,20 @@
 import { inject, Injectable } from '@angular/core';
-import { Attendee, Currency, Event, EventCategory, EventDetail, EventStatus, Order, OrderItem, OrganizerDashboardSummary, Ticket, TicketType, TicketTypeStatus, User, Venue } from '../models';
+import {
+  Attendee,
+  Currency,
+  Event,
+  EventCategory,
+  EventDetail,
+  EventStatus,
+  Order,
+  OrderItem,
+  OrganizerDashboardSummary,
+  Ticket,
+  TicketType,
+  TicketTypeStatus,
+  User,
+  Venue,
+} from '../models';
 import { MockDatabase } from '../mock/mock-database';
 import { clone, mockDelay } from '../mock/mock-helpers';
 
@@ -41,15 +56,21 @@ export class OrganizerRepository {
     const events = this.listEventDetailsForOrganizer(organizerId);
     const eventIds = new Set(events.map((detail) => detail.event.id));
     const state = this.database.snapshot();
-    const paidOrders = state.orders.filter((order) => eventIds.has(order.eventId) && order.status === 'paid');
-    const checkIns = state.checkIns.filter((checkIn) => eventIds.has(checkIn.eventId) && checkIn.status === 'accepted');
+    const paidOrders = state.orders.filter(
+      (order) => eventIds.has(order.eventId) && order.status === 'paid',
+    );
+    const checkIns = state.checkIns.filter(
+      (checkIn) => eventIds.has(checkIn.eventId) && checkIn.status === 'accepted',
+    );
 
     return clone({
       totalRevenue: paidOrders.reduce((total, order) => total + order.total, 0),
       ticketsSold: state.tickets.filter((ticket) => eventIds.has(ticket.eventId)).length,
       checkIns: checkIns.length,
       upcomingEvents: events.slice(0, 4),
-      recentOrders: paidOrders.sort((first, second) => second.createdAt.localeCompare(first.createdAt)).slice(0, 5),
+      recentOrders: paidOrders
+        .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+        .slice(0, 5),
     });
   }
 
@@ -62,7 +83,11 @@ export class OrganizerRepository {
   async getEvent(organizerId: string, eventId: string): Promise<EventDetail | null> {
     await mockDelay();
 
-    return clone(this.listEventDetailsForOrganizer(organizerId).find((detail) => detail.event.id === eventId) ?? null);
+    return clone(
+      this.listEventDetailsForOrganizer(organizerId).find(
+        (detail) => detail.event.id === eventId,
+      ) ?? null,
+    );
   }
 
   async listVenues(): Promise<Venue[]> {
@@ -103,11 +128,17 @@ export class OrganizerRepository {
     return createdEvent;
   }
 
-  async updateEvent(organizerId: string, eventId: string, input: SaveOrganizerEventInput): Promise<EventDetail | null> {
+  async updateEvent(
+    organizerId: string,
+    eventId: string,
+    input: SaveOrganizerEventInput,
+  ): Promise<EventDetail | null> {
     await mockDelay();
 
     this.database.update((state) => {
-      const event = state.events.find((candidate) => candidate.id === eventId && candidate.organizerId === organizerId);
+      const event = state.events.find(
+        (candidate) => candidate.id === eventId && candidate.organizerId === organizerId,
+      );
 
       if (!event) {
         return;
@@ -127,7 +158,11 @@ export class OrganizerRepository {
     return this.getEvent(organizerId, eventId);
   }
 
-  async createTicketType(organizerId: string, eventId: string, input: SaveTicketTypeInput): Promise<EventDetail | null> {
+  async createTicketType(
+    organizerId: string,
+    eventId: string,
+    input: SaveTicketTypeInput,
+  ): Promise<EventDetail | null> {
     await mockDelay();
 
     if (!this.eventBelongsToOrganizer(organizerId, eventId)) {
@@ -156,7 +191,12 @@ export class OrganizerRepository {
     return this.getEvent(organizerId, eventId);
   }
 
-  async updateTicketType(organizerId: string, eventId: string, ticketTypeId: string, input: SaveTicketTypeInput): Promise<EventDetail | null> {
+  async updateTicketType(
+    organizerId: string,
+    eventId: string,
+    ticketTypeId: string,
+    input: SaveTicketTypeInput,
+  ): Promise<EventDetail | null> {
     await mockDelay();
 
     if (!this.eventBelongsToOrganizer(organizerId, eventId)) {
@@ -164,7 +204,9 @@ export class OrganizerRepository {
     }
 
     this.database.update((state) => {
-      const ticketType = state.ticketTypes.find((candidate) => candidate.id === ticketTypeId && candidate.eventId === eventId);
+      const ticketType = state.ticketTypes.find(
+        (candidate) => candidate.id === ticketTypeId && candidate.eventId === eventId,
+      );
 
       if (!ticketType) {
         return;
@@ -175,7 +217,11 @@ export class OrganizerRepository {
       ticketType.price = input.price;
       ticketType.currency = input.currency;
       ticketType.quantityTotal = Math.max(input.quantityTotal, ticketType.quantitySold);
-      ticketType.status = this.normalizeTicketTypeStatus(input.status, ticketType.quantityTotal, ticketType.quantitySold);
+      ticketType.status = this.normalizeTicketTypeStatus(
+        input.status,
+        ticketType.quantityTotal,
+        ticketType.quantitySold,
+      );
       ticketType.updatedAt = new Date().toISOString();
     });
 
@@ -187,8 +233,7 @@ export class OrganizerRepository {
 
     return this.database
       .snapshot()
-      .orders
-      .filter((order) => order.eventId === eventId)
+      .orders.filter((order) => order.eventId === eventId)
       .map((order) => clone(order));
   }
 
@@ -242,7 +287,9 @@ export class OrganizerRepository {
     return state.tickets
       .filter((ticket) => ticket.eventId === eventId)
       .map((ticket) => {
-        const ticketType = state.ticketTypes.find((candidate) => candidate.id === ticket.ticketTypeId);
+        const ticketType = state.ticketTypes.find(
+          (candidate) => candidate.id === ticket.ticketTypeId,
+        );
         const order = state.orders.find((candidate) => candidate.id === ticket.orderId);
         const user = state.users.find((candidate) => candidate.id === ticket.userId);
 
@@ -281,10 +328,16 @@ export class OrganizerRepository {
   }
 
   private eventBelongsToOrganizer(organizerId: string, eventId: string): boolean {
-    return this.database.snapshot().events.some((event) => event.id === eventId && event.organizerId === organizerId);
+    return this.database
+      .snapshot()
+      .events.some((event) => event.id === eventId && event.organizerId === organizerId);
   }
 
-  private normalizeTicketTypeStatus(status: TicketTypeStatus, quantityTotal: number, quantitySold: number): TicketTypeStatus {
+  private normalizeTicketTypeStatus(
+    status: TicketTypeStatus,
+    quantityTotal: number,
+    quantitySold: number,
+  ): TicketTypeStatus {
     return quantitySold >= quantityTotal ? 'sold_out' : status;
   }
 

@@ -15,8 +15,17 @@ export class ScannerShell {
   protected readonly labels = appLabels;
   protected readonly navLinks = [
     { label: appLabels.navigation.scannerLinks.events, path: '/scan/events' },
-    { label: appLabels.navigation.scannerLinks.scanner, path: '/scan/events/event-caracas-music-fest/scanner' },
-    { label: appLabels.navigation.scannerLinks.attendees, path: '/scan/events/event-caracas-music-fest/attendees' },
-    { label: appLabels.navigation.scannerLinks.stats, path: '/scan/events/event-caracas-music-fest/stats' },
+    {
+      label: appLabels.navigation.scannerLinks.scanner,
+      path: '/scan/events/event-caracas-music-fest/scanner',
+    },
+    {
+      label: appLabels.navigation.scannerLinks.attendees,
+      path: '/scan/events/event-caracas-music-fest/attendees',
+    },
+    {
+      label: appLabels.navigation.scannerLinks.stats,
+      path: '/scan/events/event-caracas-music-fest/stats',
+    },
   ];
 }

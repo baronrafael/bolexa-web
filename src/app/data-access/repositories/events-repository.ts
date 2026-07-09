@@ -24,7 +24,9 @@ export class EventsRepository {
 
         return !filters.city || venue?.city === filters.city;
       })
-      .filter((event) => !query || normalizeSearch(`${event.title} ${event.description}`).includes(query))
+      .filter(
+        (event) => !query || normalizeSearch(`${event.title} ${event.description}`).includes(query),
+      )
       .sort((first, second) => first.startsAt.localeCompare(second.startsAt));
 
     return events.map((event) => this.toEventDetail(event));
@@ -57,8 +59,7 @@ export class EventsRepository {
 
     return this.database
       .snapshot()
-      .ticketTypes
-      .filter((ticketType) => ticketType.eventId === eventId)
+      .ticketTypes.filter((ticketType) => ticketType.eventId === eventId)
       .map((ticketType) => clone(ticketType));
   }
 

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
@@ -30,13 +37,25 @@ export class Confirmation {
   protected readonly errorMessage = this.pageState.errorMessage;
   protected readonly notFound = this.pageState.notFound;
   protected readonly isPaid = computed(() => this.order()?.status === 'paid');
-  protected readonly eyebrow = computed(() => this.isPaid() ? this.labels.confirmation.paidEyebrow : this.labels.confirmation.manualReviewEyebrow);
-  protected readonly title = computed(() => this.isPaid() ? this.labels.confirmation.paidTitle : this.labels.confirmation.manualReviewTitle);
-  protected readonly description = computed(() => this.isPaid() ? this.labels.confirmation.paidDescription : this.labels.confirmation.manualReviewDescription);
+  protected readonly eyebrow = computed(() =>
+    this.isPaid()
+      ? this.labels.confirmation.paidEyebrow
+      : this.labels.confirmation.manualReviewEyebrow,
+  );
+  protected readonly title = computed(() =>
+    this.isPaid() ? this.labels.confirmation.paidTitle : this.labels.confirmation.manualReviewTitle,
+  );
+  protected readonly description = computed(() =>
+    this.isPaid()
+      ? this.labels.confirmation.paidDescription
+      : this.labels.confirmation.manualReviewDescription,
+  );
   protected readonly paymentMethodLabel = computed(() => {
     const paymentMethod = this.order()?.paymentMethod;
 
-    return paymentMethod ? this.labels.checkout.paymentMethods[paymentMethod as PaymentMethod] : '-';
+    return paymentMethod
+      ? this.labels.checkout.paymentMethods[paymentMethod as PaymentMethod]
+      : '-';
   });
 
   constructor() {
@@ -50,7 +69,10 @@ export class Confirmation {
   }
 
   protected ticketTypeName(ticketTypeId: string): string {
-    return this.eventDetail()?.ticketTypes.find((ticketType) => ticketType.id === ticketTypeId)?.name ?? ticketTypeId;
+    return (
+      this.eventDetail()?.ticketTypes.find((ticketType) => ticketType.id === ticketTypeId)?.name ??
+      ticketTypeId
+    );
   }
 
   protected formatMoney(value: number, currency: string): string {

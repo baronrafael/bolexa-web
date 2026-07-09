@@ -10,13 +10,15 @@ export class MockAuth {
   private readonly storageKey = 'bolexa.current-user-id.v1';
   private readonly currentUserId = signal(this.loadUserId());
 
-  readonly demoUsers = computed(() => this.database.state().users.filter((user) => user.role !== 'admin'));
+  readonly demoUsers = computed(() =>
+    this.database.state().users.filter((user) => user.role !== 'admin'),
+  );
   readonly currentUser = computed(() => this.findCurrentUser());
   readonly currentRole = computed(() => this.currentUser().role);
   readonly currentOrganizerId = computed(() => {
     const user = this.currentUser();
 
-    return user.role === 'organizer' ? user.organizerId ?? null : null;
+    return user.role === 'organizer' ? (user.organizerId ?? null) : null;
   });
   readonly currentScannerUserId = computed(() => {
     const user = this.currentUser();

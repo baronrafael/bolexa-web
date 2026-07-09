@@ -56,7 +56,8 @@ export const appLabels = {
   demo: {
     trigger: 'Demo',
     title: 'Script demo 5 min',
-    description: 'Flujo recomendado: compra Caracas Music Fest, abre Mis tickets, valida un QR y revisa dashboard.',
+    description:
+      'Flujo recomendado: compra Caracas Music Fest, abre Mis tickets, valida un QR y revisa dashboard.',
     featuredEvent: 'Evento seed: Caracas Music Fest',
     qrCode: 'QR seed: BLX-CMF-GEN-1001',
     qrValue: 'BLX-CMF-GEN-1001',
@@ -64,7 +65,8 @@ export const appLabels = {
     copyDone: 'QR copiado.',
     openScannerWithQr: 'Scanner con QR',
     happyPathTitle: 'Happy path',
-    happyPath: 'Reset demo, compra 1 General, abre Mis tickets, valida BLX-CMF-GEN-1001 y marca entrada.',
+    happyPath:
+      'Reset demo, compra 1 General, abre Mis tickets, valida BLX-CMF-GEN-1001 y marca entrada.',
     reset: 'Reset demo data',
     resetDone: 'Data demo reiniciada.',
     links: {
@@ -86,7 +88,8 @@ export const appLabels = {
   home: {
     badge: 'MVP demo · Dark mode first',
     headline: 'La boleteria moderna de Venezuela.',
-    description: 'Descubre eventos, compra facil y entra rapido con tickets QR. Bolexa conecta compradores, organizadores y equipos de acceso en una sola plataforma.',
+    description:
+      'Descubre eventos, compra facil y entra rapido con tickets QR. Bolexa conecta compradores, organizadores y equipos de acceso en una sola plataforma.',
     primaryCta: 'Explorar eventos',
     secondaryCta: 'Ver demo organizador',
     stats: [
@@ -113,27 +116,23 @@ export const appLabels = {
     categories: {
       eyebrow: 'Categorias',
       title: 'Encuentra el plan que quieres vivir',
-      description: 'Conciertos, running, teatro, tecnologia, deportes y experiencias nocturnas en una sola plataforma.',
-      pills: [
-        'Conciertos',
-        'Running',
-        'Teatro',
-        'Conferencias',
-        'Fiestas',
-        'Deportes',
-      ],
+      description:
+        'Conciertos, running, teatro, tecnologia, deportes y experiencias nocturnas en una sola plataforma.',
+      pills: ['Conciertos', 'Running', 'Teatro', 'Conferencias', 'Fiestas', 'Deportes'],
     },
     upcoming: {
       eyebrow: 'Proximamente',
       title: 'Eventos destacados',
-      description: 'Una seleccion inicial de eventos venezolanos para probar el flujo completo del MVP.',
+      description:
+        'Una seleccion inicial de eventos venezolanos para probar el flujo completo del MVP.',
       emptyTitle: 'No hay eventos publicados',
       emptyDescription: 'Cuando existan eventos publicados, apareceran en esta seccion.',
     },
     organizerCta: {
       eyebrow: 'Para organizadores',
       title: 'Vende tu evento con Bolexa',
-      description: 'Publica eventos, configura tickets, controla ventas y valida accesos desde una experiencia moderna.',
+      description:
+        'Publica eventos, configura tickets, controla ventas y valida accesos desde una experiencia moderna.',
       primaryCta: 'Abrir dashboard demo',
       secondaryCta: 'Crear evento',
     },
@@ -159,7 +158,8 @@ export const appLabels = {
   eventsList: {
     eyebrow: 'Marketplace',
     title: 'Eventos en Venezuela',
-    description: 'Busca conciertos, carreras, conferencias, teatro, deportes y fiestas con tickets QR.',
+    description:
+      'Busca conciertos, carreras, conferencias, teatro, deportes y fiestas con tickets QR.',
     searchPlaceholder: 'Buscar por evento o descripcion',
     filters: {
       category: 'Categoria',
@@ -266,7 +266,8 @@ export const appLabels = {
     paidTitle: 'Tus tickets estan listos',
     manualReviewTitle: 'Recibimos tu orden',
     paidDescription: 'El pago fue aprobado en modo demo y tus tickets QR ya fueron generados.',
-    manualReviewDescription: 'La orden quedo en revision manual. En una integracion real, el equipo confirmaria el pago antes de emitir tickets validos.',
+    manualReviewDescription:
+      'La orden quedo en revision manual. En una integracion real, el equipo confirmaria el pago antes de emitir tickets validos.',
     orderNumber: 'Orden',
     orderStatus: 'Estado',
     event: 'Evento',
@@ -279,7 +280,8 @@ export const appLabels = {
     notFoundTitle: 'Orden no encontrada',
     notFoundDescription: 'No encontramos la orden solicitada en el mock store.',
     errorTitle: 'No pudimos cargar la confirmacion',
-    errorDescription: 'La orden pudo haberse creado, pero no pudimos cargar el resumen. Intenta nuevamente.',
+    errorDescription:
+      'La orden pudo haberse creado, pero no pudimos cargar el resumen. Intenta nuevamente.',
     retry: 'Reintentar carga',
     loadingTitle: 'Cargando confirmacion',
   },
@@ -298,7 +300,8 @@ export const appLabels = {
     emptyDescription: 'Compra un ticket demo para verlo aqui sin recargar la pagina manualmente.',
     emptyAction: 'Explorar eventos',
     noUpcomingTitle: 'No tienes tickets proximos',
-    noUpcomingDescription: 'Tus tickets validos apareceran aqui cuando completes una compra aprobada.',
+    noUpcomingDescription:
+      'Tus tickets validos apareceran aqui cuando completes una compra aprobada.',
     noHistoryTitle: 'Sin historial por ahora',
     noHistoryDescription: 'Los tickets usados o de eventos pasados apareceran en esta seccion.',
     loadingTitle: 'Cargando tus tickets',
@@ -307,7 +310,8 @@ export const appLabels = {
     backToTickets: 'Volver a mis tickets',
     eyebrow: 'Ticket QR',
     title: 'Entrada oficial Bolexa',
-    description: 'Presenta este codigo en la entrada. El scanner demo valida el token QR y cambia el estado del ticket.',
+    description:
+      'Presenta este codigo en la entrada. El scanner demo valida el token QR y cambia el estado del ticket.',
     eventDetails: 'Datos del evento',
     holderDetails: 'Titular del ticket',
     holderName: 'Nombre',
@@ -318,7 +322,8 @@ export const appLabels = {
     ticketId: 'Ticket ID',
     orderId: 'Orden',
     scannerHint: 'Token para scanner mock',
-    scannerDescription: 'Copia o ingresa este codigo en el flujo de scanner para simular el check-in.',
+    scannerDescription:
+      'Copia o ingresa este codigo en el flujo de scanner para simular el check-in.',
     notFoundTitle: 'Ticket no encontrado',
     notFoundDescription: 'No encontramos este ticket para el comprador demo actual.',
     errorTitle: 'No pudimos cargar el ticket',
@@ -329,7 +334,8 @@ export const appLabels = {
   organizerDashboard: {
     eyebrow: 'Dashboard organizador',
     title: 'Ventas y acceso en vivo',
-    description: 'Resumen operativo de revenue, tickets, check-ins, eventos proximos y ordenes recientes.',
+    description:
+      'Resumen operativo de revenue, tickets, check-ins, eventos proximos y ordenes recientes.',
     actions: {
       viewEvents: 'Ver eventos',
       createEvent: 'Crear evento',
@@ -361,7 +367,8 @@ export const appLabels = {
   organizerEvents: {
     eyebrow: 'Eventos',
     title: 'Gestiona tu cartelera',
-    description: 'Administra eventos, estado de publicacion, inventario vendido y accesos operativos.',
+    description:
+      'Administra eventos, estado de publicacion, inventario vendido y accesos operativos.',
     createEvent: 'Crear evento demo',
     event: 'Evento',
     status: 'Estado',
@@ -385,7 +392,8 @@ export const appLabels = {
     editEyebrow: 'Editar evento',
     createTitle: 'Crea un evento demo',
     editTitle: 'Edita el evento',
-    description: 'Configura datos basicos, lugar, fecha, cover placeholder y estado de publicacion.',
+    description:
+      'Configura datos basicos, lugar, fecha, cover placeholder y estado de publicacion.',
     fields: {
       title: 'Titulo',
       category: 'Categoria',
@@ -512,7 +520,8 @@ export const appLabels = {
     },
     notCheckedIn: 'Sin check-in',
     emptyTitle: 'No hay asistentes para este evento',
-    emptyDescription: 'Los asistentes apareceran cuando compradores generen tickets para el evento.',
+    emptyDescription:
+      'Los asistentes apareceran cuando compradores generen tickets para el evento.',
     noResultsTitle: 'No encontramos asistentes',
     noResultsDescription: 'Prueba buscando por otro nombre, correo, ticket u orden.',
     notFoundTitle: 'Evento no encontrado',
@@ -522,7 +531,8 @@ export const appLabels = {
   organizerReports: {
     eyebrow: 'Reportes',
     title: 'Pulso comercial del evento',
-    description: 'Revenue, tickets vendidos, avance de entrada y metodos de pago derivados del mock store.',
+    description:
+      'Revenue, tickets vendidos, avance de entrada y metodos de pago derivados del mock store.',
     backToEvents: 'Volver a eventos',
     sections: {
       revenueByTicket: 'Revenue por tipo de ticket',
@@ -553,7 +563,8 @@ export const appLabels = {
   scannerEvents: {
     eyebrow: 'Scanner',
     title: 'Selecciona un evento',
-    description: 'Elige el evento operativo para validar tickets QR y monitorear progreso de entrada.',
+    description:
+      'Elige el evento operativo para validar tickets QR y monitorear progreso de entrada.',
     date: 'Fecha',
     venue: 'Lugar',
     organizer: 'Organizador',
@@ -565,7 +576,8 @@ export const appLabels = {
     viewAttendees: 'Ver asistentes',
     viewStats: 'Ver stats',
     emptyTitle: 'No hay eventos publicados',
-    emptyDescription: 'Cuando existan eventos publicados con tickets, apareceran para el equipo de acceso.',
+    emptyDescription:
+      'Cuando existan eventos publicados con tickets, apareceran para el equipo de acceso.',
     errorTitle: 'No pudimos cargar eventos scanner',
     errorDescription: 'Revisa la conexion o recarga la lista antes de operar entrada.',
     retry: 'Reintentar carga',
@@ -577,9 +589,11 @@ export const appLabels = {
     description: 'Valida tokens QR en modo demo antes de ejecutar el check-in final.',
     backToEvents: 'Cambiar evento',
     cameraTitle: 'Camara placeholder',
-    cameraDescription: 'En el MVP puedes pegar o escribir el token QR. La camara real queda preparada para una integracion futura.',
+    cameraDescription:
+      'En el MVP puedes pegar o escribir el token QR. La camara real queda preparada para una integracion futura.',
     offlineTitle: 'Modo offline preparado',
-    offlineDescription: 'La validacion local/offline se simulara en una siguiente iteracion para accesos con conectividad inestable.',
+    offlineDescription:
+      'La validacion local/offline se simulara en una siguiente iteracion para accesos con conectividad inestable.',
     manualTitle: 'Validacion manual',
     qrLabel: 'Token QR',
     qrPlaceholder: 'Ej. BLX-CMF-001-A1',
@@ -591,9 +605,11 @@ export const appLabels = {
     required: 'Ingresa un token QR para validar.',
     recentTitle: 'Resultados recientes',
     noRecent: 'Aun no hay validaciones recientes.',
-    operationError: 'No pudimos completar la operacion. Verifica conexion y vuelve a intentar antes de permitir entrada.',
+    operationError:
+      'No pudimos completar la operacion. Verifica conexion y vuelve a intentar antes de permitir entrada.',
     errorTitle: 'Scanner no disponible',
-    errorDescription: 'No pudimos cargar el evento operativo. Cambia de evento o intenta nuevamente.',
+    errorDescription:
+      'No pudimos cargar el evento operativo. Cambia de evento o intenta nuevamente.',
     retry: 'Reintentar carga',
     loadingTitle: 'Cargando scanner',
     notFoundTitle: 'Evento no encontrado',
@@ -602,7 +618,8 @@ export const appLabels = {
   scannerAttendees: {
     eyebrow: 'Busqueda manual',
     title: 'Encuentra un asistente',
-    description: 'Fallback operativo cuando no puedes escanear el QR. Busca, selecciona y valida con las mismas reglas del scanner.',
+    description:
+      'Fallback operativo cuando no puedes escanear el QR. Busca, selecciona y valida con las mismas reglas del scanner.',
     backToScanner: 'Volver al scanner',
     searchPlaceholder: 'Buscar por nombre, correo, orden o QR',
     selectedTitle: 'Asistente seleccionado',
@@ -622,7 +639,8 @@ export const appLabels = {
     emptyDescription: 'Los asistentes apareceran cuando existan tickets emitidos.',
     noResultsTitle: 'No encontramos asistentes',
     noResultsDescription: 'Prueba otro nombre, correo, orden o codigo QR.',
-    operationError: 'No pudimos completar la validacion manual. No marques entrada hasta reintentar.',
+    operationError:
+      'No pudimos completar la validacion manual. No marques entrada hasta reintentar.',
     errorTitle: 'No pudimos cargar asistentes',
     errorDescription: 'Revisa la conexion o vuelve al scanner antes de operar esta entrada.',
     retry: 'Reintentar carga',
@@ -633,7 +651,8 @@ export const appLabels = {
   scannerStats: {
     eyebrow: 'Stats de entrada',
     title: 'Operacion en vivo',
-    description: 'Resumen rapido para el equipo de acceso: emitidos, ingresados, pendientes y ultimos check-ins.',
+    description:
+      'Resumen rapido para el equipo de acceso: emitidos, ingresados, pendientes y ultimos check-ins.',
     backToScanner: 'Volver al scanner',
     metrics: {
       total: 'Tickets emitidos',
@@ -647,7 +666,8 @@ export const appLabels = {
     noRecentTitle: 'Sin check-ins recientes',
     noRecentDescription: 'Cuando el scanner marque entradas, apareceran aqui.',
     errorTitle: 'No pudimos cargar stats',
-    errorDescription: 'Las metricas pueden estar desactualizadas. Reintenta antes de tomar decisiones operativas.',
+    errorDescription:
+      'Las metricas pueden estar desactualizadas. Reintenta antes de tomar decisiones operativas.',
     retry: 'Reintentar carga',
     notFoundTitle: 'Evento no encontrado',
     notFoundDescription: 'No encontramos este evento publicado para scanner.',
@@ -827,7 +847,8 @@ export const appLabels = {
     organizerDashboard: {
       eyebrow: 'Organizador',
       title: 'Dashboard de ventas',
-      description: 'Metricas de revenue, tickets vendidos, check-ins, eventos proximos y ordenes recientes.',
+      description:
+        'Metricas de revenue, tickets vendidos, check-ins, eventos proximos y ordenes recientes.',
       primaryLink: '/organizer/events',
       primaryLabel: 'Ver eventos',
     },

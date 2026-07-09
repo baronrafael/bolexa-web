@@ -2,15 +2,23 @@
   <app-loading-state [title]="labels.organizerEvents.loadingTitle" [rows]="5" />
 } @else {
   <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/70 shadow-2xl">
-    <div class="bg-[radial-gradient(circle_at_top_left,rgba(124,58,237,0.22),transparent_32%),linear-gradient(135deg,rgba(14,165,233,0.16),rgba(20,184,166,0.08))] p-6 sm:p-8">
+    <div
+      class="bg-[radial-gradient(circle_at_top_left,rgba(124,58,237,0.22),transparent_32%),linear-gradient(135deg,rgba(14,165,233,0.16),rgba(20,184,166,0.08))] p-6 sm:p-8"
+    >
       <div class="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
         <div>
-          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{{ labels.organizerEvents.eyebrow }}</p>
-          <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ labels.organizerEvents.title }}</h1>
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-primary">
+            {{ labels.organizerEvents.eyebrow }}
+          </p>
+          <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-6xl">
+            {{ labels.organizerEvents.title }}
+          </h1>
           <p class="mt-4 max-w-2xl text-slate-300">{{ labels.organizerEvents.description }}</p>
         </div>
 
-        <a class="btn btn-primary" routerLink="/organizer/events/new">{{ labels.organizerEvents.createEvent }}</a>
+        <a class="btn btn-primary" routerLink="/organizer/events/new">{{
+          labels.organizerEvents.createEvent
+        }}</a>
       </div>
     </div>
   </section>
@@ -21,9 +29,13 @@
         <article class="rounded-[1.5rem] border border-white/10 bg-base-300/70 p-5 shadow-2xl">
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ labels.organizerEvents.event }}</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                {{ labels.organizerEvents.event }}
+              </p>
               <h2 class="mt-2 text-2xl font-black text-white">{{ detail.event.title }}</h2>
-              <p class="mt-2 text-sm text-slate-400">{{ detail.venue.name }} · {{ detail.venue.city }}</p>
+              <p class="mt-2 text-sm text-slate-400">
+                {{ detail.venue.name }} · {{ detail.venue.city }}
+              </p>
             </div>
             <app-status-badge [status]="detail.event.status" />
           </div>
@@ -31,7 +43,9 @@
           <div class="mt-5 grid gap-3 sm:grid-cols-3">
             <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
               <p class="text-xs text-slate-500">{{ labels.organizerEvents.date }}</p>
-              <p class="mt-1 text-sm font-bold text-white">{{ formatDate(detail.event.startsAt) }}</p>
+              <p class="mt-1 text-sm font-bold text-white">
+                {{ formatDate(detail.event.startsAt) }}
+              </p>
             </div>
             <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
               <p class="text-xs text-slate-500">{{ labels.organizerEvents.ticketsSold }}</p>
@@ -44,17 +58,39 @@
           </div>
 
           <div class="mt-5 flex flex-wrap gap-2">
-            <a class="btn btn-primary btn-sm" [routerLink]="['/organizer/events', detail.event.id]">{{ labels.organizerEvents.viewDetail }}</a>
-            <a class="btn btn-ghost btn-sm" [routerLink]="['/organizer/events', detail.event.id, 'edit']">{{ labels.organizerEvents.edit }}</a>
-            <a class="btn btn-ghost btn-sm" [routerLink]="['/organizer/events', detail.event.id, 'ticket-types']">{{ labels.organizerEvents.ticketTypesLink }}</a>
-            <a class="btn btn-ghost btn-sm" [routerLink]="['/organizer/events', detail.event.id, 'orders']">{{ labels.organizerEvents.orders }}</a>
-            <a class="btn btn-ghost btn-sm" [routerLink]="['/organizer/events', detail.event.id, 'attendees']">{{ labels.organizerEvents.attendees }}</a>
+            <a
+              class="btn btn-primary btn-sm"
+              [routerLink]="['/organizer/events', detail.event.id]"
+              >{{ labels.organizerEvents.viewDetail }}</a
+            >
+            <a
+              class="btn btn-ghost btn-sm"
+              [routerLink]="['/organizer/events', detail.event.id, 'edit']"
+              >{{ labels.organizerEvents.edit }}</a
+            >
+            <a
+              class="btn btn-ghost btn-sm"
+              [routerLink]="['/organizer/events', detail.event.id, 'ticket-types']"
+              >{{ labels.organizerEvents.ticketTypesLink }}</a
+            >
+            <a
+              class="btn btn-ghost btn-sm"
+              [routerLink]="['/organizer/events', detail.event.id, 'orders']"
+              >{{ labels.organizerEvents.orders }}</a
+            >
+            <a
+              class="btn btn-ghost btn-sm"
+              [routerLink]="['/organizer/events', detail.event.id, 'attendees']"
+              >{{ labels.organizerEvents.attendees }}</a
+            >
           </div>
         </article>
       }
     </section>
 
-    <section class="mt-8 hidden overflow-hidden rounded-[1.5rem] border border-white/10 bg-base-300/70 shadow-2xl lg:block">
+    <section
+      class="mt-8 hidden overflow-hidden rounded-[1.5rem] border border-white/10 bg-base-300/70 shadow-2xl lg:block"
+    >
       <table class="table">
         <thead>
           <tr class="border-white/10 text-slate-400">
@@ -72,8 +108,12 @@
               <td>
                 <div>
                   <p class="font-black text-white">{{ detail.event.title }}</p>
-                  <p class="mt-1 text-sm text-slate-400">{{ detail.venue.name }} · {{ detail.venue.city }}</p>
-                  <p class="mt-1 text-xs text-slate-500">{{ detail.ticketTypes.length }} {{ labels.organizerEvents.ticketTypes }}</p>
+                  <p class="mt-1 text-sm text-slate-400">
+                    {{ detail.venue.name }} · {{ detail.venue.city }}
+                  </p>
+                  <p class="mt-1 text-xs text-slate-500">
+                    {{ detail.ticketTypes.length }} {{ labels.organizerEvents.ticketTypes }}
+                  </p>
                 </div>
               </td>
               <td><app-status-badge [status]="detail.event.status" /></td>
@@ -82,10 +122,26 @@
               <td class="font-bold text-white">{{ revenue(detail) }}</td>
               <td>
                 <div class="flex justify-end gap-2">
-                  <a class="btn btn-primary btn-xs" [routerLink]="['/organizer/events', detail.event.id]">{{ labels.organizerEvents.viewDetail }}</a>
-                  <a class="btn btn-ghost btn-xs" [routerLink]="['/organizer/events', detail.event.id, 'edit']">{{ labels.organizerEvents.edit }}</a>
-                  <a class="btn btn-ghost btn-xs" [routerLink]="['/organizer/events', detail.event.id, 'ticket-types']">{{ labels.organizerEvents.ticketTypesLink }}</a>
-                  <a class="btn btn-ghost btn-xs" [routerLink]="['/organizer/events', detail.event.id, 'orders']">{{ labels.organizerEvents.orders }}</a>
+                  <a
+                    class="btn btn-primary btn-xs"
+                    [routerLink]="['/organizer/events', detail.event.id]"
+                    >{{ labels.organizerEvents.viewDetail }}</a
+                  >
+                  <a
+                    class="btn btn-ghost btn-xs"
+                    [routerLink]="['/organizer/events', detail.event.id, 'edit']"
+                    >{{ labels.organizerEvents.edit }}</a
+                  >
+                  <a
+                    class="btn btn-ghost btn-xs"
+                    [routerLink]="['/organizer/events', detail.event.id, 'ticket-types']"
+                    >{{ labels.organizerEvents.ticketTypesLink }}</a
+                  >
+                  <a
+                    class="btn btn-ghost btn-xs"
+                    [routerLink]="['/organizer/events', detail.event.id, 'orders']"
+                    >{{ labels.organizerEvents.orders }}</a
+                  >
                 </div>
               </td>
             </tr>

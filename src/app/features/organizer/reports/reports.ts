@@ -1,10 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { Attendee, EventDetail, PaymentMethod } from '../../../data-access/models';
-import { OrganizerOrder, OrganizerRepository } from '../../../data-access/repositories/organizer-repository';
+import {
+  OrganizerOrder,
+  OrganizerRepository,
+} from '../../../data-access/repositories/organizer-repository';
 import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { EmptyState, LoadingState, MetricCard } from '../../../shared/ui';
 
@@ -37,12 +47,25 @@ export class Reports {
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
-  protected readonly paidOrders = computed(() => this.orders().filter((entry) => entry.order.status === 'paid'));
-  protected readonly totalRevenue = computed(() => this.paidOrders().reduce((total, entry) => total + entry.order.total, 0));
+  protected readonly paidOrders = computed(() =>
+    this.orders().filter((entry) => entry.order.status === 'paid'),
+  );
+  protected readonly totalRevenue = computed(() =>
+    this.paidOrders().reduce((total, entry) => total + entry.order.total, 0),
+  );
   protected readonly ticketsSold = computed(() => this.attendees().length);
-  protected readonly checkedInCount = computed(() => this.attendees().filter((attendee) => attendee.ticket.status === 'used').length);
-  protected readonly pendingCount = computed(() => Math.max(this.ticketsSold() - this.checkedInCount(), 0));
-  protected readonly hasReportData = computed(() => this.orders().length > 0 || this.attendees().length > 0 || Boolean(this.eventDetail()?.ticketTypes.length));
+  protected readonly checkedInCount = computed(
+    () => this.attendees().filter((attendee) => attendee.ticket.status === 'used').length,
+  );
+  protected readonly pendingCount = computed(() =>
+    Math.max(this.ticketsSold() - this.checkedInCount(), 0),
+  );
+  protected readonly hasReportData = computed(
+    () =>
+      this.orders().length > 0 ||
+      this.attendees().length > 0 ||
+      Boolean(this.eventDetail()?.ticketTypes.length),
+  );
   protected readonly metricCards = computed(() => [
     {
       title: this.labels.organizerReports.metrics.revenue,
@@ -66,49 +89,60 @@ export class Reports {
     },
   ]);
   protected readonly revenueByTicketType = computed<ReportBar[]>(() => {
-    const bars = this.eventDetail()?.ticketTypes.map((ticketType) => ({
-      label: ticketType.name,
-      value: ticketType.price * ticketType.quantitySold,
-      displayValue: this.formatMoney(ticketType.price * ticketType.quantitySold, ticketType.currency),
-    })) ?? [];
+    const bars =
+      this.eventDetail()?.ticketTypes.map((ticketType) => ({
+        label: ticketType.name,
+        value: ticketType.price * ticketType.quantitySold,
+        displayValue: this.formatMoney(
+          ticketType.price * ticketType.quantitySold,
+          ticketType.currency,
+        ),
+      })) ?? [];
 
     return this.withPercentages(bars);
   });
   protected readonly ticketsByType = computed<ReportBar[]>(() => {
-    const bars = this.eventDetail()?.ticketTypes.map((ticketType) => ({
-      label: ticketType.name,
-      value: ticketType.quantitySold,
-      displayValue: `${ticketType.quantitySold} ${this.labels.organizerReports.labels.sold}`,
-    })) ?? [];
+    const bars =
+      this.eventDetail()?.ticketTypes.map((ticketType) => ({
+        label: ticketType.name,
+        value: ticketType.quantitySold,
+        displayValue: `${ticketType.quantitySold} ${this.labels.organizerReports.labels.sold}`,
+      })) ?? [];
 
     return this.withPercentages(bars);
   });
-  protected readonly checkInBars = computed<ReportBar[]>(() => this.withPercentages([
-    {
-      label: this.labels.organizerReports.labels.checkedIn,
-      value: this.checkedInCount(),
-      displayValue: `${this.checkedInCount()} ${this.labels.organizerReports.labels.checkedIn}`,
-    },
-    {
-      label: this.labels.organizerReports.labels.pending,
-      value: this.pendingCount(),
-      displayValue: `${this.pendingCount()} ${this.labels.organizerReports.labels.pending}`,
-    },
-  ]));
+  protected readonly checkInBars = computed<ReportBar[]>(() =>
+    this.withPercentages([
+      {
+        label: this.labels.organizerReports.labels.checkedIn,
+        value: this.checkedInCount(),
+        displayValue: `${this.checkedInCount()} ${this.labels.organizerReports.labels.checkedIn}`,
+      },
+      {
+        label: this.labels.organizerReports.labels.pending,
+        value: this.pendingCount(),
+        displayValue: `${this.pendingCount()} ${this.labels.organizerReports.labels.pending}`,
+      },
+    ]),
+  );
   protected readonly paymentBars = computed<ReportBar[]>(() => {
     const totals = new Map<string, number>();
 
     for (const entry of this.orders()) {
-      const key = entry.order.paymentMethod ? this.labels.checkout.paymentMethods[entry.order.paymentMethod as PaymentMethod] : this.labels.organizerReports.labels.noPaymentMethod;
+      const key = entry.order.paymentMethod
+        ? this.labels.checkout.paymentMethods[entry.order.paymentMethod as PaymentMethod]
+        : this.labels.organizerReports.labels.noPaymentMethod;
 
       totals.set(key, (totals.get(key) ?? 0) + 1);
     }
 
-    return this.withPercentages([...totals.entries()].map(([label, value]) => ({
-      label,
-      value,
-      displayValue: `${value} ${this.labels.organizerReports.labels.orders}`,
-    })));
+    return this.withPercentages(
+      [...totals.entries()].map(([label, value]) => ({
+        label,
+        value,
+        displayValue: `${value} ${this.labels.organizerReports.labels.orders}`,
+      })),
+    );
   });
 
   constructor() {

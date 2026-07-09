@@ -22,7 +22,9 @@ export class CheckoutRepository {
 
     const state = this.database.snapshot();
     const ticketTypes = input.items.map((item) => {
-      const ticketType = state.ticketTypes.find((candidate) => candidate.id === item.ticketTypeId && candidate.eventId === input.eventId);
+      const ticketType = state.ticketTypes.find(
+        (candidate) => candidate.id === item.ticketTypeId && candidate.eventId === input.eventId,
+      );
 
       if (!ticketType || ticketType.status !== 'active') {
         throw new Error('Ticket type is not available.');
@@ -35,11 +37,13 @@ export class CheckoutRepository {
       return { item, ticketType };
     });
 
-    const totals = calculateOrderTotals(ticketTypes.map(({ item, ticketType }) => ({
-      currency: ticketType.currency,
-      quantity: item.quantity,
-      unitPrice: ticketType.price,
-    })));
+    const totals = calculateOrderTotals(
+      ticketTypes.map(({ item, ticketType }) => ({
+        currency: ticketType.currency,
+        quantity: item.quantity,
+        unitPrice: ticketType.price,
+      })),
+    );
     const now = nowIso();
     const orderId = createMockId('order');
     const order: Order = {
@@ -100,7 +104,9 @@ export class CheckoutRepository {
         const orderItems = state.orderItems.filter((item) => item.orderId === order.id);
 
         for (const item of orderItems) {
-          const ticketType = state.ticketTypes.find((candidate) => candidate.id === item.ticketTypeId);
+          const ticketType = state.ticketTypes.find(
+            (candidate) => candidate.id === item.ticketTypeId,
+          );
 
           if (!ticketType) {
             continue;
@@ -163,16 +169,21 @@ export class CheckoutRepository {
     }
 
     const event = state.events.find((candidate) => candidate.id === order.eventId);
-    const venue = event ? state.venues.find((candidate) => candidate.id === event.venueId) : undefined;
-    const organizer = event ? state.organizers.find((candidate) => candidate.id === event.organizerId) : undefined;
-    const eventDetail = event && venue && organizer
-      ? {
-          event,
-          venue,
-          organizer,
-          ticketTypes: state.ticketTypes.filter((ticketType) => ticketType.eventId === event.id),
-        }
-      : null;
+    const venue = event
+      ? state.venues.find((candidate) => candidate.id === event.venueId)
+      : undefined;
+    const organizer = event
+      ? state.organizers.find((candidate) => candidate.id === event.organizerId)
+      : undefined;
+    const eventDetail =
+      event && venue && organizer
+        ? {
+            event,
+            venue,
+            organizer,
+            ticketTypes: state.ticketTypes.filter((ticketType) => ticketType.eventId === event.id),
+          }
+        : null;
 
     return clone({
       order,
@@ -187,8 +198,7 @@ export class CheckoutRepository {
 
     return this.database
       .snapshot()
-      .orderItems
-      .filter((item) => item.orderId === orderId)
+      .orderItems.filter((item) => item.orderId === orderId)
       .map((item) => clone(item));
   }
 
@@ -197,8 +207,7 @@ export class CheckoutRepository {
 
     return this.database
       .snapshot()
-      .tickets
-      .filter((ticket) => ticket.orderId === orderId)
+      .tickets.filter((ticket) => ticket.orderId === orderId)
       .map((ticket) => clone(ticket));
   }
 }

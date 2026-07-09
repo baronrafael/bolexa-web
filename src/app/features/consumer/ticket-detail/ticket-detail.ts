@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { appLabels } from '../../../core/content/app-labels';
@@ -35,7 +42,9 @@ export class TicketDetail {
     const currentTicket = this.ticket();
 
     return currentTicket
-      ? this.eventDetail()?.ticketTypes.find((ticketType) => ticketType.id === currentTicket.ticketTypeId)
+      ? this.eventDetail()?.ticketTypes.find(
+          (ticketType) => ticketType.id === currentTicket.ticketTypeId,
+        )
       : undefined;
   });
 

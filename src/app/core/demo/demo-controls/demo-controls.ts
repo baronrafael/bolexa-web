@@ -28,7 +28,11 @@ export class DemoControls {
   protected readonly demoLinks: DemoLink[] = [
     { label: appLabels.demo.links.event, path: '/events/caracas-music-fest' },
     { label: appLabels.demo.links.tickets, path: '/my-tickets' },
-    { label: appLabels.demo.links.scanner, path: '/scan/events/event-caracas-music-fest/scanner', queryParams: { qr: appLabels.demo.qrValue } },
+    {
+      label: appLabels.demo.links.scanner,
+      path: '/scan/events/event-caracas-music-fest/scanner',
+      queryParams: { qr: appLabels.demo.qrValue },
+    },
     { label: appLabels.demo.links.dashboard, path: '/organizer/dashboard' },
   ];
 

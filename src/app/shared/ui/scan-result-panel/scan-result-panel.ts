@@ -37,6 +37,8 @@ export class ScanResultPanel {
   protected readonly message = computed(() => {
     const result = this.result();
 
-    return result ? result.message || this.labels.defaultMessages[result.status] : this.labels.idleMessage;
+    return result
+      ? result.message || this.labels.defaultMessages[result.status]
+      : this.labels.idleMessage;
   });
 }

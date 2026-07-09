@@ -26,7 +26,9 @@ export class Events {
   }
 
   protected checkedInPercentage(event: ScannerEventSummary): number {
-    return event.totalTickets > 0 ? Math.round((event.checkedInTickets / event.totalTickets) * 100) : 0;
+    return event.totalTickets > 0
+      ? Math.round((event.checkedInTickets / event.totalTickets) * 100)
+      : 0;
   }
 
   protected pendingTickets(event: ScannerEventSummary): number {
@@ -51,7 +53,9 @@ export class Events {
     try {
       const events = await this.scannerRepository.listEvents();
 
-      this.events.set(events.sort((first, second) => first.event.startsAt.localeCompare(second.event.startsAt)));
+      this.events.set(
+        events.sort((first, second) => first.event.startsAt.localeCompare(second.event.startsAt)),
+      );
     } catch {
       this.events.set([]);
       this.errorMessage.set(this.labels.scannerEvents.errorDescription);

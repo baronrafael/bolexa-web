@@ -10,27 +10,45 @@
     />
 
     <div class="mt-5 text-center">
-      <button class="btn btn-error" type="button" (click)="retryLoad()">{{ labels.eventDetail.retry }}</button>
+      <button class="btn btn-error" type="button" (click)="retryLoad()">
+        {{ labels.eventDetail.retry }}
+      </button>
     </div>
   } @else if (eventDetail(); as detail) {
-    <a class="btn btn-ghost btn-sm mb-6" routerLink="/events">{{ labels.eventDetail.backToEvents }}</a>
+    <a class="btn btn-ghost btn-sm mb-6" routerLink="/events">{{
+      labels.eventDetail.backToEvents
+    }}</a>
 
-    <section class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/60 shadow-2xl">
+    <section
+      class="overflow-hidden rounded-[2rem] border border-white/10 bg-base-300/60 shadow-2xl"
+    >
       <div class="relative min-h-[24rem] bg-base-200">
         @if (detail.event.coverImageUrl; as coverImageUrl) {
-          <img class="absolute inset-0 h-full w-full object-cover" [src]="coverImageUrl" [alt]="detail.event.title" />
+          <img
+            class="absolute inset-0 h-full w-full object-cover"
+            [src]="coverImageUrl"
+            [alt]="detail.event.title"
+          />
         }
-        <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/55 to-base-100/10"></div>
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/55 to-base-100/10"
+        ></div>
 
         <div class="relative flex min-h-[24rem] flex-col justify-end p-6 sm:p-8 lg:p-10">
           <div class="flex flex-wrap items-center gap-3">
-            <span class="badge border-primary/30 bg-primary/15 text-primary">{{ categoryLabel() }}</span>
+            <span class="badge border-primary/30 bg-primary/15 text-primary">{{
+              categoryLabel()
+            }}</span>
             <app-status-badge [status]="detail.event.status" />
           </div>
-          <h1 class="mt-5 max-w-4xl text-4xl font-black leading-none tracking-tight text-white sm:text-6xl lg:text-7xl">
+          <h1
+            class="mt-5 max-w-4xl text-4xl font-black leading-none tracking-tight text-white sm:text-6xl lg:text-7xl"
+          >
             {{ detail.event.title }}
           </h1>
-          <p class="mt-5 max-w-3xl text-lg leading-8 text-slate-200">{{ detail.event.description }}</p>
+          <p class="mt-5 max-w-3xl text-lg leading-8 text-slate-200">
+            {{ detail.event.description }}
+          </p>
         </div>
       </div>
     </section>
@@ -39,16 +57,22 @@
       <div class="grid gap-8">
         <div class="grid gap-4 sm:grid-cols-3">
           <article class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ labels.eventDetail.date }}</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              {{ labels.eventDetail.date }}
+            </p>
             <p class="mt-2 font-bold text-white">{{ eventDate() }}</p>
           </article>
           <article class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ labels.eventDetail.venue }}</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              {{ labels.eventDetail.venue }}
+            </p>
             <p class="mt-2 font-bold text-white">{{ detail.venue.name }}</p>
             <p class="text-sm text-slate-400">{{ detail.venue.city }}</p>
           </article>
           <article class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ labels.eventDetail.organizer }}</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              {{ labels.eventDetail.organizer }}
+            </p>
             <p class="mt-2 font-bold text-white">{{ detail.organizer.name }}</p>
           </article>
         </div>
@@ -62,7 +86,9 @@
           <h2 class="text-2xl font-black text-white">{{ labels.eventDetail.trustTitle }}</h2>
           <div class="mt-5 grid gap-3">
             @for (trustItem of labels.eventDetail.trustItems; track trustItem) {
-              <div class="flex gap-3 rounded-2xl border border-success/20 bg-success/10 p-4 text-sm text-slate-200">
+              <div
+                class="flex gap-3 rounded-2xl border border-success/20 bg-success/10 p-4 text-sm text-slate-200"
+              >
                 <span class="mt-1 size-2 rounded-full bg-success"></span>
                 <span>{{ trustItem }}</span>
               </div>
@@ -90,7 +116,9 @@
         <app-order-summary [items]="selectedItems()" [fees]="fees()" />
 
         @if (selectedCount() === 0) {
-          <p class="mt-4 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-sm text-warning">
+          <p
+            class="mt-4 rounded-2xl border border-warning/20 bg-warning/10 p-4 text-sm text-warning"
+          >
             {{ labels.eventDetail.noTicketsSelected }}
           </p>
         }

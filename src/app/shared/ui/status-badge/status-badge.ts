@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { appLabels } from '../../../core/content/app-labels';
 
-export type StatusBadgeTone = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info';
+export type StatusBadgeTone =
+  | 'neutral'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info';
 
 @Component({
   selector: 'app-status-badge',
@@ -56,6 +63,10 @@ export class StatusBadge {
     info: 'badge border-info/30 bg-info/15 text-info',
   };
 
-  protected readonly displayLabel = computed(() => this.label() ?? this.statusLabels[this.status()] ?? this.labels.fallback);
-  protected readonly badgeClass = computed(() => this.toneClasses[this.tone() ?? this.statusTones[this.status()] ?? 'neutral']);
+  protected readonly displayLabel = computed(
+    () => this.label() ?? this.statusLabels[this.status()] ?? this.labels.fallback,
+  );
+  protected readonly badgeClass = computed(
+    () => this.toneClasses[this.tone() ?? this.statusTones[this.status()] ?? 'neutral'],
+  );
 }

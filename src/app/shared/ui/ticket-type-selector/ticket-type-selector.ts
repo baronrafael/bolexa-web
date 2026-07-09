@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input, numberAttribute, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  numberAttribute,
+  output,
+} from '@angular/core';
 import { appLabels } from '../../../core/content/app-labels';
 import { TicketType } from '../../../data-access/models';
 import { formatMoneyEsVe } from '../../formatting/formatters';
@@ -17,8 +24,12 @@ export class TicketTypeSelector {
   readonly quantityChange = output<number>();
 
   protected readonly labels = appLabels.shared.ticketTypeSelector;
-  protected readonly availableTickets = computed(() => Math.max(this.ticketType().quantityTotal - this.ticketType().quantitySold, 0));
-  protected readonly unavailable = computed(() => this.ticketType().status !== 'active' || this.availableTickets() === 0);
+  protected readonly availableTickets = computed(() =>
+    Math.max(this.ticketType().quantityTotal - this.ticketType().quantitySold, 0),
+  );
+  protected readonly unavailable = computed(
+    () => this.ticketType().status !== 'active' || this.availableTickets() === 0,
+  );
 
   protected formatMoney(value: number, currency: string): string {
     return formatMoneyEsVe(value, currency, {

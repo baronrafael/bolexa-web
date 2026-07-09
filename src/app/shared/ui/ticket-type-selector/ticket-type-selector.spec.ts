@@ -31,7 +31,9 @@ describe('TicketTypeSelector', () => {
     fixture.componentInstance.quantityChange.subscribe((quantity) => emitted.push(quantity));
     fixture.detectChanges();
 
-    const buttons = fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
+    const buttons = fixture.nativeElement.querySelectorAll(
+      'button',
+    ) as NodeListOf<HTMLButtonElement>;
     buttons[0].click();
     buttons[1].click();
 
@@ -47,7 +49,9 @@ describe('TicketTypeSelector', () => {
     fixture.componentInstance.quantityChange.subscribe((quantity) => emitted.push(quantity));
     fixture.detectChanges();
 
-    const incrementButton = fixture.nativeElement.querySelectorAll('button')[1] as HTMLButtonElement;
+    const incrementButton = fixture.nativeElement.querySelectorAll(
+      'button',
+    )[1] as HTMLButtonElement;
     incrementButton.click();
 
     expect(incrementButton.disabled).toBe(true);

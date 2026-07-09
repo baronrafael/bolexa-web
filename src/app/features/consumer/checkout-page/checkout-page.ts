@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
@@ -8,7 +15,14 @@ import { EventDetail, PaymentMethod } from '../../../data-access/models';
 import { CheckoutRepository } from '../../../data-access/repositories/checkout-repository';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
-import { EmptyState, LoadingState, OrderSummary, OrderSummaryItem, StatusBadge, TicketTypeSelector } from '../../../shared/ui';
+import {
+  EmptyState,
+  LoadingState,
+  OrderSummary,
+  OrderSummaryItem,
+  StatusBadge,
+  TicketTypeSelector,
+} from '../../../shared/ui';
 
 type PaymentOption = Exclude<PaymentMethod, 'card'> | 'card';
 
@@ -40,9 +54,18 @@ export class CheckoutPage {
   protected readonly buyerPhone = signal(this.auth.currentUser().phone ?? '');
   protected readonly paymentMethod = signal<PaymentOption>('pago_movil');
   protected readonly paymentReference = signal('');
-  protected readonly selectedPaymentClass = 'rounded-2xl border border-primary/50 bg-primary/10 p-4 text-left transition hover:border-primary/60';
-  protected readonly unselectedPaymentClass = 'rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-primary/40';
-  protected readonly paymentOptions: PaymentOption[] = ['pago_movil', 'zelle', 'binance', 'bank_transfer', 'manual', 'card'];
+  protected readonly selectedPaymentClass =
+    'rounded-2xl border border-primary/50 bg-primary/10 p-4 text-left transition hover:border-primary/60';
+  protected readonly unselectedPaymentClass =
+    'rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left transition hover:border-primary/40';
+  protected readonly paymentOptions: PaymentOption[] = [
+    'pago_movil',
+    'zelle',
+    'binance',
+    'bank_transfer',
+    'manual',
+    'card',
+  ];
   protected readonly selectedItems = computed<OrderSummaryItem[]>(() => {
     const eventDetail = this.eventDetail();
 
@@ -59,15 +82,23 @@ export class CheckoutPage {
       }))
       .filter((item) => item.quantity > 0);
   });
-  protected readonly selectedCount = computed(() => this.selectedItems().reduce((total, item) => total + item.quantity, 0));
+  protected readonly selectedCount = computed(() =>
+    this.selectedItems().reduce((total, item) => total + item.quantity, 0),
+  );
   protected readonly totals = computed(() => calculateOrderTotals(this.selectedItems()));
   protected readonly subtotal = computed(() => this.totals().subtotal);
   protected readonly fees = computed(() => this.totals().fees);
   protected readonly total = computed(() => this.totals().total);
   protected readonly selectedCurrency = computed(() => this.totals().currency);
-  protected readonly selectedPaymentDescription = computed(() => this.labels.checkout.methodDescriptions[this.paymentMethod()]);
-  protected readonly requiresPaymentReference = computed(() => this.paymentMethod() !== 'manual' && this.paymentMethod() !== 'card');
-  protected readonly buyerNameError = computed(() => this.buyerName().trim() ? null : this.labels.checkout.validation.nameRequired);
+  protected readonly selectedPaymentDescription = computed(
+    () => this.labels.checkout.methodDescriptions[this.paymentMethod()],
+  );
+  protected readonly requiresPaymentReference = computed(
+    () => this.paymentMethod() !== 'manual' && this.paymentMethod() !== 'card',
+  );
+  protected readonly buyerNameError = computed(() =>
+    this.buyerName().trim() ? null : this.labels.checkout.validation.nameRequired,
+  );
   protected readonly buyerEmailError = computed(() => {
     const email = this.buyerEmail().trim();
 
@@ -75,10 +106,18 @@ export class CheckoutPage {
       return this.labels.checkout.validation.emailRequired;
     }
 
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? null : this.labels.checkout.validation.emailInvalid;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+      ? null
+      : this.labels.checkout.validation.emailInvalid;
   });
-  protected readonly paymentReferenceError = computed(() => this.requiresPaymentReference() && !this.paymentReference().trim() ? this.labels.checkout.validation.referenceRequired : null);
-  protected readonly isFormValid = computed(() => !this.buyerNameError() && !this.buyerEmailError() && !this.paymentReferenceError());
+  protected readonly paymentReferenceError = computed(() =>
+    this.requiresPaymentReference() && !this.paymentReference().trim()
+      ? this.labels.checkout.validation.referenceRequired
+      : null,
+  );
+  protected readonly isFormValid = computed(
+    () => !this.buyerNameError() && !this.buyerEmailError() && !this.paymentReferenceError(),
+  );
   protected readonly eventDate = computed(() => {
     const eventDetail = this.eventDetail();
 
@@ -129,7 +168,9 @@ export class CheckoutPage {
   }
 
   protected paymentOptionClass(method: PaymentOption): string {
-    return this.paymentMethod() === method ? this.selectedPaymentClass : this.unselectedPaymentClass;
+    return this.paymentMethod() === method
+      ? this.selectedPaymentClass
+      : this.unselectedPaymentClass;
   }
 
   protected formatMoney(value: number, currency: string): string {
@@ -181,7 +222,12 @@ export class CheckoutPage {
         result,
       });
 
-      await this.router.navigate(['/checkout', eventDetail.event.id, 'confirmation', payment.order.id]);
+      await this.router.navigate([
+        '/checkout',
+        eventDetail.event.id,
+        'confirmation',
+        payment.order.id,
+      ]);
     } catch (error) {
       this.error.set(error instanceof Error ? error.message : this.labels.checkout.errorTitle);
     } finally {
@@ -202,23 +248,34 @@ export class CheckoutPage {
         return;
       }
 
-      const restoredQuantities = eventDetail.ticketTypes.reduce<Record<string, number>>((quantities, ticketType) => {
-        const available = Math.max(ticketType.quantityTotal - ticketType.quantitySold, 0);
-        const requestedQuantity = Number(queryParams.get(ticketType.id));
+      const restoredQuantities = eventDetail.ticketTypes.reduce<Record<string, number>>(
+        (quantities, ticketType) => {
+          const available = Math.max(ticketType.quantityTotal - ticketType.quantitySold, 0);
+          const requestedQuantity = Number(queryParams.get(ticketType.id));
 
-        if (ticketType.status === 'active' && available > 0 && Number.isFinite(requestedQuantity) && requestedQuantity > 0) {
-          quantities[ticketType.id] = Math.min(Math.trunc(requestedQuantity), available);
-        }
+          if (
+            ticketType.status === 'active' &&
+            available > 0 &&
+            Number.isFinite(requestedQuantity) &&
+            requestedQuantity > 0
+          ) {
+            quantities[ticketType.id] = Math.min(Math.trunc(requestedQuantity), available);
+          }
 
-        return quantities;
-      }, {});
+          return quantities;
+        },
+        {},
+      );
 
       if (Object.keys(restoredQuantities).length > 0) {
         this.quantities.set(restoredQuantities);
         return;
       }
 
-      const firstAvailableTicketType = eventDetail.ticketTypes.find((ticketType) => ticketType.status === 'active' && ticketType.quantityTotal > ticketType.quantitySold);
+      const firstAvailableTicketType = eventDetail.ticketTypes.find(
+        (ticketType) =>
+          ticketType.status === 'active' && ticketType.quantityTotal > ticketType.quantitySold,
+      );
 
       if (firstAvailableTicketType) {
         this.quantities.set({ [firstAvailableTicketType.id]: 1 });

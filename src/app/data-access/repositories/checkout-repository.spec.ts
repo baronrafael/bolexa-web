@@ -29,7 +29,9 @@ describe('CheckoutRepository', () => {
       paymentReference: 'PM-TEST',
       result: 'approved',
     });
-    const ticketType = database.snapshot().ticketTypes.find((candidate) => candidate.id === 'tt-cmf-general');
+    const ticketType = database
+      .snapshot()
+      .ticketTypes.find((candidate) => candidate.id === 'tt-cmf-general');
 
     expect(payment.order.status).toBe('paid');
     expect(payment.tickets).toHaveLength(2);
@@ -38,10 +40,12 @@ describe('CheckoutRepository', () => {
   });
 
   it('rejects orders that exceed available inventory', async () => {
-    await expect(repository.createOrder({
-      eventId: 'event-caracas-music-fest',
-      userId: 'user-andrea',
-      items: [{ ticketTypeId: 'tt-cmf-general', quantity: 2000 }],
-    })).rejects.toThrow('Not enough tickets available.');
+    await expect(
+      repository.createOrder({
+        eventId: 'event-caracas-music-fest',
+        userId: 'user-andrea',
+        items: [{ ticketTypeId: 'tt-cmf-general', quantity: 2000 }],
+      }),
+    ).rejects.toThrow('Not enough tickets available.');
   });
 });

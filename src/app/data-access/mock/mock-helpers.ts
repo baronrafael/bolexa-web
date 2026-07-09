@@ -11,9 +11,10 @@ export async function mockDelay(ms = 180): Promise<void> {
 }
 
 export function createMockId(prefix: string): string {
-  const randomPart = typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID().slice(0, 8)
-    : Math.random().toString(36).slice(2, 10);
+  const randomPart =
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10);
 
   return `${prefix}_${randomPart}`;
 }

@@ -20,8 +20,7 @@ export class TicketsRepository {
 
     return this.database
       .snapshot()
-      .tickets
-      .filter((ticket) => ticket.userId === userId)
+      .tickets.filter((ticket) => ticket.userId === userId)
       .map((ticket) => clone(ticket));
   }
 
@@ -34,11 +33,20 @@ export class TicketsRepository {
     return tickets
       .map((ticket) => {
         const event = state.events.find((candidate) => candidate.id === ticket.eventId);
-        const venue = event ? state.venues.find((candidate) => candidate.id === event.venueId) : undefined;
-        const organizer = event ? state.organizers.find((candidate) => candidate.id === event.organizerId) : undefined;
-        const ticketTypes = state.ticketTypes.filter((ticketType) => ticketType.eventId === ticket.eventId);
-        const ticketTypeName = ticketTypes.find((ticketType) => ticketType.id === ticket.ticketTypeId)?.name;
-        const eventDetail = event && venue && organizer ? { event, venue, organizer, ticketTypes } : null;
+        const venue = event
+          ? state.venues.find((candidate) => candidate.id === event.venueId)
+          : undefined;
+        const organizer = event
+          ? state.organizers.find((candidate) => candidate.id === event.organizerId)
+          : undefined;
+        const ticketTypes = state.ticketTypes.filter(
+          (ticketType) => ticketType.eventId === ticket.eventId,
+        );
+        const ticketTypeName = ticketTypes.find(
+          (ticketType) => ticketType.id === ticket.ticketTypeId,
+        )?.name;
+        const eventDetail =
+          event && venue && organizer ? { event, venue, organizer, ticketTypes } : null;
 
         return clone({
           ticket,
@@ -54,15 +62,20 @@ export class TicketsRepository {
 
     const ticket = this.database
       .snapshot()
-      .tickets
-      .find((candidate) => candidate.id === ticketId && (!userId || candidate.userId === userId));
+      .tickets.find(
+        (candidate) => candidate.id === ticketId && (!userId || candidate.userId === userId),
+      );
 
     return ticket ? clone(ticket) : null;
   }
 
   private sortByEventDate(first: TicketListItemReadModel, second: TicketListItemReadModel): number {
-    const firstTime = first.eventDetail?.event.startsAt ? new Date(first.eventDetail.event.startsAt).getTime() : Number.MAX_SAFE_INTEGER;
-    const secondTime = second.eventDetail?.event.startsAt ? new Date(second.eventDetail.event.startsAt).getTime() : Number.MAX_SAFE_INTEGER;
+    const firstTime = first.eventDetail?.event.startsAt
+      ? new Date(first.eventDetail.event.startsAt).getTime()
+      : Number.MAX_SAFE_INTEGER;
+    const secondTime = second.eventDetail?.event.startsAt
+      ? new Date(second.eventDetail.event.startsAt).getTime()
+      : Number.MAX_SAFE_INTEGER;
 
     return firstTime - secondTime;
   }

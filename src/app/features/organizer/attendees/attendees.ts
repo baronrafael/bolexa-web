@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
@@ -39,13 +46,19 @@ export class Attendees {
     }
 
     return this.attendees().filter((attendee) => {
-      const searchable = normalizeSearch(`${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.id} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`);
+      const searchable = normalizeSearch(
+        `${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.id} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`,
+      );
 
       return searchable.includes(query);
     });
   });
-  protected readonly checkedInCount = computed(() => this.attendees().filter((attendee) => attendee.ticket.status === 'used').length);
-  protected readonly pendingCount = computed(() => this.attendees().filter((attendee) => attendee.ticket.status === 'valid').length);
+  protected readonly checkedInCount = computed(
+    () => this.attendees().filter((attendee) => attendee.ticket.status === 'used').length,
+  );
+  protected readonly pendingCount = computed(
+    () => this.attendees().filter((attendee) => attendee.ticket.status === 'valid').length,
+  );
   protected readonly metrics = computed(() => [
     {
       title: this.labels.organizerAttendees.metrics.total,
@@ -76,7 +89,9 @@ export class Attendees {
   }
 
   protected checkInLabel(attendee: Attendee): string {
-    return attendee.ticket.checkedInAt ? this.formatDate(attendee.ticket.checkedInAt) : this.labels.organizerAttendees.notCheckedIn;
+    return attendee.ticket.checkedInAt
+      ? this.formatDate(attendee.ticket.checkedInAt)
+      : this.labels.organizerAttendees.notCheckedIn;
   }
 
   protected formatDate(value: string): string {
@@ -88,7 +103,16 @@ export class Attendees {
 
   protected exportCsv(): void {
     const rows = [
-      ['holder_name', 'holder_email', 'ticket_type', 'ticket_status', 'checked_in_at', 'order_id', 'ticket_id', 'qr_code'],
+      [
+        'holder_name',
+        'holder_email',
+        'ticket_type',
+        'ticket_status',
+        'checked_in_at',
+        'order_id',
+        'ticket_id',
+        'qr_code',
+      ],
       ...this.filteredAttendees().map((attendee) => [
         attendee.ticket.holderName,
         attendee.ticket.holderEmail,
@@ -100,7 +124,9 @@ export class Attendees {
         attendee.ticket.qrCode,
       ]),
     ];
-    const csv = rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const csv = rows
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -129,7 +155,11 @@ export class Attendees {
 
       this.notFound.set(!eventDetail);
       this.eventTitle.set(eventDetail?.event.title ?? '');
-      this.attendees.set(attendees.sort((first, second) => first.ticket.holderName.localeCompare(second.ticket.holderName)));
+      this.attendees.set(
+        attendees.sort((first, second) =>
+          first.ticket.holderName.localeCompare(second.ticket.holderName),
+        ),
+      );
     } finally {
       if (requestId === this.loadRequestId) {
         this.loading.set(false);

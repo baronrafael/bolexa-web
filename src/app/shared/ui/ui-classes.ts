@@ -6,7 +6,8 @@ export const uiClasses = {
   button: {
     primary: 'btn btn-primary',
     secondary: 'btn btn-secondary',
-    outline: 'btn btn-outline border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10',
+    outline:
+      'btn btn-outline border-slate-600 text-slate-100 hover:border-primary hover:bg-primary/10',
     ghost: 'btn btn-ghost',
     danger: 'btn btn-error',
     success: 'btn btn-success',

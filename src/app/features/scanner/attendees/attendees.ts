@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
@@ -6,7 +13,13 @@ import { appLabels } from '../../../core/content/app-labels';
 import { Attendee, ScanResult, ScannerEventSummary } from '../../../data-access/models';
 import { ScannerRepository } from '../../../data-access/repositories/scanner-repository';
 import { normalizeSearch } from '../../../shared/search/normalize-search';
-import { EmptyState, LoadingState, ScanResultPanel, SearchInput, StatusBadge } from '../../../shared/ui';
+import {
+  EmptyState,
+  LoadingState,
+  ScanResultPanel,
+  SearchInput,
+  StatusBadge,
+} from '../../../shared/ui';
 
 @Component({
   selector: 'app-attendees',
@@ -42,7 +55,9 @@ export class Attendees {
     }
 
     return this.attendees().filter((attendee) => {
-      const searchable = normalizeSearch(`${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`);
+      const searchable = normalizeSearch(
+        `${attendee.ticket.holderName} ${attendee.ticket.holderEmail} ${attendee.ticket.qrCode} ${attendee.order.id} ${attendee.ticketType.name}`,
+      );
 
       return searchable.includes(query);
     });
@@ -50,9 +65,13 @@ export class Attendees {
   protected readonly selectedAttendee = computed(() => {
     const selectedTicketId = this.selectedTicketId();
 
-    return selectedTicketId ? this.attendees().find((attendee) => attendee.ticket.id === selectedTicketId) ?? null : null;
+    return selectedTicketId
+      ? (this.attendees().find((attendee) => attendee.ticket.id === selectedTicketId) ?? null)
+      : null;
   });
-  protected readonly canCheckIn = computed(() => this.currentResult()?.status === 'accepted' && Boolean(this.currentResult()?.ticket));
+  protected readonly canCheckIn = computed(
+    () => this.currentResult()?.status === 'accepted' && Boolean(this.currentResult()?.ticket),
+  );
 
   constructor() {
     effect(() => {
@@ -81,7 +100,9 @@ export class Attendees {
     this.operationError.set(null);
 
     try {
-      this.currentResult.set(await this.scannerRepository.validateTicket(eventId, attendee.ticket.qrCode));
+      this.currentResult.set(
+        await this.scannerRepository.validateTicket(eventId, attendee.ticket.qrCode),
+      );
     } catch {
       this.operationError.set(this.labels.scannerAttendees.operationError);
     } finally {
@@ -102,7 +123,9 @@ export class Attendees {
     this.operationError.set(null);
 
     try {
-      this.currentResult.set(await this.scannerRepository.checkIn(eventId, attendee.ticket.qrCode, scannerUserId));
+      this.currentResult.set(
+        await this.scannerRepository.checkIn(eventId, attendee.ticket.qrCode, scannerUserId),
+      );
       await this.loadData(eventId, false);
     } catch {
       this.operationError.set(this.labels.scannerAttendees.operationError);
@@ -139,7 +162,11 @@ export class Attendees {
       }
 
       this.eventSummary.set(eventSummary);
-      this.attendees.set(attendees.sort((first, second) => first.ticket.holderName.localeCompare(second.ticket.holderName)));
+      this.attendees.set(
+        attendees.sort((first, second) =>
+          first.ticket.holderName.localeCompare(second.ticket.holderName),
+        ),
+      );
     } catch {
       if (requestId === this.loadRequestId) {
         this.eventSummary.set(null);

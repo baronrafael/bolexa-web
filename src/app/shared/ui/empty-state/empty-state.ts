@@ -20,6 +20,10 @@ export class EmptyState {
 
   protected readonly displayEyebrow = computed(() => this.eyebrow() ?? this.defaults.eyebrow);
   protected readonly displayTitle = computed(() => this.title() ?? this.defaults.title);
-  protected readonly displayDescription = computed(() => this.description() ?? this.defaults.description);
-  protected readonly displayActionLabel = computed(() => this.actionLabel() ?? this.defaults.actionLabel);
+  protected readonly displayDescription = computed(
+    () => this.description() ?? this.defaults.description,
+  );
+  protected readonly displayActionLabel = computed(
+    () => this.actionLabel() ?? this.defaults.actionLabel,
+  );
 }
