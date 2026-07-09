@@ -218,6 +218,13 @@ export const appLabels = {
       phone: '+58 414-000-0000',
       reference: 'Ej. PM-123456, Zelle ID o hash USDT',
     },
+    validation: {
+      nameRequired: 'Ingresa el nombre del titular.',
+      emailRequired: 'Ingresa el correo del titular.',
+      emailInvalid: 'Ingresa un correo valido.',
+      referenceRequired: 'Ingresa una referencia para este metodo de pago.',
+      fixFields: 'Revisa los campos marcados antes de continuar.',
+    },
     paymentMethods: {
       pago_movil: 'Pago movil',
       zelle: 'Zelle',

@@ -95,6 +95,9 @@ export interface Order {
   id: string;
   userId: string;
   eventId: string;
+  buyerName?: string;
+  buyerEmail?: string;
+  buyerPhone?: string;
   status: OrderStatus;
   subtotal: number;
   fees: number;
@@ -162,6 +165,9 @@ export interface EventDetail {
 export interface CreateOrderInput {
   userId: string;
   eventId: string;
+  buyerName?: string;
+  buyerEmail?: string;
+  buyerPhone?: string;
   items: Array<{
     ticketTypeId: string;
     quantity: number;

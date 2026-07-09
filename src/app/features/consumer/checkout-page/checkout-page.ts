@@ -30,6 +30,7 @@ export class CheckoutPage {
   protected readonly eventDetail = signal<EventDetail | null>(null);
   protected readonly loading = signal(true);
   protected readonly processing = signal(false);
+  protected readonly submitted = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly quantities = signal<Record<string, number>>({});
   protected readonly buyerName = signal(this.auth.currentUser().name);
@@ -62,6 +63,19 @@ export class CheckoutPage {
   protected readonly total = computed(() => this.subtotal() + this.fees());
   protected readonly selectedCurrency = computed(() => this.selectedItems()[0]?.currency ?? 'USD');
   protected readonly selectedPaymentDescription = computed(() => this.labels.checkout.methodDescriptions[this.paymentMethod()]);
+  protected readonly requiresPaymentReference = computed(() => this.paymentMethod() !== 'manual' && this.paymentMethod() !== 'card');
+  protected readonly buyerNameError = computed(() => this.buyerName().trim() ? null : this.labels.checkout.validation.nameRequired);
+  protected readonly buyerEmailError = computed(() => {
+    const email = this.buyerEmail().trim();
+
+    if (!email) {
+      return this.labels.checkout.validation.emailRequired;
+    }
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? null : this.labels.checkout.validation.emailInvalid;
+  });
+  protected readonly paymentReferenceError = computed(() => this.requiresPaymentReference() && !this.paymentReference().trim() ? this.labels.checkout.validation.referenceRequired : null);
+  protected readonly isFormValid = computed(() => !this.buyerNameError() && !this.buyerEmailError() && !this.paymentReferenceError());
   protected readonly eventDate = computed(() => {
     const eventDetail = this.eventDetail();
 
@@ -126,10 +140,19 @@ export class CheckoutPage {
     this.paymentReference.set((event.target as HTMLInputElement).value);
   }
 
+  protected displayError(errorMessage: string | null): string | null {
+    return this.submitted() ? errorMessage : null;
+  }
+
   protected async submit(result: 'approved' | 'manual_review'): Promise<void> {
+    this.submitted.set(true);
     const eventDetail = this.eventDetail();
 
-    if (!eventDetail || this.selectedCount() === 0 || this.processing()) {
+    if (!eventDetail || this.selectedCount() === 0 || !this.isFormValid() || this.processing()) {
+      if (!this.isFormValid()) {
+        this.error.set(this.labels.checkout.validation.fixFields);
+      }
+
       return;
     }
 
@@ -140,6 +163,9 @@ export class CheckoutPage {
       const order = await this.checkoutRepository.createOrder({
         eventId: eventDetail.event.id,
         userId: this.auth.currentUser().id,
+        buyerName: this.buyerName().trim(),
+        buyerEmail: this.buyerEmail().trim(),
+        buyerPhone: this.buyerPhone().trim(),
         items: eventDetail.ticketTypes
           .map((ticketType) => ({
             quantity: this.quantities()[ticketType.id] ?? 0,
@@ -151,7 +177,7 @@ export class CheckoutPage {
       const payment = await this.checkoutRepository.payOrder({
         orderId: order.id,
         paymentMethod: this.paymentMethod(),
-        paymentReference: this.paymentReference(),
+        paymentReference: this.paymentReference().trim() || undefined,
         result,
       });
 
