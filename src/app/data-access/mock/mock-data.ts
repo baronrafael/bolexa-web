@@ -195,7 +195,8 @@ export function createInitialMockDatabase(): MockDatabaseState {
         slug: 'noches-de-stand-up',
         description: 'Comedia en vivo con una seleccion de talentos emergentes y consagrados.',
         category: 'theater',
-        coverImageUrl: 'https://images.unsplash.com/photo-1515168833906-d2a3b82b302b',
+        coverImageUrl:
+          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80',
         startsAt: '2026-08-14T00:30:00.000Z',
         status: 'published',
         createdAt,
