@@ -12,7 +12,7 @@ export interface SelectFieldOption {
     <label class="form-control">
       <span class="label-text mb-2 text-slate-300">{{ label() }}</span>
       <select
-        class="select select-bordered bg-base-100/80 text-white"
+        class="select select-bordered bg-base-100 text-white"
         [required]="required()"
         [attr.aria-describedby]="invalid() ? describedBy() : null"
         [attr.aria-invalid]="invalid() ? 'true' : null"

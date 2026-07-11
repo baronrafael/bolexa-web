@@ -27,7 +27,7 @@
       <label class="form-control">
         <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.category }}</span>
         <select
-          class="select select-bordered w-full border-white/10 bg-white/[0.04]"
+          class="select select-bordered w-full border-white/10 bg-base-100 text-white"
           [value]="selectedCategory()"
           (change)="setCategory($event)"
         >
@@ -41,7 +41,7 @@
       <label class="form-control">
         <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.city }}</span>
         <select
-          class="select select-bordered w-full border-white/10 bg-white/[0.04]"
+          class="select select-bordered w-full border-white/10 bg-base-100 text-white"
           [value]="selectedCity()"
           (change)="setCity($event)"
         >
@@ -55,7 +55,7 @@
       <label class="form-control">
         <span class="label-text mb-2 text-slate-300">{{ labels.eventsList.filters.date }}</span>
         <select
-          class="select select-bordered w-full border-white/10 bg-white/[0.04]"
+          class="select select-bordered w-full border-white/10 bg-base-100 text-white"
           [value]="selectedDate()"
           (change)="setDate($event)"
         >

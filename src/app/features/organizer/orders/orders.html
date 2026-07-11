@@ -43,7 +43,7 @@
         <label class="form-control">
           <span class="sr-only">{{ labels.organizerOrders.filters.status }}</span>
           <select
-            class="select select-bordered bg-base-100/80 text-white"
+            class="select select-bordered bg-base-100 text-white"
             [value]="statusFilter()"
             (change)="updateStatusFilter($any($event.target).value)"
           >
@@ -57,7 +57,7 @@
         <label class="form-control">
           <span class="sr-only">{{ labels.organizerOrders.filters.paymentMethod }}</span>
           <select
-            class="select select-bordered bg-base-100/80 text-white"
+            class="select select-bordered bg-base-100 text-white"
             [value]="paymentMethodFilter()"
             (change)="updatePaymentMethodFilter($any($event.target).value)"
           >
