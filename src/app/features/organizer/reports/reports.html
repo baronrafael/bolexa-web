@@ -31,9 +31,9 @@
     </div>
   </section>
 
-  @if (hasReportData()) {
+  @if (report().hasReportData) {
     <section class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      @for (metric of metricCards(); track metric.title) {
+      @for (metric of report().metricCards; track metric.title) {
         <app-metric-card [title]="metric.title" [value]="metric.value" [tone]="metric.tone" />
       }
     </section>
@@ -44,7 +44,7 @@
           {{ labels.organizerReports.sections.revenueByTicket }}
         </h2>
         <div class="mt-5 grid gap-4">
-          @for (bar of revenueByTicketType(); track bar.label) {
+          @for (bar of report().revenueByTicketType; track bar.label) {
             <div>
               <div class="flex items-center justify-between gap-4 text-sm">
                 <p class="font-bold text-white">{{ bar.label }}</p>
@@ -63,7 +63,7 @@
           {{ labels.organizerReports.sections.ticketsByType }}
         </h2>
         <div class="mt-5 grid gap-4">
-          @for (bar of ticketsByType(); track bar.label) {
+          @for (bar of report().ticketsByType; track bar.label) {
             <div>
               <div class="flex items-center justify-between gap-4 text-sm">
                 <p class="font-bold text-white">{{ bar.label }}</p>
@@ -82,7 +82,7 @@
           {{ labels.organizerReports.sections.checkInProgress }}
         </h2>
         <div class="mt-5 grid gap-4">
-          @for (bar of checkInBars(); track bar.label) {
+          @for (bar of report().checkInBars; track bar.label) {
             <div>
               <div class="flex items-center justify-between gap-4 text-sm">
                 <p class="font-bold text-white">{{ bar.label }}</p>
@@ -101,7 +101,7 @@
           {{ labels.organizerReports.sections.paymentBreakdown }}
         </h2>
         <div class="mt-5 grid gap-4">
-          @for (bar of paymentBars(); track bar.label) {
+          @for (bar of report().paymentBars; track bar.label) {
             <div>
               <div class="flex items-center justify-between gap-4 text-sm">
                 <p class="font-bold text-white">{{ bar.label }}</p>

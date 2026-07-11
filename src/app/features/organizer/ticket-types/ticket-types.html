@@ -116,100 +116,59 @@
       }
 
       <div class="mt-5 grid gap-5">
-        <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{
-            labels.organizerTicketTypes.fields.name
-          }}</span>
-          <input
-            class="input input-bordered bg-base-100/80 text-white"
-            required
-            type="text"
-            [attr.aria-describedby]="hasFieldError('name') ? 'ticket-type-form-error' : null"
-            [attr.aria-invalid]="hasFieldError('name') ? 'true' : null"
-            [placeholder]="labels.organizerTicketTypes.placeholders.name"
-            [value]="form().name"
-            (input)="updateField('name', $any($event.target).value)"
-          />
-        </label>
+        <app-text-field
+          [label]="labels.organizerTicketTypes.fields.name"
+          [placeholder]="labels.organizerTicketTypes.placeholders.name"
+          [value]="form().name"
+          [required]="true"
+          [invalid]="hasFieldError('name')"
+          describedBy="ticket-type-form-error"
+          (valueChange)="updateField('name', $event)"
+        />
 
-        <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{
-            labels.organizerTicketTypes.fields.description
-          }}</span>
-          <textarea
-            class="textarea textarea-bordered min-h-24 bg-base-100/80 text-white"
-            [placeholder]="labels.organizerTicketTypes.placeholders.description"
-            [value]="form().description"
-            (input)="updateField('description', $any($event.target).value)"
-          ></textarea>
-        </label>
+        <app-textarea-field
+          [label]="labels.organizerTicketTypes.fields.description"
+          [placeholder]="labels.organizerTicketTypes.placeholders.description"
+          [value]="form().description"
+          (valueChange)="updateField('description', $event)"
+        />
 
         <div class="grid gap-5 sm:grid-cols-2">
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerTicketTypes.fields.price
-            }}</span>
-            <input
-              class="input input-bordered bg-base-100/80 text-white"
-              min="0"
-              step="0.01"
-              type="number"
-              [attr.aria-describedby]="hasFieldError('price') ? 'ticket-type-form-error' : null"
-              [attr.aria-invalid]="hasFieldError('price') ? 'true' : null"
-              [value]="form().price"
-              (input)="updateField('price', $any($event.target).valueAsNumber)"
-            />
-          </label>
+          <app-number-field
+            [label]="labels.organizerTicketTypes.fields.price"
+            [value]="form().price"
+            [min]="0"
+            step="0.01"
+            [invalid]="hasFieldError('price')"
+            describedBy="ticket-type-form-error"
+            (valueChange)="updateField('price', $event)"
+          />
 
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerTicketTypes.fields.currency
-            }}</span>
-            <select
-              class="select select-bordered bg-base-100/80 text-white"
-              [value]="form().currency"
-              (change)="updateField('currency', $any($event.target).value)"
-            >
-              @for (currency of currencies; track currency) {
-                <option [value]="currency">{{ currency }}</option>
-              }
-            </select>
-          </label>
+          <app-select-field
+            [label]="labels.organizerTicketTypes.fields.currency"
+            [options]="currencyOptions()"
+            [value]="form().currency"
+            (valueChange)="updateField('currency', $any($event))"
+          />
         </div>
 
         <div class="grid gap-5 sm:grid-cols-2">
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerTicketTypes.fields.quantityTotal
-            }}</span>
-            <input
-              class="input input-bordered bg-base-100/80 text-white"
-              min="0"
-              step="1"
-              type="number"
-              [attr.aria-describedby]="
-                hasFieldError('quantityTotal') ? 'ticket-type-form-error' : null
-              "
-              [attr.aria-invalid]="hasFieldError('quantityTotal') ? 'true' : null"
-              [value]="form().quantityTotal"
-              (input)="updateField('quantityTotal', $any($event.target).valueAsNumber)"
-            />
-          </label>
+          <app-number-field
+            [label]="labels.organizerTicketTypes.fields.quantityTotal"
+            [value]="form().quantityTotal"
+            [min]="0"
+            step="1"
+            [invalid]="hasFieldError('quantityTotal')"
+            describedBy="ticket-type-form-error"
+            (valueChange)="updateField('quantityTotal', $event)"
+          />
 
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerTicketTypes.fields.status
-            }}</span>
-            <select
-              class="select select-bordered bg-base-100/80 text-white"
-              [value]="form().status"
-              (change)="updateField('status', $any($event.target).value)"
-            >
-              @for (status of statuses; track status) {
-                <option [value]="status">{{ labels.shared.statusBadge.ticketType[status] }}</option>
-              }
-            </select>
-          </label>
+          <app-select-field
+            [label]="labels.organizerTicketTypes.fields.status"
+            [options]="statusOptions()"
+            [value]="form().status"
+            (valueChange)="updateField('status', $any($event))"
+          />
         </div>
       </div>
 

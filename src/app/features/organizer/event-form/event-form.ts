@@ -15,6 +15,12 @@ import {
   OrganizerRepository,
   SaveOrganizerEventInput,
 } from '../../../data-access/repositories/organizer-repository';
+import {
+  SelectField,
+  SelectFieldOption,
+  TextareaField,
+  TextField,
+} from '../../../shared/form-fields';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState } from '../../../shared/ui';
 
@@ -30,7 +36,7 @@ interface EventFormState {
 
 @Component({
   selector: 'app-event-form',
-  imports: [EmptyState, LoadingState, RouterLink],
+  imports: [EmptyState, LoadingState, RouterLink, SelectField, TextareaField, TextField],
   templateUrl: './event-form.html',
   styleUrl: './event-form.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +65,24 @@ export class EventForm {
     'published',
   ];
   protected readonly venues = signal<Venue[]>([]);
+  protected readonly categoryOptions = computed<SelectFieldOption[]>(() =>
+    this.categories.map((category) => ({
+      label: this.labels.shared.eventCard.categories[category],
+      value: category,
+    })),
+  );
+  protected readonly statusOptions = computed<SelectFieldOption[]>(() =>
+    this.statuses.map((status) => ({
+      label: this.labels.organizerEventForm.statuses[status],
+      value: status,
+    })),
+  );
+  protected readonly venueOptions = computed<SelectFieldOption[]>(() =>
+    this.venues().map((venue) => ({
+      label: `${venue.name} · ${venue.city}`,
+      value: venue.id,
+    })),
+  );
   protected readonly loading = this.pageState.loading;
   protected readonly saving = signal(false);
   protected readonly submitted = signal(false);

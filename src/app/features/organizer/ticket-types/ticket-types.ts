@@ -15,6 +15,13 @@ import {
   OrganizerRepository,
   SaveTicketTypeInput,
 } from '../../../data-access/repositories/organizer-repository';
+import {
+  NumberField,
+  SelectField,
+  SelectFieldOption,
+  TextareaField,
+  TextField,
+} from '../../../shared/form-fields';
 import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
@@ -30,7 +37,16 @@ interface TicketTypeFormState {
 
 @Component({
   selector: 'app-ticket-types',
-  imports: [EmptyState, LoadingState, RouterLink, StatusBadge],
+  imports: [
+    EmptyState,
+    LoadingState,
+    NumberField,
+    RouterLink,
+    SelectField,
+    StatusBadge,
+    TextareaField,
+    TextField,
+  ],
   templateUrl: './ticket-types.html',
   styleUrl: './ticket-types.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +61,15 @@ export class TicketTypes {
   protected readonly labels = appLabels;
   protected readonly currencies: Currency[] = ['USD', 'VES'];
   protected readonly statuses: TicketTypeStatus[] = ['active', 'paused', 'sold_out'];
+  protected readonly currencyOptions = computed<SelectFieldOption[]>(() =>
+    this.currencies.map((currency) => ({ label: currency, value: currency })),
+  );
+  protected readonly statusOptions = computed<SelectFieldOption[]>(() =>
+    this.statuses.map((status) => ({
+      label: this.labels.shared.statusBadge.ticketType[status],
+      value: status,
+    })),
+  );
   protected readonly loading = this.pageState.loading;
   protected readonly saving = signal(false);
   protected readonly submitted = signal(false);

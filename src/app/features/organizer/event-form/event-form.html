@@ -34,118 +34,72 @@
       }
 
       <div class="grid gap-5">
-        <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{
-            labels.organizerEventForm.fields.title
-          }}</span>
-          <input
-            class="input input-bordered bg-base-100/80 text-white"
-            required
-            type="text"
-            [attr.aria-describedby]="hasFieldError('title') ? 'event-form-error' : null"
-            [attr.aria-invalid]="hasFieldError('title') ? 'true' : null"
-            [placeholder]="labels.organizerEventForm.placeholders.title"
-            [value]="form().title"
-            (input)="updateField('title', $any($event.target).value)"
-          />
-        </label>
+        <app-text-field
+          [label]="labels.organizerEventForm.fields.title"
+          [placeholder]="labels.organizerEventForm.placeholders.title"
+          [value]="form().title"
+          [required]="true"
+          [invalid]="hasFieldError('title')"
+          describedBy="event-form-error"
+          (valueChange)="updateField('title', $event)"
+        />
 
         <div class="grid gap-5 md:grid-cols-2">
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerEventForm.fields.category
-            }}</span>
-            <select
-              class="select select-bordered bg-base-100/80 text-white"
-              [value]="form().category"
-              (change)="updateField('category', $any($event.target).value)"
-            >
-              @for (category of categories; track category) {
-                <option [value]="category">
-                  {{ labels.shared.eventCard.categories[category] }}
-                </option>
-              }
-            </select>
-          </label>
+          <app-select-field
+            [label]="labels.organizerEventForm.fields.category"
+            [options]="categoryOptions()"
+            [value]="form().category"
+            (valueChange)="updateField('category', $any($event))"
+          />
 
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerEventForm.fields.status
-            }}</span>
-            <select
-              class="select select-bordered bg-base-100/80 text-white"
-              [value]="form().status"
-              (change)="updateField('status', $any($event.target).value)"
-            >
-              @for (status of statuses; track status) {
-                <option [value]="status">{{ labels.organizerEventForm.statuses[status] }}</option>
-              }
-            </select>
-          </label>
+          <app-select-field
+            [label]="labels.organizerEventForm.fields.status"
+            [options]="statusOptions()"
+            [value]="form().status"
+            (valueChange)="updateField('status', $any($event))"
+          />
         </div>
 
-        <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{
-            labels.organizerEventForm.fields.description
-          }}</span>
-          <textarea
-            class="textarea textarea-bordered min-h-36 bg-base-100/80 text-white"
-            required
-            [attr.aria-describedby]="hasFieldError('description') ? 'event-form-error' : null"
-            [attr.aria-invalid]="hasFieldError('description') ? 'true' : null"
-            [placeholder]="labels.organizerEventForm.placeholders.description"
-            [value]="form().description"
-            (input)="updateField('description', $any($event.target).value)"
-          ></textarea>
-        </label>
+        <app-textarea-field
+          [label]="labels.organizerEventForm.fields.description"
+          [placeholder]="labels.organizerEventForm.placeholders.description"
+          [value]="form().description"
+          [required]="true"
+          [invalid]="hasFieldError('description')"
+          describedBy="event-form-error"
+          size="md"
+          (valueChange)="updateField('description', $event)"
+        />
 
         <div class="grid gap-5 md:grid-cols-2">
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerEventForm.fields.venue
-            }}</span>
-            <select
-              class="select select-bordered bg-base-100/80 text-white"
-              required
-              [attr.aria-describedby]="hasFieldError('venueId') ? 'event-form-error' : null"
-              [attr.aria-invalid]="hasFieldError('venueId') ? 'true' : null"
-              [value]="form().venueId"
-              (change)="updateField('venueId', $any($event.target).value)"
-            >
-              @for (venue of venues(); track venue.id) {
-                <option [value]="venue.id">{{ venue.name }} · {{ venue.city }}</option>
-              }
-            </select>
-          </label>
+          <app-select-field
+            [label]="labels.organizerEventForm.fields.venue"
+            [options]="venueOptions()"
+            [value]="form().venueId"
+            [required]="true"
+            [invalid]="hasFieldError('venueId')"
+            describedBy="event-form-error"
+            (valueChange)="updateField('venueId', $event)"
+          />
 
-          <label class="form-control">
-            <span class="label-text mb-2 text-slate-300">{{
-              labels.organizerEventForm.fields.startsAt
-            }}</span>
-            <input
-              class="input input-bordered bg-base-100/80 text-white"
-              required
-              type="datetime-local"
-              [attr.aria-describedby]="hasFieldError('startsAt') ? 'event-form-error' : null"
-              [attr.aria-invalid]="hasFieldError('startsAt') ? 'true' : null"
-              [value]="form().startsAt"
-              (input)="updateField('startsAt', $any($event.target).value)"
-            />
-          </label>
+          <app-text-field
+            [label]="labels.organizerEventForm.fields.startsAt"
+            [value]="form().startsAt"
+            [required]="true"
+            [invalid]="hasFieldError('startsAt')"
+            describedBy="event-form-error"
+            type="datetime-local"
+            (valueChange)="updateField('startsAt', $event)"
+          />
         </div>
 
-        <label class="form-control">
-          <span class="label-text mb-2 text-slate-300">{{
-            labels.organizerEventForm.fields.coverImageUrl
-          }}</span>
-          <input
-            class="input input-bordered bg-base-100/80 text-white"
-            type="url"
-            [placeholder]="labels.organizerEventForm.placeholders.coverImageUrl"
-            [value]="form().coverImageUrl"
-            (input)="updateField('coverImageUrl', $any($event.target).value)"
-          />
-        </label>
+        <app-text-field
+          [label]="labels.organizerEventForm.fields.coverImageUrl"
+          [placeholder]="labels.organizerEventForm.placeholders.coverImageUrl"
+          [value]="form().coverImageUrl"
+          type="url"
+          (valueChange)="updateField('coverImageUrl', $event)"
+        />
       </div>
 
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">

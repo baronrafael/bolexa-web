@@ -10,7 +10,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
-import { Attendee, EventDetail, PaymentMethod } from '../../../data-access/models';
+import { Attendee, EventDetail } from '../../../data-access/models';
+import { buildOrganizerReportReadModel } from '../../../data-access/reports/organizer-report-read-model';
 import {
   OrganizerOrder,
   OrganizerRepository,
@@ -18,13 +19,6 @@ import {
 import { formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, MetricCard } from '../../../shared/ui';
-
-interface ReportBar {
-  label: string;
-  value: number;
-  displayValue: string;
-  percentage: number;
-}
 
 @Component({
   selector: 'app-reports',
@@ -48,103 +42,19 @@ export class Reports {
   protected readonly attendees = signal<Attendee[]>([]);
   protected readonly eventId = computed(() => this.routeParams()?.get('eventId') ?? null);
   protected readonly organizerId = computed(() => this.auth.currentOrganizerId());
-  protected readonly paidOrders = computed(() =>
-    this.orders().filter((entry) => entry.order.status === 'paid'),
-  );
-  protected readonly totalRevenue = computed(() =>
-    this.paidOrders().reduce((total, entry) => total + entry.order.total, 0),
-  );
-  protected readonly ticketsSold = computed(() => this.attendees().length);
-  protected readonly checkedInCount = computed(
-    () => this.attendees().filter((attendee) => attendee.ticket.status === 'used').length,
-  );
-  protected readonly pendingCount = computed(() =>
-    Math.max(this.ticketsSold() - this.checkedInCount(), 0),
-  );
-  protected readonly hasReportData = computed(
-    () =>
-      this.orders().length > 0 ||
-      this.attendees().length > 0 ||
-      Boolean(this.eventDetail()?.ticketTypes.length),
-  );
-  protected readonly metricCards = computed(() => [
-    {
-      title: this.labels.organizerReports.metrics.revenue,
-      value: this.formatMoney(this.totalRevenue()),
-      tone: 'primary' as const,
-    },
-    {
-      title: this.labels.organizerReports.metrics.ticketsSold,
-      value: this.ticketsSold(),
-      tone: 'success' as const,
-    },
-    {
-      title: this.labels.organizerReports.metrics.checkedIn,
-      value: this.checkedInCount(),
-      tone: 'warning' as const,
-    },
-    {
-      title: this.labels.organizerReports.metrics.paidOrders,
-      value: this.paidOrders().length,
-      tone: 'neutral' as const,
-    },
-  ]);
-  protected readonly revenueByTicketType = computed<ReportBar[]>(() => {
-    const bars =
-      this.eventDetail()?.ticketTypes.map((ticketType) => ({
-        label: ticketType.name,
-        value: ticketType.price * ticketType.quantitySold,
-        displayValue: this.formatMoney(
-          ticketType.price * ticketType.quantitySold,
-          ticketType.currency,
-        ),
-      })) ?? [];
-
-    return this.withPercentages(bars);
-  });
-  protected readonly ticketsByType = computed<ReportBar[]>(() => {
-    const bars =
-      this.eventDetail()?.ticketTypes.map((ticketType) => ({
-        label: ticketType.name,
-        value: ticketType.quantitySold,
-        displayValue: `${ticketType.quantitySold} ${this.labels.organizerReports.labels.sold}`,
-      })) ?? [];
-
-    return this.withPercentages(bars);
-  });
-  protected readonly checkInBars = computed<ReportBar[]>(() =>
-    this.withPercentages([
-      {
-        label: this.labels.organizerReports.labels.checkedIn,
-        value: this.checkedInCount(),
-        displayValue: `${this.checkedInCount()} ${this.labels.organizerReports.labels.checkedIn}`,
+  protected readonly report = computed(() =>
+    buildOrganizerReportReadModel({
+      eventDetail: this.eventDetail(),
+      orders: this.orders(),
+      attendees: this.attendees(),
+      labels: {
+        metrics: this.labels.organizerReports.metrics,
+        labels: this.labels.organizerReports.labels,
+        paymentMethods: this.labels.checkout.paymentMethods,
       },
-      {
-        label: this.labels.organizerReports.labels.pending,
-        value: this.pendingCount(),
-        displayValue: `${this.pendingCount()} ${this.labels.organizerReports.labels.pending}`,
-      },
-    ]),
+      formatMoney: (value, currency) => this.formatMoney(value, currency),
+    }),
   );
-  protected readonly paymentBars = computed<ReportBar[]>(() => {
-    const totals = new Map<string, number>();
-
-    for (const entry of this.orders()) {
-      const key = entry.order.paymentMethod
-        ? this.labels.checkout.paymentMethods[entry.order.paymentMethod as PaymentMethod]
-        : this.labels.organizerReports.labels.noPaymentMethod;
-
-      totals.set(key, (totals.get(key) ?? 0) + 1);
-    }
-
-    return this.withPercentages(
-      [...totals.entries()].map(([label, value]) => ({
-        label,
-        value,
-        displayValue: `${value} ${this.labels.organizerReports.labels.orders}`,
-      })),
-    );
-  });
 
   constructor() {
     effect(() => {
@@ -182,14 +92,5 @@ export class Reports {
     } finally {
       this.pageState.finish(requestId);
     }
-  }
-
-  private withPercentages(items: Array<Omit<ReportBar, 'percentage'>>): ReportBar[] {
-    const max = Math.max(...items.map((item) => item.value), 0);
-
-    return items.map((item) => ({
-      ...item,
-      percentage: max > 0 ? Math.round((item.value / max) * 100) : 0,
-    }));
   }
 }
