@@ -10,5 +10,7 @@ export const demoRoleGuard: CanMatchFn = (route) => {
     return true;
   }
 
-  return inject(Router).parseUrl('/');
+  return inject(Router).createUrlTree(['/access-denied'], {
+    queryParams: { requiredRole },
+  });
 };

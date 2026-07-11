@@ -6,6 +6,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { MockAuth } from '../mock-auth';
 import { UserRole } from '../../../data-access/models';
 import { appLabels } from '../../content/app-labels';
@@ -19,6 +20,7 @@ import { appLabels } from '../../content/app-labels';
 })
 export class DemoRoleSwitcher {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly router = inject(Router);
 
   protected readonly labels = appLabels;
   protected readonly auth = inject(MockAuth);
@@ -51,7 +53,14 @@ export class DemoRoleSwitcher {
   }
 
   protected switchUser(userId: string): void {
+    const user = this.auth.demoUsers().find((candidate) => candidate.id === userId);
+
+    if (!user) {
+      return;
+    }
+
     this.auth.switchUser(userId);
     this.closeMenu();
+    void this.router.navigateByUrl(this.auth.defaultRouteForRole(user.role));
   }
 }

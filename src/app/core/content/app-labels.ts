@@ -23,6 +23,7 @@ export const appLabels = {
     publicLinks: {
       events: 'Eventos',
       myTickets: 'Mis tickets',
+      profile: 'Perfil',
       organizer: 'Organizador',
       scanner: 'Scanner',
     },
@@ -41,10 +42,12 @@ export const appLabels = {
     },
     actions: {
       sellEvent: 'Vende tu evento',
+      createEvent: 'Crear evento',
       viewMarketplace: 'Ver marketplace',
     },
   },
   auth: {
+    areaSwitcherPrefix: 'Area',
     switcherPrefix: 'Entrar como',
     roleLabels: {
       consumer: 'Comprador',
@@ -689,6 +692,23 @@ export const appLabels = {
     description: 'Esta pantalla no existe en el MVP de Bolexa.',
     cta: 'Volver al inicio',
   },
+  accessDenied: {
+    code: '403',
+    title: 'No tenes acceso a esta seccion',
+    descriptions: {
+      organizer:
+        'El panel de organizador es solo para cuentas con permiso para vender y gestionar eventos.',
+      scanner:
+        'El modo scanner es solo para personal de entrada autorizado en el evento.',
+      admin: 'Esta seccion es solo para administradores de la plataforma.',
+      fallback: 'Tu cuenta actual no tiene permiso para ver esta pagina.',
+    },
+    actions: {
+      home: 'Volver al inicio',
+      myTickets: 'Ir a mis tickets',
+      sell: 'Quiero vender eventos',
+    },
+  },
   shared: {
     statusBadge: {
       fallback: 'Estado',
@@ -844,6 +864,14 @@ export const appLabels = {
       eyebrow: 'Perfil',
       title: 'Perfil del usuario demo',
       description: 'Datos basicos y preferencias del comprador.',
+    },
+    sell: {
+      eyebrow: 'Organizadores',
+      title: 'Vende tus eventos con Bolexa',
+      description:
+        'Publica eventos, configura tipos de ticket, cobra en bolivares y controla entradas desde un solo panel. En esta demo podes cambiar al area Organizador desde el menu superior.',
+      primaryLink: '/events',
+      primaryLabel: 'Explorar eventos',
     },
     organizerDashboard: {
       eyebrow: 'Organizador',

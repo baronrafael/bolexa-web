@@ -11,6 +11,8 @@ const routeMetadata = {
   myTickets: { title: 'Mis tickets | Bolexa', data: appLabels.routes.myTickets },
   ticketDetail: { title: 'Ticket QR | Bolexa', data: appLabels.routes.ticketDetail },
   profile: { title: 'Perfil | Bolexa', data: appLabels.routes.profile },
+  sell: { title: 'Vende tu evento | Bolexa', data: appLabels.routes.sell },
+  accessDenied: { title: 'Acceso denegado | Bolexa' },
   organizerShell: { data: { requiredRole: 'organizer' } },
   organizerDashboard: {
     title: 'Dashboard organizador | Bolexa',
@@ -107,6 +109,19 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
         data: routeMetadata.profile.data,
+      },
+      {
+        path: 'sell',
+        title: routeMetadata.sell.title,
+        loadComponent: () =>
+          import('./shared/ui/route-placeholder/route-placeholder').then((m) => m.RoutePlaceholder),
+        data: routeMetadata.sell.data,
+      },
+      {
+        path: 'access-denied',
+        title: routeMetadata.accessDenied.title,
+        loadComponent: () =>
+          import('./shared/ui/access-denied/access-denied').then((m) => m.AccessDenied),
       },
     ],
   },

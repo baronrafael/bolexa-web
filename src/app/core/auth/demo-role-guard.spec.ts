@@ -21,7 +21,7 @@ describe('demoRoleGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('redirects to home when the current demo role does not match', () => {
+  it('redirects to access denied when the current demo role does not match', () => {
     TestBed.inject(MockAuth).switchRole('consumer');
 
     const result = TestBed.runInInjectionContext(() =>
@@ -29,6 +29,8 @@ describe('demoRoleGuard', () => {
     );
 
     expect(result).toBeInstanceOf(UrlTree);
-    expect(TestBed.inject(Router).serializeUrl(result as UrlTree)).toBe('/');
+    expect(TestBed.inject(Router).serializeUrl(result as UrlTree)).toBe(
+      '/access-denied?requiredRole=scanner',
+    );
   });
 });

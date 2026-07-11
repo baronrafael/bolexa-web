@@ -1,6 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { MockDatabase } from '../../data-access/mock/mock-database';
 import { User, UserRole } from '../../data-access/models';
+import { AppArea, DEFAULT_ROUTE_BY_ROLE } from './role-routes';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,10 @@ export class MockAuth {
     return this.currentRole() === role;
   }
 
+  defaultRouteForRole(role: UserRole): string {
+    return DEFAULT_ROUTE_BY_ROLE[role];
+  }
+
   switchUser(userId: string): void {
     if (!this.database.state().users.some((user) => user.id === userId)) {
       return;
@@ -45,6 +50,12 @@ export class MockAuth {
     if (user) {
       this.switchUser(user.id);
     }
+  }
+
+  switchToArea(area: AppArea): string {
+    this.switchRole(area);
+
+    return this.defaultRouteForRole(area);
   }
 
   resetDemoUser(): void {
