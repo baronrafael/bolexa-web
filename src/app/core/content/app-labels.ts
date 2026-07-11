@@ -55,6 +55,7 @@ export const appLabels = {
   },
   demo: {
     trigger: 'Demo',
+    close: 'Cerrar',
     title: 'Script demo 5 min',
     description:
       'Flujo recomendado: compra Caracas Music Fest, abre Mis tickets, valida un QR y revisa dashboard.',

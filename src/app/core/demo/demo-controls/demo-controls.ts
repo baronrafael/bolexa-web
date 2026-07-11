@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MockAuth } from '../../auth/mock-auth';
 import { appLabels } from '../../content/app-labels';
@@ -18,11 +25,13 @@ interface DemoLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoControls {
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly auth = inject(MockAuth);
   private readonly database = inject(MockDatabase);
   private readonly router = inject(Router);
 
   protected readonly labels = appLabels.demo;
+  protected readonly isOpen = signal(false);
   protected readonly resetDone = signal(false);
   protected readonly copyDone = signal(false);
   protected readonly demoLinks: DemoLink[] = [
@@ -35,6 +44,28 @@ export class DemoControls {
     },
     { label: appLabels.demo.links.dashboard, path: '/organizer/dashboard' },
   ];
+
+  @HostListener('document:click', ['$event.target'])
+  protected closeOnOutsideClick(target: EventTarget | null): void {
+    if (target instanceof Node && this.elementRef.nativeElement.contains(target)) {
+      return;
+    }
+
+    this.closeMenu();
+  }
+
+  @HostListener('document:keydown.escape')
+  protected closeOnEscape(): void {
+    this.closeMenu();
+  }
+
+  protected toggleMenu(): void {
+    this.isOpen.update((isOpen) => !isOpen);
+  }
+
+  protected closeMenu(): void {
+    this.isOpen.set(false);
+  }
 
   protected copyQrCode(): void {
     this.copyDone.set(false);
@@ -50,6 +81,7 @@ export class DemoControls {
   }
 
   protected resetDemoData(): void {
+    this.closeMenu();
     this.database.reset();
     this.auth.resetDemoUser();
     this.resetDone.set(true);

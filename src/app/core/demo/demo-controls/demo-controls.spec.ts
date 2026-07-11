@@ -25,6 +25,10 @@ describe('DemoControls', () => {
     const fixture = TestBed.createComponent(DemoControls);
     fixture.detectChanges();
 
+    const demoButton = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+    demoButton.click();
+    fixture.detectChanges();
+
     const buttons = Array.from(
       fixture.nativeElement.querySelectorAll('button'),
     ) as HTMLButtonElement[];
@@ -38,6 +42,28 @@ describe('DemoControls', () => {
     expect(state.orders).toHaveLength(2);
     expect(state.events[0].title).toBe('Caracas Music Fest');
     expect(auth.currentRole()).toBe('consumer');
-    expect(fixture.nativeElement.textContent).toContain('Data demo reiniciada.');
+    expect(fixture.nativeElement.textContent).not.toContain('Reset demo data');
+  });
+
+  it('closes the menu from the close button', () => {
+    const fixture = TestBed.createComponent(DemoControls);
+    fixture.detectChanges();
+
+    const demoButton = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+    demoButton.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Script demo 5 min');
+
+    const buttons = Array.from(
+      fixture.nativeElement.querySelectorAll('button'),
+    ) as HTMLButtonElement[];
+    const closeButton = buttons.find((button) => button.textContent?.includes('Cerrar'));
+
+    expect(closeButton).toBeTruthy();
+    closeButton!.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).not.toContain('Script demo 5 min');
   });
 });
