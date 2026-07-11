@@ -33,4 +33,17 @@ describe('demoRoleGuard', () => {
       '/access-denied?requiredRole=scanner',
     );
   });
+
+  it('redirects consumer-only routes when the current demo role is not consumer', () => {
+    TestBed.inject(MockAuth).switchRole('organizer');
+
+    const result = TestBed.runInInjectionContext(() =>
+      demoRoleGuard({ data: { requiredRole: 'consumer' } } as Route, [] as UrlSegment[]),
+    );
+
+    expect(result).toBeInstanceOf(UrlTree);
+    expect(TestBed.inject(Router).serializeUrl(result as UrlTree)).toBe(
+      '/access-denied?requiredRole=consumer',
+    );
+  });
 });

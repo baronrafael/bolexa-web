@@ -201,6 +201,10 @@ export const appLabels = {
     summaryTitle: 'Tu seleccion',
     noTicketsSelected: 'Selecciona al menos un ticket para continuar.',
     continueToCheckout: 'Continuar al checkout',
+    purchaseRestrictedTitle: 'Compra no disponible en esta area',
+    purchaseRestrictedDescription:
+      'Para comprar entradas, cambia al area Comprador desde el menu superior.',
+    ticketsReadOnly: 'Tipos de ticket',
     unavailable: 'No hay tickets disponibles para este evento.',
     notFoundTitle: 'Evento no encontrado',
     notFoundDescription: 'El evento que buscas no existe o no esta publicado.',
@@ -696,6 +700,8 @@ export const appLabels = {
     code: '403',
     title: 'No tenes acceso a esta seccion',
     descriptions: {
+      consumer:
+        'La compra de entradas y tus tickets estan disponibles solo en el area Comprador.',
       organizer:
         'El panel de organizador es solo para cuentas con permiso para vender y gestionar eventos.',
       scanner:
@@ -705,6 +711,7 @@ export const appLabels = {
     },
     actions: {
       home: 'Volver al inicio',
+      events: 'Ver eventos',
       myTickets: 'Ir a mis tickets',
       sell: 'Quiero vender eventos',
     },

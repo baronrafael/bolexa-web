@@ -8,11 +8,12 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
+import { MockAuth } from '../../../core/auth/mock-auth';
 import { appLabels } from '../../../core/content/app-labels';
 import { calculateOrderTotals } from '../../../data-access/pricing/checkout-pricing';
 import { EventCategory, EventDetail as EventDetailModel } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
-import { formatDateEsVe } from '../../../shared/formatting/formatters';
+import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import {
   EmptyState,
@@ -32,11 +33,13 @@ import {
 })
 export class EventDetail {
   private readonly route = inject(ActivatedRoute);
+  private readonly auth = inject(MockAuth);
   private readonly eventsRepository = inject(EventsRepository);
   private readonly routeParams = toSignal(this.route.paramMap);
   private readonly pageState = createAsyncPageState();
 
   protected readonly labels = appLabels;
+  protected readonly canPurchase = computed(() => this.auth.hasRole('consumer'));
   protected readonly eventDetail = signal<EventDetailModel | null>(null);
   protected readonly loading = this.pageState.loading;
   protected readonly errorMessage = this.pageState.errorMessage;
@@ -122,6 +125,12 @@ export class EventDetail {
 
   protected quantityFor(ticketTypeId: string): number {
     return this.quantities()[ticketTypeId] ?? 0;
+  }
+
+  protected formatMoney(value: number, currency: string): string {
+    return formatMoneyEsVe(value, currency, {
+      maximumFractionDigits: 0,
+    });
   }
 
   protected retryLoad(): void {

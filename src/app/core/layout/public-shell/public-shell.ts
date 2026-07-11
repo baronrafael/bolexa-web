@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { DemoRoleSwitcher } from '../../auth/demo-role-switcher/demo-role-switcher';
 import { MockAuth } from '../../auth/mock-auth';
@@ -16,9 +16,15 @@ export class PublicShell {
   protected readonly labels = appLabels;
   protected readonly auth = inject(MockAuth);
 
-  protected readonly navLinks = [
-    { label: appLabels.navigation.publicLinks.events, path: '/events' },
-    { label: appLabels.navigation.publicLinks.myTickets, path: '/my-tickets' },
-    { label: appLabels.navigation.publicLinks.profile, path: '/profile' },
-  ];
+  protected readonly navLinks = computed(() => {
+    const links = [
+      { label: appLabels.navigation.publicLinks.events, path: '/events' },
+      ...(this.auth.hasRole('consumer')
+        ? [{ label: appLabels.navigation.publicLinks.myTickets, path: '/my-tickets' }]
+        : []),
+      { label: appLabels.navigation.publicLinks.profile, path: '/profile' },
+    ];
+
+    return links;
+  });
 }

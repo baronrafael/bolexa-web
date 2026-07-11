@@ -6,9 +6,11 @@
 
     <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
       <a class="btn btn-primary" routerLink="/">{{ labels.actions.home }}</a>
-      <a class="btn btn-ghost border-white/10" routerLink="/my-tickets">{{
-        labels.actions.myTickets
-      }}</a>
+      @if (showEventsAction()) {
+        <a class="btn btn-ghost border-white/10" routerLink="/events">{{
+          labels.actions.events
+        }}</a>
+      }
       @if (showSellAction()) {
         <a class="btn btn-ghost border-white/10" routerLink="/sell">{{
           labels.actions.sell

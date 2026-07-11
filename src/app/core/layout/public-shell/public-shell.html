@@ -14,7 +14,7 @@
       class="hidden items-center gap-6 text-sm font-medium text-slate-300 lg:flex"
       [attr.aria-label]="labels.navigation.primaryAriaLabel"
     >
-      @for (link of navLinks; track link.path) {
+      @for (link of navLinks(); track link.path) {
         <a
           class="transition hover:text-white"
           ariaCurrentWhenActive="page"

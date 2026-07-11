@@ -22,6 +22,10 @@ export class AccessDenied {
   protected readonly description = computed(() => {
     const requiredRole = this.queryParams().get('requiredRole') as UserRole | null;
 
+    if (requiredRole === 'consumer') {
+      return this.labels.descriptions.consumer;
+    }
+
     if (requiredRole === 'organizer') {
       return this.labels.descriptions.organizer;
     }
@@ -40,4 +44,14 @@ export class AccessDenied {
   protected readonly showSellAction = computed(
     () => this.queryParams().get('requiredRole') === 'organizer',
   );
+
+  protected readonly showEventsAction = computed(() => {
+    const requiredRole = this.queryParams().get('requiredRole');
+
+    return (
+      requiredRole === 'consumer' ||
+      requiredRole === 'scanner' ||
+      requiredRole === 'organizer'
+    );
+  });
 }

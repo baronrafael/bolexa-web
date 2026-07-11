@@ -78,30 +78,34 @@ export const routes: Routes = [
       {
         path: 'checkout/:eventId',
         title: routeMetadata.checkout.title,
+        canMatch: [demoRoleGuard],
+        data: { requiredRole: 'consumer', ...routeMetadata.checkout.data },
         loadComponent: () =>
           import('./features/consumer/checkout-page/checkout-page').then((m) => m.CheckoutPage),
-        data: routeMetadata.checkout.data,
       },
       {
         path: 'checkout/:eventId/confirmation/:orderId',
         title: routeMetadata.confirmation.title,
+        canMatch: [demoRoleGuard],
+        data: { requiredRole: 'consumer', ...routeMetadata.confirmation.data },
         loadComponent: () =>
           import('./features/consumer/confirmation/confirmation').then((m) => m.Confirmation),
-        data: routeMetadata.confirmation.data,
       },
       {
         path: 'my-tickets',
         title: routeMetadata.myTickets.title,
+        canMatch: [demoRoleGuard],
+        data: { requiredRole: 'consumer', ...routeMetadata.myTickets.data },
         loadComponent: () =>
           import('./features/consumer/my-tickets/my-tickets').then((m) => m.MyTickets),
-        data: routeMetadata.myTickets.data,
       },
       {
         path: 'my-tickets/:ticketId',
         title: routeMetadata.ticketDetail.title,
+        canMatch: [demoRoleGuard],
+        data: { requiredRole: 'consumer', ...routeMetadata.ticketDetail.data },
         loadComponent: () =>
           import('./features/consumer/ticket-detail/ticket-detail').then((m) => m.TicketDetail),
-        data: routeMetadata.ticketDetail.data,
       },
       {
         path: 'profile',
