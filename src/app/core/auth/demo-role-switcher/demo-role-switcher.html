@@ -1,35 +1,37 @@
-<div class="dropdown dropdown-end">
+<div class="dropdown dropdown-end" [class.dropdown-open]="isOpen()">
   <button
     class="btn btn-sm border-white/10 bg-white/[0.04] text-slate-100 hover:bg-white/[0.08]"
     type="button"
-    tabindex="0"
     aria-haspopup="menu"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggleMenu()"
   >
     <span class="hidden sm:inline">{{ labels.auth.switcherPrefix }}</span>
     <span class="font-bold">{{ roleLabel(auth.currentUser().role) }}</span>
   </button>
 
-  <ul
-    class="menu dropdown-content z-20 mt-3 w-72 max-w-[calc(100vw-2rem)] rounded-box border border-white/10 bg-base-300 p-2 shadow-2xl max-sm:fixed max-sm:left-4 max-sm:right-4 max-sm:top-16 max-sm:mt-0 max-sm:w-auto"
-    role="menu"
-    tabindex="0"
-  >
-    @for (user of auth.demoUsers(); track user.id) {
-      <li>
-        <button
-          type="button"
-          role="menuitemradio"
-          [attr.aria-checked]="auth.currentUser().id === user.id"
-          (click)="auth.switchUser(user.id)"
-        >
-          <span>
-            <span class="block font-semibold">{{ user.name }}</span>
-            <span class="text-xs text-slate-400"
-              >{{ roleLabel(user.role) }} · {{ user.email }}</span
-            >
-          </span>
-        </button>
-      </li>
-    }
-  </ul>
+  @if (isOpen()) {
+    <ul
+      class="menu dropdown-content z-20 mt-3 w-72 max-w-[calc(100vw-2rem)] rounded-box border border-white/10 bg-base-300 p-2 shadow-2xl max-sm:fixed max-sm:left-4 max-sm:right-4 max-sm:top-16 max-sm:mt-0 max-sm:w-auto"
+      role="menu"
+    >
+      @for (user of auth.demoUsers(); track user.id) {
+        <li>
+          <button
+            type="button"
+            role="menuitemradio"
+            [attr.aria-checked]="auth.currentUser().id === user.id"
+            (click)="switchUser(user.id)"
+          >
+            <span>
+              <span class="block font-semibold">{{ user.name }}</span>
+              <span class="text-xs text-slate-400"
+                >{{ roleLabel(user.role) }} · {{ user.email }}</span
+              >
+            </span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
 </div>
