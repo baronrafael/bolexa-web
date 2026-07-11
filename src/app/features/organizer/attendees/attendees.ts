@@ -16,10 +16,19 @@ import { formatDateEsVe } from '../../../shared/formatting/formatters';
 import { normalizeSearch } from '../../../shared/search/normalize-search';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, MetricCard, SearchInput, StatusBadge } from '../../../shared/ui';
+import { OrganizerAttendeeListItem } from '../components/organizer-attendee-list-item/organizer-attendee-list-item';
 
 @Component({
   selector: 'app-attendees',
-  imports: [EmptyState, LoadingState, MetricCard, RouterLink, SearchInput, StatusBadge],
+  imports: [
+    EmptyState,
+    LoadingState,
+    MetricCard,
+    OrganizerAttendeeListItem,
+    RouterLink,
+    SearchInput,
+    StatusBadge,
+  ],
   templateUrl: './attendees.html',
   styleUrl: './attendees.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

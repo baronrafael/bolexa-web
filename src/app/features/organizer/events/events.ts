@@ -14,10 +14,11 @@ import { OrganizerRepository } from '../../../data-access/repositories/organizer
 import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/formatters';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, StatusBadge } from '../../../shared/ui';
+import { OrganizerEventListItem } from '../components/organizer-event-list-item/organizer-event-list-item';
 
 @Component({
   selector: 'app-events',
-  imports: [EmptyState, LoadingState, RouterLink, StatusBadge],
+  imports: [EmptyState, LoadingState, OrganizerEventListItem, RouterLink, StatusBadge],
   templateUrl: './events.html',
   styleUrl: './events.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

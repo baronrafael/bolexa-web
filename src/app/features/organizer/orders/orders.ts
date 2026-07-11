@@ -19,10 +19,11 @@ import { formatDateEsVe, formatMoneyEsVe } from '../../../shared/formatting/form
 import { normalizeSearch } from '../../../shared/search/normalize-search';
 import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, LoadingState, SearchInput, StatusBadge } from '../../../shared/ui';
+import { OrganizerOrderListItem } from '../components/organizer-order-list-item/organizer-order-list-item';
 
 @Component({
   selector: 'app-orders',
-  imports: [EmptyState, LoadingState, RouterLink, SearchInput, StatusBadge],
+  imports: [EmptyState, LoadingState, OrganizerOrderListItem, RouterLink, SearchInput, StatusBadge],
   templateUrl: './orders.html',
   styleUrl: './orders.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

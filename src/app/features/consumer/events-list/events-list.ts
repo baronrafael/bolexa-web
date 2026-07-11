@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  resource,
+  signal,
+} from '@angular/core';
 import { appLabels } from '../../../core/content/app-labels';
 import { EventCategory, EventDetail } from '../../../data-access/models';
 import { EventsRepository } from '../../../data-access/repositories/events-repository';
 import { normalizeSearch } from '../../../shared/search/normalize-search';
-import { createAsyncPageState } from '../../../shared/state/async-page-state';
 import { EmptyState, EventCard, LoadingState, SearchInput } from '../../../shared/ui';
 
 type CategoryFilter = EventCategory | 'all';
@@ -18,11 +24,13 @@ type DateFilter = 'all' | 'next_90_days' | 'later';
 })
 export class EventsList {
   private readonly eventsRepository = inject(EventsRepository);
-  private readonly pageState = createAsyncPageState();
+  private readonly eventsResource = resource({
+    loader: () => this.eventsRepository.listEvents(),
+  });
 
   protected readonly labels = appLabels;
-  protected readonly events = signal<EventDetail[]>([]);
-  protected readonly loading = this.pageState.loading;
+  protected readonly events = computed(() => this.eventsResource.value() ?? []);
+  protected readonly loading = this.eventsResource.isLoading;
   protected readonly query = signal('');
   protected readonly selectedCategory = signal<CategoryFilter>('all');
   protected readonly selectedCity = signal('all');
@@ -70,10 +78,6 @@ export class EventsList {
     return `${count} ${suffix}`;
   });
 
-  constructor() {
-    void this.loadEvents();
-  }
-
   protected setQuery(query: string): void {
     this.query.set(query);
   }
@@ -88,22 +92,6 @@ export class EventsList {
 
   protected setDate(event: Event): void {
     this.selectedDate.set((event.target as HTMLSelectElement).value as DateFilter);
-  }
-
-  private async loadEvents(): Promise<void> {
-    const requestId = this.pageState.start();
-
-    try {
-      const events = await this.eventsRepository.listEvents();
-
-      if (!this.pageState.isCurrent(requestId)) {
-        return;
-      }
-
-      this.events.set(events);
-    } finally {
-      this.pageState.finish(requestId);
-    }
   }
 
   private matchesDateFilter(eventDetail: EventDetail, filter: DateFilter): boolean {
